@@ -5,7 +5,8 @@ N/A
 N/A
 
 # 3rd-Party Assets
-N/A
+- [Starter Assets - ThirdPerson (Unity Technologies)](https://assetstore.unity.com/packages/essentials/starter-assets-thirdperson-updates-in-new-charactercontroller-pa-196526)
+- [Simple Heart Health System (OArielG)](https://assetstore.unity.com/packages/tools/gui/simple-heart-health-system-120676)
 
 # Contributing
 ## Contributing Guide
