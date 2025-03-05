@@ -96,3 +96,21 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &3336111403539786723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16a6adda0cd7c8a869ac03a02096fb38, type: 3}
+  m_Name: DarkenAtmosphereFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  material: {fileID: 2100000, guid: 92d826f48ff5df6e2ae181fab9d2ef3b, type: 2}
+  darkCenter: {fileID: -8679921383154817045, guid: dbfdec72e0ae2988dad6f78892c0f9ef,
+    type: 3}
+  darkRadius: 0.5
+  darkIntensity: 0.2

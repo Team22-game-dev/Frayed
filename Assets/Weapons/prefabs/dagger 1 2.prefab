@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6394660404147472005
+--- !u!1 &6845681392630350154
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,49 +8,50 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 436858425182803085}
-  - component: {fileID: 5444446524787966264}
-  - component: {fileID: 58758515794840258}
-  - component: {fileID: 48832227395077740}
-  - component: {fileID: 6608710934388645340}
-  - component: {fileID: 5352430822233831517}
+  - component: {fileID: 5079663380843256327}
+  - component: {fileID: 6563191454932375651}
+  - component: {fileID: 5937058672303352769}
+  - component: {fileID: 7436236013924680004}
+  - component: {fileID: 917145225827413452}
+  - component: {fileID: 3578677562772900760}
+  - component: {fileID: 3585940603415972}
   m_Layer: 6
-  m_Name: dagger
+  m_Name: dagger 1 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &436858425182803085
+--- !u!4 &5079663380843256327
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6394660404147472005}
+  m_GameObject: {fileID: 6845681392630350154}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.640811, y: -0.00000023841858, z: 8.403512}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!33 &5444446524787966264
+--- !u!33 &6563191454932375651
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6394660404147472005}
+  m_GameObject: {fileID: 6845681392630350154}
   m_Mesh: {fileID: 5535028233509875347, guid: 91bcf08669419711883c3fd013bc5b15, type: 3}
---- !u!23 &58758515794840258
+--- !u!23 &5937058672303352769
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6394660404147472005}
+  m_GameObject: {fileID: 6845681392630350154}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -86,54 +87,97 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &48832227395077740
+--- !u!114 &7436236013924680004
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6394660404147472005}
+  m_GameObject: {fileID: 6845681392630350154}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b4dd31a8ada2acd6888555eac75584c, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d99e0872de4aea449a47ad2c77f1ac2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData: {fileID: 6608710934388645340}
---- !u!114 &6608710934388645340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6394660404147472005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 676d5021068900718a219c628d78d7fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Weapon: {fileID: 6394660404147472005}
-  Sheath: {fileID: 919132149155446097, guid: 9ce4ef66f51ba7b52a90028d88fd9b12, type: 3}
-  WeaponName: Dagger
-  DrawAnimation: draw_dagger
-  SheathAnimation: sheath_dagger
-  ActionBone: {fileID: 0}
-  SheathedBone: {fileID: 0}
-  actionBoneLocalRotationAdjustments: {x: -91.3, y: -0.075, z: 90.3}
---- !u!114 &5352430822233831517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6394660404147472005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88860683f8c8ca01d90f127210229c5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponPrefab: {fileID: 6394660404147472005}
-  pickupRadius: 2
-  pickupKey: 101
+  weaponData: {fileID: 917145225827413452}
+  pickupRadius: 1.5
   playerLayer:
     serializedVersion: 2
+    m_Bits: 64
+  NPCLayer:
+    serializedVersion: 2
     m_Bits: 0
+  EnemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  userWeaponController: {fileID: 0}
+--- !u!114 &917145225827413452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845681392630350154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f81bd5f488fe20b28924e8f09dea7ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Weapon: {fileID: 919132149155446097, guid: 91bcf08669419711883c3fd013bc5b15, type: 3}
+  Sheath: {fileID: 919132149155446097, guid: 9ce4ef66f51ba7b52a90028d88fd9b12, type: 3}
+  WeaponName: Dagger
+  weaponType: 
+  attackPower: 0
+  damage: 0
+  DrawAnimation: 
+  SheathAnimation: 
+  twoHanded: 0
+  ActionBoneRequired: WeaponHandFowardR
+  ActionBoneTwoRequired: WeaponHandFowardL
+  SheathBoneRequired: WeaponSheathHip
+  ActionBoneR: {fileID: 0}
+  ActionBoneL: {fileID: 0}
+  SheathedBone: {fileID: 0}
+  actionBoneLocalRotationAdjustments: {x: 0, y: 0, z: 0}
+--- !u!135 &3578677562772900760
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845681392630350154}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Radius: 1.5
+  m_Center: {x: 0, y: -0.009277715, z: 0.16743003}
+--- !u!135 &3585940603415972
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845681392630350154}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Radius: 1.5
+  m_Center: {x: 0, y: -0.009277715, z: 0.16743003}
