@@ -28,8 +28,8 @@ jobs:
           restore-keys: |
             Library-
 
-      # Build
-      - name: Build project
+      # Build for Windows 64-bit
+      - name: Build project for Windows 64-bit
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -37,6 +37,16 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: StandaloneWindows64
+
+      # Build for Linux 64-bit
+      - name: Build project for Linux 64-bit
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: StandaloneLinux64
 
       # Output
       - uses: actions/upload-artifact@v4
