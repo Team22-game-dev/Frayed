@@ -13,6 +13,12 @@ jobs:
   build:
     name: Build Unity Project
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64
+          - StandaloneLinux64
     steps:
       # Checkout
       - name: Checkout repository
@@ -27,7 +33,6 @@ jobs:
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
             Library-
-
       # Build
       - name: Build project
         uses: game-ci/unity-builder@v4
@@ -36,10 +41,10 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          targetPlatform: StandaloneWindows64
+          targetPlatform: ${{ matrix.targetPlatform }}
 
       # Output
       - uses: actions/upload-artifact@v4
         with:
-          name: Build
+          name: Build-${{ matrix.targetPlatform }}
           path: build

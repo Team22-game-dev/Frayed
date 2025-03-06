@@ -6,7 +6,7 @@ public class AnimationManager : MonoBehaviour
 {
     private Animator animator;
 
-    private void Start()
+    protected void Start()
     {
         // Get Animator component
         animator = GetComponent<Animator>();
