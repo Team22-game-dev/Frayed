@@ -1422,7 +1422,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animationParameterSpeed: speed
   _animationParameterSprintHeld: sprintHeld
-  footstepAudioClips: []
+  footstepAudioClips:
+  - {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  - {fileID: 8300000, guid: 85016e0f2b01da248b9663dd49a161b0, type: 3}
+  - {fileID: 8300000, guid: 186de84b3207156479abe98f4958fed0, type: 3}
+  - {fileID: 8300000, guid: 1a91fcd19acf1e54bba0945d9f390849, type: 3}
+  - {fileID: 8300000, guid: 14e8a8d2158bec840b56c54f5266e692, type: 3}
+  - {fileID: 8300000, guid: 29841e7d5bbfb5b419c9ad16ca8bc4c1, type: 3}
+  - {fileID: 8300000, guid: dd1af302b8902684d9381de1f2d3a5af, type: 3}
+  - {fileID: 8300000, guid: 67c8b33e424ccdc4486edf538ab91c5a, type: 3}
+  - {fileID: 8300000, guid: 274649b0e221539409070ebf6c18918b, type: 3}
+  - {fileID: 8300000, guid: a3194b8bbc96ef84fab1f98f4b7dae3e, type: 3}
   footstepAudioVolume: 0.5
 --- !u!1 &8338988565591873048 stripped
 GameObject:
@@ -1650,7 +1660,7 @@ PrefabInstance:
     - target: {fileID: 2456836682300840533, guid: 58005239b036b9e478a719a4c24e7b57,
         type: 3}
       propertyPath: m_Name
-      value: PlayerArmature
+      value: MainCharacter
       objectReference: {fileID: 0}
     - target: {fileID: 6416585373616028004, guid: 58005239b036b9e478a719a4c24e7b57,
         type: 3}
@@ -1727,8 +1737,7 @@ PrefabInstance:
       propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4129636355612473788, guid: 58005239b036b9e478a719a4c24e7b57, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 695454624185432540, guid: 58005239b036b9e478a719a4c24e7b57, type: 3}
     - {fileID: 5160924981228654020, guid: 58005239b036b9e478a719a4c24e7b57, type: 3}
