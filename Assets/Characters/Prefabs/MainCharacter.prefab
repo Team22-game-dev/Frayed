@@ -5758,6 +5758,7 @@ GameObject:
   - component: {fileID: 7005419985995812074}
   - component: {fileID: 7030976015949841167}
   - component: {fileID: 4792826243224289047}
+  - component: {fileID: 8612749129740152534}
   m_Layer: 3
   m_Name: MainCharacter
   m_TagString: Player
@@ -5888,6 +5889,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2
   sprintSpeed: 5.335
+  attackSpeed: 0.4
   rotationSmoothTime: 0.12
   speedChangeRate: 10
   jumpHeight: 1.2
@@ -5956,6 +5958,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comboWindowTime: 0.5
   clickBuffer: 0.25
+--- !u!114 &8612749129740152534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2456836682300840533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32a9b05c1fde05b44ad5813ac08a17cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagePerSecond: 0.25
 --- !u!1 &2476365724505015327
 GameObject:
   m_ObjectHideFlags: 0
