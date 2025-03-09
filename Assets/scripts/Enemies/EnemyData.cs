@@ -12,6 +12,10 @@ public class EnemyData : MonoBehaviour
     public GameObject mainCharacter { get { return _mainCharacter; } private set { _mainCharacter = value; } }
 
     [SerializeField]
+    private string _enemyName;
+    [SerializeField]
+    private float _health = 100;
+    [SerializeField]
     private float _chaseRadius = 20f;
     [SerializeField]
     private float _chaseSpeed = 2.5f;
@@ -21,9 +25,10 @@ public class EnemyData : MonoBehaviour
     [Tooltip("In seconds.")]
     private float _attackDuration = 1f;
     [SerializeField]
-    private float _height = 2f;
+    private float _height = -0.5f;
     [SerializeField]
     private GameObject _mainCharacter;
+    
 
     private void Start()
     {
