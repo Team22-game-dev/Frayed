@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AnimationManager : MonoBehaviour
 {
-    private Animator animator;
+    public Animator animator;
 
     protected void Start()
     {
@@ -94,5 +94,28 @@ public class AnimationManager : MonoBehaviour
         }
 
         return null; // No animation found
+    }
+    
+
+    public string GetCurrentStateName()
+    {
+        Debug.Log("Getting State name from AnimationManager");
+
+        if (animator == null)
+        {
+            Debug.LogWarning($"{nameof(Animator)} not set in {nameof(AnimationManager)}.");
+            return null;
+        }
+
+        // Wait for the Animator to finish transitioning
+        int layerIndex = 0;
+        if (animator.IsInTransition(layerIndex))
+        {
+            return "transition";
+        }
+
+        // Get the current state info
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(layerIndex);
+        return stateInfo.IsName("") ? null : stateInfo.fullPathHash.ToString();
     }
 }

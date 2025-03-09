@@ -15,7 +15,19 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     [SerializeField] private Transform SheathBoneHip;
     [SerializeField] private Transform SheathBoneBack;
 
+    private WeaponRotationData rotationComponent;  // Reference to the WeaponRotationComponent
+
     private AnimationManager animationManager;
+
+    public enum WeaponState
+    {
+        None,
+        Sheathed,
+        Drawn
+    }
+
+    public WeaponState currentWeaponState;
+
 
     public void Awake()
     {
@@ -32,6 +44,14 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     void Start()
     {
         SetBoneData();
+
+        if(hasWeaponEquipped())
+            currentWeaponState = WeaponState.Sheathed;
+        else
+            currentWeaponState = WeaponState.None;
+        rotationComponent = GetComponent<WeaponRotationData>();
+        if(rotationComponent == null)
+            Debug.LogError("Rotation Component Not found!");
     }
 
     
@@ -164,9 +184,6 @@ public IEnumerator EquipWeapon()
     }
 }
 
-
-
-
     // local function to start the equip weapon coroutine
 public void StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
 {
@@ -241,7 +258,7 @@ public void StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
         if(playAnimation)
         {
             // start animation and wait for animation event to parent to hand on OnDrawAnimation
-            if (weaponData != null && weaponData.GetWeaponState() == WeaponData.State.Equipped)
+            if (weaponData != null && currentWeaponState == WeaponState.Sheathed)
             {
                 animationManager.SetTrigger(weaponData.DrawAnimation);
             }
@@ -253,6 +270,7 @@ public void StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
         else 
         {
             // invoke the method to reparent now
+            animationManager.SetTrigger("DrawDagger");
             OnDrawWeaponEvent();
         }
     }
@@ -261,15 +279,72 @@ public void StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
     {
         if(!weaponData.twoHanded) 
         {
+            currentWeaponState = WeaponState.Drawn;
             Debug.Log("Parent weapon to hand bone");
             equippedWeapon.transform.SetParent(weaponData.ActionBoneR);
             equippedWeapon.transform.localPosition = Vector3.zero;
-            equippedWeapon.transform.localRotation = Quaternion.identity;
+            
         }
         else
         {
             // Two Handed Equip Logic (stretch goal)
         }
+
+        ApplyWeaponRotation();
+
+ 
+    }
+
+    public void SheathWeapon()
+    {
+        if(animationManager.GetCurrentAnimationName() == "encounter_idle")
+        {
+            // play sheathing Animation animation
+            if(weaponData != null && currentWeaponState == WeaponState.Drawn)
+            {
+                animationManager.SetTrigger(weaponData.SheathAnimation);
+            }
+            else
+            {
+                Debug.LogError("weaponData null or weapon in wrong state");
+            }
+        }
+        else
+        {
+            // dont play sheatingn animation
+            OnSheathWeapon();
+        }
+    }
+
+    public void OnSheathWeapon()
+    {
+        currentWeaponState = WeaponState.Sheathed;
+        equippedWeapon.transform.SetParent(weaponData.SheathedBone);
+        equippedWeapon.transform.localPosition = Vector3.zero;
+        ApplyWeaponRotation();
+    }
+
+    private void ApplyWeaponRotation()
+    {
+        // Get the rotation for the weapon from the user's WeaponRotationComponent
+        Quaternion weaponRotation;
+
+        switch(currentWeaponState)
+        {
+            case WeaponState.Drawn:
+                weaponRotation = rotationComponent.GetDrawnWeaponRotation(weaponData.WeaponName);
+                break;
+            case WeaponState.Sheathed:
+                weaponRotation = rotationComponent.GetSheathedWeaponRotation(weaponData.WeaponName);
+                break;
+            default:
+                Debug.LogError("weapon in wrong state to get rotation");
+                return;
+
+        }
+
+        // Apply the rotation to the equipped weapon
+        equippedWeapon.transform.localRotation = weaponRotation;
     }
 
     public void DropWeapon()
@@ -298,13 +373,14 @@ public void StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
 
         }
     }
-
-    
-
     public bool hasWeaponEquipped()
     {
         Debug.Log("Checking if Weapon is equipped!");
         return equippedWeapon != null;
+    }
+    public bool isDrawn()
+    {
+        return currentWeaponState == WeaponState.Drawn;
     }
 
 

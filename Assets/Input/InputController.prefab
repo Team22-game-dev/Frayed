@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5967174168013178374}
   - component: {fileID: 231445240593187950}
-  - component: {fileID: 4113724552777079417}
+  - component: {fileID: 5042785242986501391}
   m_Layer: 0
   m_Name: InputController
   m_TagString: Untagged
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &4113724552777079417
+--- !u!114 &5042785242986501391
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
