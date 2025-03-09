@@ -85,6 +85,7 @@ GameObject:
   - component: {fileID: 7863211478494169745}
   - component: {fileID: 3943023120160889109}
   - component: {fileID: 1311034194875209138}
+  - component: {fileID: 4210678903781039041}
   m_Layer: 0
   m_Name: CameraController
   m_TagString: MainCamera
@@ -118,7 +119,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -245,6 +246,25 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4210678903781039041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963585208302535189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37fa0c975227ad248a03b69db588ea75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mainCamera: {fileID: 963585208302535189}
+  _lockCameraPosition: 0
+  lookThreshold: 0.01
+  cinemachineCameraTarget: {fileID: 0}
+  topClamp: 70
+  bottomClamp: -30
+  cameraAngleOverride: 0
 --- !u!1 &5880579853255790260
 GameObject:
   m_ObjectHideFlags: 0
