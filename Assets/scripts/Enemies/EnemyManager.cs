@@ -160,7 +160,7 @@ public class EnemyManager : MonoBehaviour
 
         }
         _currentState = newState;
-        Debug.Log($"Change enemy to state {newState.ToString()}");
+        //Debug.Log($"Change enemy to state {newState.ToString()}");
     }
 
     private void ChasingColliderEnter(Collider other)
