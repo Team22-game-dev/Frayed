@@ -26,6 +26,8 @@ public class EnemyManager : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
 
     private float timeSinceAttack;
+    private float timeStanding;
+    private float timeStandingUntilWandering;
 
     private EnemyData enemyData;
     private GameObject chasingColliderGameObject;
@@ -35,7 +37,6 @@ public class EnemyManager : MonoBehaviour
     private void Start()
     {
         enemyData = GetComponent<EnemyData>();
-        _currentState = State.STANDING;
 
         // Create child game object for chasing sphere collider since a game object can only have one collider.
         chasingColliderGameObject = new GameObject("Chasing Collider");
@@ -62,9 +63,7 @@ public class EnemyManager : MonoBehaviour
             _navMeshAgent = this.gameObject.AddComponent<NavMeshAgent>();
         }
         _navMeshAgent.baseOffset = enemyData.height / 2;
-        _navMeshAgent.SetDestination(this.transform.position);
-        _navMeshAgent.isStopped = true;
-        _navMeshAgent.speed = 0;
+        ChangeState(State.STANDING);
     }
 
     private void Update()
@@ -96,18 +95,28 @@ public class EnemyManager : MonoBehaviour
 
     private void HandleStandingState()
     {
-
+        timeStanding += Time.deltaTime;
+        if (enemyData.enableWanderBehavior)
+        {
+            if (timeStanding >= timeStandingUntilWandering)
+            {
+                ChangeState(State.WANDERING);
+            }
+        }
     }
 
     private void HandleWanderingState()
     {
-
+        if (ReachedDestination())
+        {
+            ChangeState(State.STANDING);
+        }
     }
 
     private void HandleChasingState()
     {
         _navMeshAgent.SetDestination(enemyData.mainCharacter.transform.position);
-        if (CanAttack())
+        if (ReachedDestination())
         {
             ChangeState(State.READY_TO_ATTACK);
         }
@@ -116,12 +125,13 @@ public class EnemyManager : MonoBehaviour
     private void HandleReadyToAttackState()
     {
         timeSinceAttack = 0f;
-        Debug.Log("TODO: Attacking!");
+        //Debug.Log("TODO: Attacking!");
         ChangeState(State.ATTACKING);
     }
 
     private void HandleAttackingState()
     {
+        // TODO: Will probably have to improve on this logic.
         timeSinceAttack += Time.deltaTime;
         if (timeSinceAttack >= enemyData.attackDuration)
         {
@@ -129,7 +139,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    private bool CanAttack()
+    private bool ReachedDestination()
     {
         return _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance;
     }
@@ -141,9 +151,31 @@ public class EnemyManager : MonoBehaviour
             case State.STANDING:
                 _navMeshAgent.SetDestination(this.transform.position);
                 _navMeshAgent.isStopped = true;
-                _navMeshAgent.speed = 0;
+                _navMeshAgent.speed = 0f;
+                timeStanding = 0f;
+                if (enemyData.enableWanderBehavior)
+                {
+                    timeStandingUntilWandering = UnityEngine.Random.Range(enemyData.minimumWanderPause, enemyData.maximumWanderPause);
+                }
                 break;
             case State.WANDERING:
+                float wanderingRadius = UnityEngine.Random.Range(0f, enemyData.maximumWanderRadius);
+                Vector3 wanderingDirection = UnityEngine.Random.insideUnitSphere * wanderingRadius;
+                wanderingDirection.y = 0f;
+                Vector3 randomPosition = enemyData.spawnPosition + wanderingDirection;
+
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(randomPosition, out hit, enemyData.height * 2, NavMesh.AllAreas))
+                {
+                    _navMeshAgent.SetDestination(hit.position);
+                    _navMeshAgent.isStopped = false;
+                    _navMeshAgent.speed = enemyData.wanderSpeed;
+                    _navMeshAgent.stoppingDistance = 2f;
+                }
+                else
+                {
+                    Debug.Log("Could not set new destination");
+                }
                 break;
             case State.CHASING:
                 _navMeshAgent.isStopped = false;

@@ -2153,6 +2153,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e310d98afb18464c9f912144bd250f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enableWanderBehavior: 1
+  _maximumWanderRadius: 30
+  _wanderSpeed: 1.5
+  _minimumWanderPause: 1.5
+  _maximumWanderPause: 3
   _chaseRadius: 20
   _chaseSpeed: 2.5
   _attackRadius: 2
