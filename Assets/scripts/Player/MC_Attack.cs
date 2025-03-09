@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class MC_Attack : AttackBase
 {
-    private enum AttackState
+    public enum AttackState
     {
         Idle,
         Attacking,
         Combo
     };
 
-    private AttackState currentState;
+    public AttackState currentState { get; private set; }
 
     [SerializeField] private float comboWindowTime = 0.5f; // Time to trigger a combo attack
     [SerializeField] private float clickBuffer = 0.25f; // Prevent button mashing

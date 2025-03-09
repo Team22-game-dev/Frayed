@@ -11,6 +11,7 @@ using Frayed.Input;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(MC_AnimationManager))]
+[RequireComponent(typeof(MC_Attack))]
 public class MC_Locomotion : MonoBehaviour
 {
 
@@ -22,6 +23,10 @@ public class MC_Locomotion : MonoBehaviour
     [Tooltip("Sprint speed of the character in m/s")]
     [SerializeField]
     private float sprintSpeed = 5.335f;
+
+    [Tooltip("Attack speed of the character in m/s")]
+    [SerializeField]
+    private float attackSpeed = 0.4f;
 
     [Tooltip("How fast the character turns to face movement direction")]
     [Range(0.0f, 0.3f)]
@@ -90,6 +95,7 @@ public class MC_Locomotion : MonoBehaviour
     private MC_AnimationManager animationManager;
     private InputManager inputManager;
     private CameraManager cameraManager;
+    private MC_Attack attack;
 
 
     private void Awake()
@@ -111,6 +117,8 @@ public class MC_Locomotion : MonoBehaviour
         Debug.Assert(cameraManager != null);
 
         animationManager = GetComponent<MC_AnimationManager>();
+
+        attack = GetComponent<MC_Attack>();
     }
 
     private void Update()
@@ -133,8 +141,18 @@ public class MC_Locomotion : MonoBehaviour
 
     private void Move()
     {
-        // Set target speed based on move speed, sprint speed and if sprint is pressed
-        float targetSpeed = inputManager.sprint ? sprintSpeed : moveSpeed;
+        // Set target speed based on conditions.
+        float targetSpeed;
+        if (attack.currentState != MC_Attack.AttackState.Idle)
+        {
+            targetSpeed = attackSpeed;
+        } else if (inputManager.sprint)
+        {
+            targetSpeed = sprintSpeed;
+        } else
+        {
+            targetSpeed = moveSpeed;
+        }
 
         // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
