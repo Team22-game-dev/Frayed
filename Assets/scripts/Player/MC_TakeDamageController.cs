@@ -4,5 +4,9 @@ using UnityEngine;
 
 public class MC_TakeDamageController : TakeDameageBase
 {
-
+    override
+    public void HandleDamage()
+    {
+        Debug.Log("handling damage");
+    }
 }

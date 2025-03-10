@@ -91,7 +91,7 @@ private void OnTriggerExit(Collider other)
     {
         Debug.Log("Picking Up Weapon!");
         sphereCollider.enabled = false; // Disable sphere collider
-        rigidBody.isKinematic = false;
+        rigidBody.isKinematic = true;
         rigidBody.useGravity = false;
 
 

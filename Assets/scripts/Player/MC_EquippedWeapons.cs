@@ -12,7 +12,7 @@ public class MC_EquippedWeapon : EquippedWeaponBase
     private static MC_EquippedWeapon _instance; // the local private _instance
     public static MC_EquippedWeapon Instance => _instance;
 
-    private void Awake()
+    new private void Awake()
     {
         base.Awake();
         if(_instance != null && _instance != this)
