@@ -12,10 +12,13 @@ public abstract class TakeDameageBase : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Weapons"))
         {
             // Handle the trigger with another object on the Weapons layer
-            Debug.Log("Weapon entered a trigger on the Weapons layer!");
+            Debug.Log("Weapon entered " + gameObject.name + "'s collader from the Weapons layer!");
             AttackingWeapon = other.gameObject;
             Debug.Log("Attacking Weapon: " + other.gameObject.name);
+            HandleDamage();
         }
     }
+
+    public abstract void HandleDamage();
     
 }
