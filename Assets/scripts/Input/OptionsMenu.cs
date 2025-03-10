@@ -48,6 +48,7 @@ public class OptionsMenu : MonoBehaviour
             // Pause game.
             Time.timeScale = 0f;
             inputManager.UnlockMouse();
+            inputManager.LockMovement();
         }
         else
         {
@@ -55,6 +56,7 @@ public class OptionsMenu : MonoBehaviour
             // Unpause game.
             Time.timeScale = 1f;
             inputManager.LockMouse();
+            inputManager.UnlockMovement();
         }
     }
 
