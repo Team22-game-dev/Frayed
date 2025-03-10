@@ -37,6 +37,9 @@ namespace Frayed.Input
         [SerializeField]
         private bool _optionsMenu;
 
+        [Header("Movement Settings")]
+        public bool movementLocked = false;
+
         [Header("Mouse Cursor Settings")]
         public bool cursorLocked = true;
         public bool cursorInputForLook = true;
@@ -66,7 +69,10 @@ namespace Frayed.Input
 
         public void OnMove(InputValue value)
         {
-            MoveInput(value.Get<Vector2>());
+            if (!movementLocked)
+            {
+                MoveInput(value.Get<Vector2>());
+            }
         }
 
         public void OnLook(InputValue value)
@@ -129,6 +135,18 @@ namespace Frayed.Input
         private void SetCursorState(bool newState)
         {
             Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+        }
+
+        public void LockMovement()
+        {
+            movementLocked = true;
+            // Stop all current movement.
+            _move = new Vector2(0f, 0f);
+        }
+
+        public void UnlockMovement()
+        {
+            movementLocked = false;
         }
 
         public void LockMouse()

@@ -45,6 +45,11 @@ public class PlayerStats : MonoBehaviour
     {
         health -= dmg;
         ClampHealth();
+
+        if (health <= 0)
+        {
+            GameOver();
+        }
     }
 
     public void AddHealth()
@@ -56,7 +61,7 @@ public class PlayerStats : MonoBehaviour
 
             if (onHealthChangedCallback != null)
                 onHealthChangedCallback.Invoke();
-        }   
+        }
     }
 
     void ClampHealth()
@@ -70,5 +75,18 @@ public class PlayerStats : MonoBehaviour
     void IncreaseSkill()
     {
         _skill += 0.1f;
+    }
+
+    void GameOver()
+    {
+        GameOverScreen gameOverScreen = FindObjectOfType<GameOverScreen>();
+        if (gameOverScreen != null)
+        {
+            gameOverScreen.ShowGameOver();
+        }
+        else
+        {
+            UnityEngine.Debug.LogError("GameOverScreen not found!");
+        }
     }
 }
