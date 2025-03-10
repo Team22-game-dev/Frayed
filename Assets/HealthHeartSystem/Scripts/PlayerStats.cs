@@ -2,6 +2,7 @@
  *  Author: ariel oliveira [o.arielg@gmail.com]
  */
 
+using System.Diagnostics;
 using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
@@ -43,6 +44,11 @@ public class PlayerStats : MonoBehaviour
     {
         health -= dmg;
         ClampHealth();
+
+        if (health <= 0)
+        {
+            GameOver();
+        }
     }
 
     public void AddHealth()
@@ -63,5 +69,18 @@ public class PlayerStats : MonoBehaviour
 
         if (onHealthChangedCallback != null)
             onHealthChangedCallback.Invoke();
+    }
+
+    void GameOver()
+    {
+        GameOverScreen gameOverScreen = FindObjectOfType<GameOverScreen>();
+        if (gameOverScreen != null)
+        {
+            gameOverScreen.ShowGameOver();
+        }
+        else
+        {
+            UnityEngine.Debug.LogError("GameOverScreen not found!");
+        }
     }
 }

@@ -7,7 +7,7 @@ public class MC_EnviromentDamage : MonoBehaviour
     public float damagePerSecond = 5f; // Damage without armor
     private float damageCooldown = 1f; // Damage interval
     private bool isTakingDamage = false;
-
+    
     private int hazardousLayerIndex = -1; // Index of the purple terrain texture
 
     void Start()
