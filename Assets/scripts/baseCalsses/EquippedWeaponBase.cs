@@ -41,7 +41,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         }
     }
 
-    void Start()
+    protected void Start()
     {
         SetBoneData();
 
@@ -104,12 +104,6 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         }
     }
 
-    // private void ParentToUser()
-    // {
-    //     equippedWeapon.transform.SetParent()
-    // }
-
-    // use enumerator for yield if animation in transisiton period
 public IEnumerator EquipWeapon()
 {
     if (weaponData == null || weaponData.Weapon == null)
@@ -175,6 +169,8 @@ public IEnumerator EquipWeapon()
             else
             {
                 Debug.LogWarning("weaponData.SheathedBone is null!");
+                // some enemies dont have sheathes try draw weapon
+                DrawWeapon(false);
             }
         }
         else

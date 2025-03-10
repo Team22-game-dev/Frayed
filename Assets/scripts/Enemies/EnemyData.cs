@@ -18,6 +18,9 @@ public class EnemyData : MonoBehaviour
 
     public Vector3 spawnPosition { get { return _spawnPosition; } private set { _spawnPosition = value; } }
 
+    public float getenemyhealth { get {return currentHealth; } }
+    public float getAttackPower { get { return currentAttackPower; } }
+
     [Header("Wander Fields")]
     [SerializeField]
     private bool _enableWanderBehavior = true;
@@ -53,13 +56,28 @@ public class EnemyData : MonoBehaviour
     [SerializeField]
     private float _height = 2f;
 
+    [Header("Enemy Stats")]
+    [SerializeField]
+    private float _baseHealth = 100f; 
+    private float startingHealth;
+    private float currentHealth;
+
+    [SerializeField]
+    private float _baseAttackPower = 1f;
+    private float currentAttackPower;
 
     [Header("Game Information")]
     [SerializeField]
     private GameObject _mainCharacter;
+    private PlayerStats playerStats;
 
 
     private Vector3 _spawnPosition;
+
+    public float GetHealthRatio()
+    {
+        return currentHealth / startingHealth;
+    }
 
     private void Start()
     {
@@ -70,5 +88,15 @@ public class EnemyData : MonoBehaviour
         Debug.Assert(_mainCharacter != null);
 
         _spawnPosition = this.transform.position;
+        if (playerStats == null)
+        {
+            playerStats = _mainCharacter.GetComponent<PlayerStats>();
+        }
+
+        // Assign the value to startingHealth only once
+        currentHealth = startingHealth = _baseHealth * playerStats._skill;
+        currentAttackPower = _baseAttackPower * playerStats._skill;
     }
+    
+
 }

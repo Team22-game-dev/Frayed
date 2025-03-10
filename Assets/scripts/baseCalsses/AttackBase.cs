@@ -22,20 +22,12 @@ public abstract class AttackBase : MonoBehaviour
             Debug.LogError("EquippedWeaponBase component not found from AttackBase");
     }
 
-
-
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
         // check for attack input based on derived class.
         if(AttackTrigger())
             Attack();
-
     }
 
     public abstract bool AttackTrigger();
