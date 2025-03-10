@@ -94,8 +94,8 @@ public class EnemyData : MonoBehaviour
         }
 
         // Assign the value to startingHealth only once
-        currentHealth = startingHealth = _baseHealth * playerStats._skill;
-        currentAttackPower = _baseAttackPower * playerStats._skill;
+       // currentHealth = startingHealth = _baseHealth * playerStats._skill;
+//        currentAttackPower = _baseAttackPower * playerStats._skill;
     }
     
 

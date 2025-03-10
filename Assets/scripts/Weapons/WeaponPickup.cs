@@ -14,12 +14,14 @@ public class WeaponPickup : MonoBehaviour
 
     private GameObject PotentialUser = null;
     private SphereCollider sphereCollider;
+    private Rigidbody rigidBody;
     [SerializeField] private EquippedWeaponBase userWeaponController;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        rigidBody = GetComponent<Rigidbody>();
         // add sphere collider to weapon object for its pickup radius
         sphereCollider = gameObject.AddComponent<SphereCollider>();
         sphereCollider.isTrigger = true;
@@ -27,7 +29,7 @@ public class WeaponPickup : MonoBehaviour
         sphereCollider.enabled = true;
 
         // Set collider to weapon pickup layer
-        gameObject.layer = LayerMask.NameToLayer("weapons");
+        gameObject.layer = LayerMask.NameToLayer("Weapons");
         
     }
 
@@ -89,6 +91,9 @@ private void OnTriggerExit(Collider other)
     {
         Debug.Log("Picking Up Weapon!");
         sphereCollider.enabled = false; // Disable sphere collider
+        rigidBody.isKinematic = false;
+        rigidBody.useGravity = false;
+
 
         if (userWeaponController == null)
         {
