@@ -10,8 +10,6 @@ public class AmalgamAttack : EnemyAttack
 
     private Transform handBoneR, handBoneL;
     
-    EquippedWeaponBase equippedWeapon;
-
     private SphereCollider clawSphereLeftHand;
     private SphereCollider clawSphereRightHand;
 
@@ -24,7 +22,7 @@ public class AmalgamAttack : EnemyAttack
             clawSphereRightHand.enabled = false;
 
 
-            if(!equippedWeapon.isDrawn())
+            if(!equippedWeaponController.isDrawn())
             {   
                 
                 animationManager.SetTrigger("DrawSword");
@@ -41,14 +39,16 @@ public class AmalgamAttack : EnemyAttack
 
     private void clawAttack()
     {
+        Debug.Log("Claw Attack!");
         // Check if hand sphered created if not instrnatiate them to collide to cause damage
         if(clawSphereLeftHand == null || clawSphereRightHand == null){
+            Debug.Log("ClawSpheres null");
             if(handBoneL == null || handBoneR == null)
             {
                 Debug.LogError("Hand bones null on Amalgam!");
                 return;
             }
-
+            return;
         }
 
         animationManager.SetTrigger("ClawAttack");
@@ -58,7 +58,7 @@ public class AmalgamAttack : EnemyAttack
     {
         int trys = 0;
         do{
-            if(!equippedWeapon.hasWeaponEquipped())
+            if(!equippedWeaponController.hasWeaponEquipped())
             {
                 
                 
@@ -96,30 +96,52 @@ public class AmalgamAttack : EnemyAttack
     }
 
 
+
     void Start()
     {
+        Debug.Log("AmalgamAttack Start");
+        Debug.Log("Addign colliders to " + gameObject.name);
         base.Start();
 
-        clawSphereLeftHand = handBoneL.gameObject.AddComponent<SphereCollider>();
-        clawSphereRightHand = handBoneR.gameObject.AddComponent<SphereCollider>();
-        clawSphereLeftHand.isTrigger = clawSphereRightHand.isTrigger = true;
-        clawSphereLeftHand.radius = clawSphereRightHand.radius = 0.14f;
+        StartCoroutine(DelayedInit());
+    }
 
-        // Accessing the dictionary via the property
-        var boneData = equippedWeapon.GetWeaponBoneData;
+    private IEnumerator DelayedInit()
+    {
+        yield return new WaitForEndOfFrame(); // Ensures all Start() calls have executed
 
-        // Accessing specific hand bones using keys
-        if (boneData.TryGetValue("WeaponHandFowardL", out handBoneL) && 
-            boneData.TryGetValue("WeaponHandFowardR", out handBoneR))
+        if (equippedWeaponController != null)
         {
-            // Both bones found successfully
-            Debug.Log("Hand bones successfully assigned.");
+            Dictionary<string, Transform> boneData = equippedWeaponController.GetWeaponBoneData;
+            if (boneData != null && boneData.Count > 0) // Ensure dictionary isn't empty
+            {
+                handBoneL = boneData["WeaponHandFowardL"];
+                handBoneR = boneData["WeaponHandFowardR"];
+            }
+            else
+            {
+                Debug.LogError("BoneData dictionary is empty in AmalgamAttack!");
+            }
         }
         else
         {
-            // One or both bones are null or not found
-            Debug.LogError("Hand bones are null or not found.");
+            Debug.LogError("equippedWeaponController is null in AmalgamAttack!");
+        }
+
+        if (handBoneL != null && handBoneR != null)
+        {
+            clawSphereLeftHand = handBoneL.gameObject.AddComponent<SphereCollider>();
+            clawSphereRightHand = handBoneR.gameObject.AddComponent<SphereCollider>();
+            clawSphereLeftHand.isTrigger = clawSphereRightHand.isTrigger = true;
+            clawSphereLeftHand.radius = clawSphereRightHand.radius = 0.14f;
+            clawSphereLeftHand.enabled = clawSphereRightHand.enabled = true;
+            clawSphereLeftHand.gameObject.layer = clawSphereRightHand.gameObject.layer = LayerMask.NameToLayer("Weapons");
+        }
+        else
+        {
+            Debug.LogError("Hand bones are null in AmalgamAttack!");
         }
     }
+
 
 }
