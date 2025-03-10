@@ -28,6 +28,8 @@ public class PlayerStats : MonoBehaviour
     private float maxHealth;
     [SerializeField]
     private float maxTotalHealth;
+    [SerializeField]
+    public float _skill = 1;
 
     public float Health { get { return health; } }
     public float MaxHealth { get { return maxHealth; } }
@@ -63,5 +65,10 @@ public class PlayerStats : MonoBehaviour
 
         if (onHealthChangedCallback != null)
             onHealthChangedCallback.Invoke();
+    }
+
+    void IncreaseSkill()
+    {
+        _skill += 0.1f;
     }
 }

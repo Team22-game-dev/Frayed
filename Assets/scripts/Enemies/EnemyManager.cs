@@ -20,16 +20,22 @@ public class EnemyManager : MonoBehaviour
     public State currentState { get { return _currentState; } private set { _currentState = value; } }
     public NavMeshAgent navMeshAgent { get { return _navMeshAgent; } private set { _navMeshAgent = value; } }
 
+    private AnimationManager animationManager;
+
     [SerializeField]
     private State _currentState;
     [SerializeField]
     private NavMeshAgent _navMeshAgent;
+    [SerializeField]
+
+
+  
 
     private float timeSinceAttack;
     private float timeStanding;
     private float timeStandingUntilWandering;
 
-    private EnemyData enemyData;
+    public EnemyData enemyData;
     private GameObject chasingColliderGameObject;
     private SphereCollider chasingCollider;
     private CharacterController characterController;
@@ -37,6 +43,10 @@ public class EnemyManager : MonoBehaviour
     private void Start()
     {
         enemyData = GetComponent<EnemyData>();
+        animationManager = GetComponent<AnimationManager>();
+
+        if(animationManager == null)
+            Debug.LogError("Amalgam animationManager is null");
 
         // Create child game object for chasing sphere collider since a game object can only have one collider.
         chasingColliderGameObject = new GameObject("Chasing Collider");
@@ -62,8 +72,9 @@ public class EnemyManager : MonoBehaviour
         {
             _navMeshAgent = this.gameObject.AddComponent<NavMeshAgent>();
         }
-        _navMeshAgent.baseOffset = enemyData.height / 2;
         ChangeState(State.STANDING);
+
+       
     }
 
     private void Update()
@@ -90,6 +101,7 @@ public class EnemyManager : MonoBehaviour
                 break;
 
         }
+        UpdateAnimationToState();
         
     }
 
@@ -210,6 +222,12 @@ public class EnemyManager : MonoBehaviour
             ChangeState(State.STANDING);
         }
     }
+
+    private void UpdateAnimationToState()
+    {
+        animationManager.SetFloat("speed", _navMeshAgent.velocity.magnitude);
+    }
+
 }
 
 class ChildColliderScript : MonoBehaviour

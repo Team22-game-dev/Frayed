@@ -5894,7 +5894,7 @@ MonoBehaviour:
   speedChangeRate: 10
   jumpHeight: 1.2
   gravity: -15
-  jumpTimeout: 0.5
+  jumpTimeout: 0.2
   fallTimeout: 0.15
   groundedOffset: -0.14
   groundedRadius: 0.28
