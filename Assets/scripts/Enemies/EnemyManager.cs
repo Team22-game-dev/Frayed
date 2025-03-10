@@ -174,7 +174,11 @@ public class EnemyManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Could not set new destination");
+                    _navMeshAgent.SetDestination(randomPosition);
+                    _navMeshAgent.isStopped = false;
+                    _navMeshAgent.speed = enemyData.wanderSpeed;
+                    _navMeshAgent.stoppingDistance = 2f;
+                    Debug.Log("Using random position.");
                 }
                 break;
             case State.CHASING:

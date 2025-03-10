@@ -19,10 +19,11 @@ namespace Frayed.Input
 
         public Vector2 move { get { return _move;  } private set { _move = value; } }
         public Vector2 look { get { return _look; } private set { _look = value; } }
+        // Public setter and getter.
         public bool jump { get { return _jump; } set { _jump = value; } }
         public bool sprint { get { return _sprint; } private set { _sprint = value; } }
-        public bool cursorLocked { get { return _cursorLocked; } private set { _cursorLocked = value; } }
-        public bool cursorInputForLook { get { return _cursorInputForLook; } private set { _cursorInputForLook = value; } }
+        // Public setter and getter.
+        public bool optionsMenu { get { return _optionsMenu; } set { _optionsMenu = value; } }
 
         [Header("Character Input Values")]
         [SerializeField]
@@ -33,12 +34,12 @@ namespace Frayed.Input
         private bool _jump;
         [SerializeField]
         private bool _sprint;
+        [SerializeField]
+        private bool _optionsMenu;
 
         [Header("Mouse Cursor Settings")]
-        [SerializeField]
-        private bool _cursorLocked  = true;
-        [SerializeField]
-        private bool _cursorInputForLook = true;
+        public bool cursorLocked = true;
+        public bool cursorInputForLook = true;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput playerInput;
@@ -52,7 +53,6 @@ namespace Frayed.Input
                 Destroy(gameObject);
                 return;
             }
-
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -61,7 +61,6 @@ namespace Frayed.Input
         {
             playerInput = GetComponent<PlayerInput>();
         }
-
 
 #if ENABLE_INPUT_SYSTEM
 
@@ -72,7 +71,7 @@ namespace Frayed.Input
 
         public void OnLook(InputValue value)
         {
-            if (_cursorInputForLook)
+            if (cursorInputForLook)
             {
                 LookInput(value.Get<Vector2>());
             }
@@ -86,6 +85,11 @@ namespace Frayed.Input
         public void OnSprint(InputValue value)
         {
             SprintInput(value.isPressed);
+        }
+
+        public void OnOptionsMenu(InputValue value)
+        {
+            OptionsMenuInput(value.isPressed);
         }
 
 #endif
@@ -102,6 +106,7 @@ namespace Frayed.Input
 
         public void JumpInput(bool newJumpState)
         {
+            // Always be true due to Action being button.
             _jump = newJumpState;
         }
 
@@ -110,14 +115,36 @@ namespace Frayed.Input
             _sprint = newSprintState;
         }
 
+        public void OptionsMenuInput(bool newOptionsMenuState)
+        {
+            // Always be true due to Action being button.
+            _optionsMenu = newOptionsMenuState;
+        }
+
         private void OnApplicationFocus(bool hasFocus)
         {
-            SetCursorState(_cursorLocked);
+            SetCursorState(cursorLocked);
         }
 
         private void SetCursorState(bool newState)
         {
             Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+        }
+
+        public void LockMouse()
+        {
+            cursorLocked = true;
+            cursorInputForLook = true;
+            SetCursorState(true);
+        }
+
+        public void UnlockMouse()
+        {
+            cursorLocked = false;
+            cursorInputForLook = false;
+            SetCursorState(false);
+            // Stop all camera movement.
+            _look = new Vector2(0f, 0f);
         }
 
         public bool IsCurrentDeviceMouse
