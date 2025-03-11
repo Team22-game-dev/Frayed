@@ -91,5 +91,6 @@ public class OptionsMenu : MonoBehaviour
             GameObject.FindGameObjectWithTag("Player").transform.position = new Vector3(504.94f, 0f, 106.3f);
             GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = true;
         }
+        Toggle(false);
     }
 }

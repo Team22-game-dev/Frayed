@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MC_EnviromentDamage : MonoBehaviour
 {
@@ -12,8 +13,20 @@ public class MC_EnviromentDamage : MonoBehaviour
 
     void Start()
     {
+        // Add event listener for scene change.
+        SceneManager.activeSceneChanged += OnSceneChange;
+        SetUp();
+    }
+
+    void SetUp()
+    {
         // Find the index of the purple (hazardous) texture
         hazardousLayerIndex = FindTerrainLayerIndex("PurpleLayer"); // Updated layer name
+    }
+
+    void OnSceneChange(Scene current, Scene next)
+    {
+        SetUp();
     }
 
     void Update()
@@ -78,6 +91,10 @@ public class MC_EnviromentDamage : MonoBehaviour
     private int FindTerrainLayerIndex(string layerName)
     {
         Terrain terrain = Terrain.activeTerrain;
+        if (terrain == null)
+        {
+            return -1;
+        }
         for (int i = 0; i < terrain.terrainData.terrainLayers.Length; i++)
         {
             if (terrain.terrainData.terrainLayers[i].name == layerName)
