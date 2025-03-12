@@ -35,7 +35,6 @@ public class PowerUp : MonoBehaviour
 
                     case PowerUpType.Heart_Up:
                         UnityEngine.Debug.LogError("Increasing Health...");
-                        playerStats.AddHealth();
                         playerStats.Heal(1); // Increase max health by 1
                         break;
                 }

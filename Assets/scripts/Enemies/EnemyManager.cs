@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(EnemyData))]
+[RequireComponent(typeof(AnimationManager))]
 public class EnemyManager : MonoBehaviour
 {
     public enum State
@@ -38,6 +40,8 @@ public class EnemyManager : MonoBehaviour
     public EnemyData enemyData;
     private GameObject chasingColliderGameObject;
     private SphereCollider chasingCollider;
+    private GameObject attackingColliderGameObject;
+    private SphereCollider attackingCollider;
     private CharacterController characterController;
 
     private void Start()
@@ -49,15 +53,10 @@ public class EnemyManager : MonoBehaviour
             Debug.LogError("Amalgam animationManager is null");
 
         // Create child game object for chasing sphere collider since a game object can only have one collider.
-        chasingColliderGameObject = new GameObject("Chasing Collider");
-        chasingColliderGameObject.transform.SetParent(this.transform);
-        chasingCollider = chasingColliderGameObject.AddComponent<SphereCollider>();
-        ChildColliderScript chasingColliderScript = chasingCollider.AddComponent<ChildColliderScript>();
-        chasingColliderScript.OnTriggerEnterAction += ChasingColliderEnter;
-        chasingColliderScript.OnTriggerExitAction += ChasingColliderExit;
-        chasingCollider.isTrigger = true;
-        chasingCollider.radius = enemyData.chaseRadius;
-        chasingCollider.enabled = true;
+        AddCollider(ref chasingColliderGameObject, ref chasingCollider, "Chasing Collider", enemyData.chaseRadius, ChasingColliderEnter, ChasingColliderExit);
+
+        // Create child game object for attacking sphere collider since a game object can only have one collider.
+        AddCollider(ref attackingColliderGameObject, ref attackingCollider, "Attacking Collider", enemyData.attackRadius, AttackingColliderEnter, AttackingColliderExit);
 
         // Configure CharacterController
         characterController = GetComponent<CharacterController>();
@@ -75,6 +74,21 @@ public class EnemyManager : MonoBehaviour
         ChangeState(State.STANDING);
 
        
+    }
+
+    // Creates a new GameObject for colliderGameObject and a new SphereCollider for collider.
+    void AddCollider(ref GameObject colliderGameObject, ref SphereCollider collider, string colliderName, float colliderRadius, Action<Collider> colliderEnter, Action<Collider> colliderExit)
+    {
+        colliderGameObject = new GameObject(colliderName);
+        colliderGameObject.transform.SetParent(this.transform);
+        colliderGameObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+        collider = colliderGameObject.AddComponent<SphereCollider>();
+        ChildColliderScript colliderScript = collider.AddComponent<ChildColliderScript>();
+        colliderScript.OnTriggerEnterAction += colliderEnter;
+        colliderScript.OnTriggerExitAction += colliderExit;
+        collider.isTrigger = true;
+        collider.radius = colliderRadius;
+        collider.enabled = true;
     }
 
     private void Update()
@@ -127,11 +141,8 @@ public class EnemyManager : MonoBehaviour
 
     private void HandleChasingState()
     {
-        _navMeshAgent.SetDestination(enemyData.mainCharacter.transform.position);
-        if (ReachedDestination())
-        {
-            ChangeState(State.READY_TO_ATTACK);
-        }
+        //_navMeshAgent.SetDestination(enemyData.mainCharacter.transform.position);
+        TrySetDestination(enemyData.mainCharacter.transform.position);
     }
 
     private void HandleReadyToAttackState()
@@ -147,7 +158,19 @@ public class EnemyManager : MonoBehaviour
         timeSinceAttack += Time.deltaTime;
         if (timeSinceAttack >= enemyData.attackDuration)
         {
-            ChangeState(State.CHASING);
+            ChangeState(State.READY_TO_ATTACK);
+        }
+    }
+
+    private void TrySetDestination(Vector3 desiredDestination)
+    {
+        NavMeshPath path = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, desiredDestination, NavMesh.AllAreas, path);
+        if (path.corners.Length > 0)
+        {
+            // Go to the last location of the path to the desiredDestination (even if it's unreachable).
+            _navMeshAgent.SetDestination(path.corners.Last());
+            //Debug.Log(path.corners.Last());
         }
     }
 
@@ -175,23 +198,10 @@ public class EnemyManager : MonoBehaviour
                 Vector3 wanderingDirection = UnityEngine.Random.insideUnitSphere * wanderingRadius;
                 wanderingDirection.y = 0f;
                 Vector3 randomPosition = enemyData.spawnPosition + wanderingDirection;
-
-                NavMeshHit hit;
-                if (NavMesh.SamplePosition(randomPosition, out hit, enemyData.height * 2, NavMesh.AllAreas))
-                {
-                    _navMeshAgent.SetDestination(hit.position);
-                    _navMeshAgent.isStopped = false;
-                    _navMeshAgent.speed = enemyData.wanderSpeed;
-                    _navMeshAgent.stoppingDistance = 2f;
-                }
-                else
-                {
-                    _navMeshAgent.SetDestination(randomPosition);
-                    _navMeshAgent.isStopped = false;
-                    _navMeshAgent.speed = enemyData.wanderSpeed;
-                    _navMeshAgent.stoppingDistance = 2f;
-                    Debug.Log("Using random position instead of hit position");
-                }
+                TrySetDestination(randomPosition);
+                _navMeshAgent.isStopped = false;
+                _navMeshAgent.speed = enemyData.wanderSpeed;
+                _navMeshAgent.stoppingDistance = 1f;
                 break;
             case State.CHASING:
                 _navMeshAgent.isStopped = false;
@@ -224,6 +234,22 @@ public class EnemyManager : MonoBehaviour
         if (other.gameObject == enemyData.mainCharacter)
         {
             ChangeState(State.STANDING);
+        }
+    }
+
+    private void AttackingColliderEnter(Collider other)
+    {
+        if (other.gameObject == enemyData.mainCharacter)
+        {
+            ChangeState(State.READY_TO_ATTACK);
+        }
+    }
+
+    private void AttackingColliderExit(Collider other)
+    {
+        if (other.gameObject == enemyData.mainCharacter)
+        {
+            ChangeState(State.CHASING);
         }
     }
 
