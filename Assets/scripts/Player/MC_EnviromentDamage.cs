@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MC_EnviromentDamage : MonoBehaviour
 {
-    MC_AnimationManager mcAnimationManager;
+    private MC_AnimationManager mcAnimationManager;
     public float damagePerSecond = 5f; // Damage without armor
     private float damageCooldown = 1f; // Damage interval
     private bool isTakingDamage = false;

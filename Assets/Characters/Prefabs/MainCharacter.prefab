@@ -5913,7 +5913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c19786e6d5b8ef4384d28cfed7fd06d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 8709735467319045502}
   _animationParameterSpeed: speed
   _animationParameterSprintHeld: sprintHeld
   footstepAudioClips:
@@ -5927,7 +5927,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 67c8b33e424ccdc4486edf538ab91c5a, type: 3}
   - {fileID: 8300000, guid: 274649b0e221539409070ebf6c18918b, type: 3}
   - {fileID: 8300000, guid: a3194b8bbc96ef84fab1f98f4b7dae3e, type: 3}
+  environmentPainSound: {fileID: 8300000, guid: 8fc2889bd152c453197347df0865edb0,
+    type: 3}
   footstepAudioVolume: 0.5
+  environmentPainSoundVolume: 0.8
 --- !u!114 &7030976015949841167
 MonoBehaviour:
   m_ObjectHideFlags: 0
