@@ -24,9 +24,16 @@ public class MC_AnimationManager : AnimationManager
     [SerializeField]
     private AudioClip[] footstepAudioClips;
 
+    [SerializeField]
+    private AudioClip environmentPainSound;
+
     [Range(0, 1)]
     [SerializeField]
-    private float footstepAudioVolume = 0.5f;
+    private float footstepAudioVolume = 0.33f;
+
+    [Range(0, 1)]
+    [SerializeField]
+    private float environmentPainSoundVolume = 0.8f;
 
     private MC_Locomotion locomotion;
     private InputManager inputManager;
@@ -56,6 +63,11 @@ public class MC_AnimationManager : AnimationManager
                 AudioSource.PlayClipAtPoint(footstepAudioClips[index], transform.TransformPoint(locomotion.position), footstepAudioVolume);
             }
         }
+    }
+
+    public void EnvironmentPain()
+    {
+        AudioSource.PlayClipAtPoint(environmentPainSound, transform.TransformPoint(locomotion.position), environmentPainSoundVolume);
     }
 
     private void Update()
