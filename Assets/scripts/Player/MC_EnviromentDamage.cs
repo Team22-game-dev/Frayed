@@ -5,9 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class MC_EnviromentDamage : MonoBehaviour
 {
+    MC_AnimationManager mcAnimationManager;
     public float damagePerSecond = 5f; // Damage without armor
     private float damageCooldown = 1f; // Damage interval
     private bool isTakingDamage = false;
+
 
     private int hazardousLayerIndex = -1; // Index of the purple terrain texture
 
@@ -15,6 +17,7 @@ public class MC_EnviromentDamage : MonoBehaviour
     {
         // Add event listener for scene change.
         SceneManager.activeSceneChanged += OnSceneChange;
+        mcAnimationManager = GetComponent<MC_AnimationManager>();
         SetUp();
     }
 
@@ -57,6 +60,7 @@ public class MC_EnviromentDamage : MonoBehaviour
         while (isTakingDamage)
         {
             PlayerStats.Instance.TakeDamage(damagePerSecond);
+            mcAnimationManager.EnvironmentPain();            
             yield return new WaitForSeconds(damageCooldown);
         }
     }
