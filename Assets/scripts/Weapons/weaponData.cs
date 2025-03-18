@@ -20,6 +20,8 @@ public class WeaponData : MonoBehaviour
     public float attackPower;
     public float damage;
 
+    private MeshCollider damageCollider;
+
     public string DrawAnimation;
     public string SheathAnimation;
 
@@ -91,6 +93,7 @@ public class WeaponData : MonoBehaviour
                 break;
 
             case State.Drawn:
+
                 // Should be drawn and ready for use (attached to hand)
                 if (Weapon != null) Weapon.SetActive(true);
                 if (Sheath != null) Sheath.SetActive(true);

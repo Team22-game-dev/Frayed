@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IWeaponUser
 {
-    bool willPickupWeapon(); // Function where an entity decides if ot will pickup a weapon.
+    bool WillPickupWeapon(); // Function where an entity decides if ot will pickup a weapon.
 
     Dictionary<string, Transform> GetWeaponBoneData { get; } // returns key value pairs of bones that weapons can be parented to.
 

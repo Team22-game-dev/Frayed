@@ -27,7 +27,7 @@ public class MC_EquippedWeapon : EquippedWeaponBase
     }
 
     // from Base Class
-    override public bool willPickupWeapon() // If player would like to pick up the weapon they should press E
+    override public bool WillPickupWeapon() // If player would like to pick up the weapon they should press E
     {
         return Input.GetKeyDown(pickupKey);
     }

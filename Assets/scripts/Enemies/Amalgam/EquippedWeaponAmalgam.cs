@@ -5,10 +5,6 @@ using UnityEngine;
 public class EquippedWeaponAmalgam : EquippedWeaponBase
 {
     // Start is called before the first frame update
-    void Start()
-    {
-        base.Start();
-    }
 
     // Update is called once per frame
     void Update()
@@ -16,7 +12,7 @@ public class EquippedWeaponAmalgam : EquippedWeaponBase
         
     }
 
-    override public bool willPickupWeapon()
+    override public bool WillPickupWeapon()
     {
         return false;
     }

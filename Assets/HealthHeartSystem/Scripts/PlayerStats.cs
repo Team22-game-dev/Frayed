@@ -2,6 +2,8 @@
  *  Author: ariel oliveira [o.arielg@gmail.com]
  */
 
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
@@ -48,7 +50,7 @@ public class PlayerStats : MonoBehaviour
 
         if (health <= 0)
         {
-            GameOver();
+            StartCoroutine(GameOver());
         }
     }
 
@@ -77,9 +79,17 @@ public class PlayerStats : MonoBehaviour
         _skill += 0.1f;
     }
 
-    void GameOver()
+    private IEnumerator GameOver()
     {
+        GameObject _mainCharacter = GameObject.FindGameObjectWithTag("Player");
+
+        OnDeathController onDeathcontroller = _mainCharacter.GetComponent<OnDeathController>();
         GameOverScreen gameOverScreen = FindObjectOfType<GameOverScreen>();
+
+        onDeathcontroller.ActivateRagdoll(Vector3.back, 1f);
+
+        yield return new WaitForSeconds(3f);
+
         if (gameOverScreen != null)
         {
             gameOverScreen.ShowGameOver();

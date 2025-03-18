@@ -1,121 +1,173 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 /*
  * Describes pickup behavior
- * Weapons can be picked up by all of the player, enemies and other NPCs
+ * Weapons can be picked up by the player, enemies, and other NPCs
  */
-
 public class WeaponPickup : MonoBehaviour
 {
-
-    [SerializeField] private WeaponData weaponData; // Reference to the weapon's data
-    [SerializeField] private float pickupRadius = 1.5f; // radius from weapon in which the weapon can be picked up
-
-    private GameObject PotentialUser = null;
     private SphereCollider sphereCollider;
     private Rigidbody rigidBody;
-    [SerializeField] private EquippedWeaponBase userWeaponController;
 
+    [SerializeField]
+    private WeaponData weaponData;
 
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private float pickupRadius = 0.5f; 
+
+    [SerializeField]
+    private List<EquippedWeaponBase> userWeaponController;
+
+    private EquippedWeaponBase newUser;
+
+    // UI Elements
+    [SerializeField]
+    private Sprite pickupPrompt;  // Assign this in the Inspector
+    private Image pickupPromptUI;
+    private Canvas pickupCanvas;
+
+    private void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
-        // add sphere collider to weapon object for its pickup radius
+
+        // Add sphere collider for pickup detection
         sphereCollider = gameObject.AddComponent<SphereCollider>();
         sphereCollider.isTrigger = true;
         sphereCollider.radius = pickupRadius;
         sphereCollider.enabled = true;
 
-        // Set collider to weapon pickup layer
+        userWeaponController = new List<EquippedWeaponBase>();
+
+        CreatePickupUI();
+
+        // Set layer to "Weapons"
         gameObject.layer = LayerMask.NameToLayer("Weapons");
-        
     }
 
-    // Update is called once per frame
-    void Update()
+private void CreatePickupUI()
+{
+    // Create Canvas
+    GameObject canvasGO = new GameObject("PickupCanvas");
+    pickupCanvas = canvasGO.AddComponent<Canvas>();
+    pickupCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+    canvasGO.AddComponent<CanvasScaler>();
+    canvasGO.AddComponent<GraphicRaycaster>();
+
+    // Create Image
+    GameObject imageGO = new GameObject("PickupPrompt");
+    imageGO.transform.SetParent(canvasGO.transform);
+    pickupPromptUI = imageGO.AddComponent<Image>();
+    pickupPromptUI.sprite = pickupPrompt;
+    pickupPromptUI.enabled = false;  // Initially hidden
+
+    // Adjust size while preserving aspect ratio
+    RectTransform rt = pickupPromptUI.GetComponent<RectTransform>();
+
+    if (pickupPrompt != null)
     {
-        // Check if player is in rang and would like to pickup the weapon
-        if((PotentialUser != null) && PickupTrigger())
-        {
-            PickupWeapon();
-        }
-        
+        float originalWidth = pickupPrompt.rect.width;
+        float originalHeight = pickupPrompt.rect.height;
+        float aspectRatio = originalWidth / originalHeight;
+
+        float targetHeight = 50; // Set base height
+        float targetWidth = targetHeight * aspectRatio; // Maintain aspect ratio
+
+        rt.sizeDelta = new Vector2(targetWidth, targetHeight);
     }
-
-    private bool PickupTrigger()
+    else
     {
+        rt.sizeDelta = new Vector2(70, 70);  // Fallback default size
+    }
+}
 
-        if(userWeaponController != null)
-        {
-            return(userWeaponController.willPickupWeapon());
-        }
-        else
-        {
-            Debug.Log("UserWwaponController null when checking for Pickup Trigger");
-            return false;
-        }
 
-                // if enemy or NPC, request if they would like to pick up the weapon whose answer will be context specific
+    private void Update()
+    {
+        if (userWeaponController.Count > 0)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                Vector3 playerWorldPosition = player.transform.position;
+                
+                // Convert player's world position to screen position
+                Vector3 screenPos = Camera.main.WorldToScreenPoint(playerWorldPosition + Vector3.up * .85f);
+                
+                screenPos.x += 200f;
+                // Position UI prompt over player
+                pickupPromptUI.rectTransform.position = screenPos;
+            }
+
+            foreach (EquippedWeaponBase user in userWeaponController)
+            {
+                if (user.WillPickupWeapon())
+                {
+                    newUser = user;
+                    PickupWeapon();
+                    break;
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collider Triggered");
+        if (!(other.CompareTag("Player") || other.CompareTag("Enemy") || other.CompareTag("NPC_WeaponUser")))
+            return;
 
-        userWeaponController = other.GetComponent<EquippedWeaponBase>();
+        EquippedWeaponBase userComponent = other.GetComponent<EquippedWeaponBase>();
+        if (userWeaponController.Contains(userComponent))
+            return;
 
-        if (userWeaponController != null)
+        userWeaponController.Add(userComponent);
+
+        if (other.CompareTag("Player"))
+            pickupPromptUI.enabled = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        EquippedWeaponBase userComponent = other.GetComponent<EquippedWeaponBase>();
+        userWeaponController.Remove(userComponent);
+
+        if (userWeaponController.Count == 0)
         {
-            PotentialUser = other.gameObject;
-            Debug.Log($"{other.gameObject.name} is in range to pick up the weapon.");
+            pickupPromptUI.enabled = false;
         }
     }
-
-
-
-
-
-private void OnTriggerExit(Collider other)
-{
-    if (other.gameObject == PotentialUser)
-    {
-        PotentialUser = null;
-        userWeaponController = null;
-        Debug.Log("Player has left range to pickup weapon.");
-    }
-}
 
     private void PickupWeapon()
     {
-        Debug.Log("Picking Up Weapon!");
-        sphereCollider.enabled = false; // Disable sphere collider
+        pickupPromptUI.enabled = false;
+        sphereCollider.enabled = false;
+        
         rigidBody.isKinematic = true;
         rigidBody.useGravity = false;
 
-
-        if (userWeaponController == null)
+        if (newUser == null)
         {
-            Debug.Log("Tried to equip to null user");
+            Debug.LogError("Attempted to equip a weapon with a null user.");
             return;
         }
 
-        if (userWeaponController.hasWeaponEquipped())
+        if (newUser.hasWeaponEquipped())
         {
-            Debug.Log("To Inventory");
-            // TODO: Send to inventory
+            // TODO: Implement logic to send weapon to inventory
         }
         else
         {
-            // Pass the weapon instance (gameObject) to the equip function
-            userWeaponController.StartEquipWeaponCoroutine(gameObject);
-            userWeaponController.DrawWeapon(false);
+            newUser.StartEquipWeaponCoroutine(gameObject);
+            newUser.DrawWeapon(false);
         }
     }
 
     public void DropWeapon()
     {
         sphereCollider.enabled = true;
+        rigidBody.isKinematic = false;
+        rigidBody.useGravity = true;
     }
 }
