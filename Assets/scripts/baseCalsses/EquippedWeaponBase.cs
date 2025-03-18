@@ -49,7 +49,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
             currentWeaponState = WeaponState.Sheathed;
         else
             currentWeaponState = WeaponState.None;
-        rotationComponent = GetComponent<WeaponRotationData>();
+            rotationComponent = GetComponent<WeaponRotationData>();
         if(rotationComponent == null)
             Debug.LogError("Rotation Component Not found!");
     }
@@ -58,7 +58,10 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     private void SetBoneData()
     {
-        Transform rootBone = GetComponentInChildren<Transform>(); 
+        Transform rootBone = GetComponentInChildren<Transform>();
+
+        if(rootBone == null)
+            Debug.LogError("root bone null");
         
         // Use GetComponentsInChildren to search through all descendants
         WeaponHandFowardR = FindDeepBoneByName(rootBone, "weapon-fwrd-ctrl.R");
@@ -86,7 +89,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     }
 
 
-    public abstract bool willPickupWeapon();
+    public abstract bool WillPickupWeapon();
 
     // function to pass the bone data to the weapon
     public Dictionary<string, Transform> GetWeaponBoneData

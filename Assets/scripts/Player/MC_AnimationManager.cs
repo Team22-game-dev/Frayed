@@ -43,7 +43,7 @@ public class MC_AnimationManager : AnimationManager
         SetFloat(_animationParameterSpeed, speed);
     }
     
-    protected void Start()
+    new protected void Start()
     {
         base.Start();
         locomotion = GetComponent<MC_Locomotion>();

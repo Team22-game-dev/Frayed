@@ -97,6 +97,9 @@ public class EnemyData : MonoBehaviour
        // currentHealth = startingHealth = _baseHealth * playerStats._skill;
 //        currentAttackPower = _baseAttackPower * playerStats._skill;
     }
-    
+    public float GetAttackPower()
+    {
+        return _baseAttackPower;
+    }
 
 }

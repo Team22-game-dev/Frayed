@@ -97,7 +97,7 @@ public class AmalgamAttack : EnemyAttack
 
 
 
-    void Start()
+    new void Start()
     {
         Debug.Log("AmalgamAttack Start");
         Debug.Log("Addign colliders to " + gameObject.name);
