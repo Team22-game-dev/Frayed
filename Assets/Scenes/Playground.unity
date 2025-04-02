@@ -187,11 +187,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2123062433608041310, guid: 0d981414cbbfb94d397e2e9ff7787b32,
-        type: 3}
-      propertyPath: _baseAttackPower
-      value: 0.25
-      objectReference: {fileID: 0}
     - target: {fileID: 2867637006469518429, guid: 0d981414cbbfb94d397e2e9ff7787b32,
         type: 3}
       propertyPath: m_Name
@@ -1370,8 +1365,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animationManager: {fileID: 0}
-  ragdollBodies: []
-  ragdollColliders: []
   characterController: {fileID: 0}
 --- !u!1 &1028513131
 GameObject:

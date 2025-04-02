@@ -819,7 +819,7 @@ MonoBehaviour:
   _attackDuration: 1
   _height: 2
   _baseHealth: 100
-  _baseAttackPower: 10
+  _baseAttackPower: 0.25
   _mainCharacter: {fileID: 0}
 --- !u!114 &6546940443472890167
 MonoBehaviour:
