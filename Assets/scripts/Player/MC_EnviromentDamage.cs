@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(MC_AudioManager))]
+
 public class MC_EnviromentDamage : MonoBehaviour
 {
-    private MC_AnimationManager mcAnimationManager;
+    private MC_AudioManager audioManager;
     public float damagePerSecond = 5f; // Damage without armor
     private float damageCooldown = 1f; // Damage interval
     private bool isTakingDamage = false;
@@ -17,7 +19,8 @@ public class MC_EnviromentDamage : MonoBehaviour
     {
         // Add event listener for scene change.
         SceneManager.activeSceneChanged += OnSceneChange;
-        mcAnimationManager = GetComponent<MC_AnimationManager>();
+        audioManager = GetComponent<MC_AudioManager>();
+        Debug.Assert(audioManager != null);
         SetUp();
     }
 
@@ -60,7 +63,7 @@ public class MC_EnviromentDamage : MonoBehaviour
         while (isTakingDamage)
         {
             PlayerStats.Instance.TakeDamage(damagePerSecond);
-            mcAnimationManager.EnvironmentPain();            
+            audioManager.PlayEnvironmentPainAudio();        
             yield return new WaitForSeconds(damageCooldown);
         }
     }
