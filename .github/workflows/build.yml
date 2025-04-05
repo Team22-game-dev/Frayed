@@ -19,6 +19,7 @@ jobs:
         targetPlatform:
           - StandaloneWindows64
           - StandaloneLinux64
+          - WebGL
     steps:
       # Checkout
       - name: Checkout repository

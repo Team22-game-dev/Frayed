@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyData : MonoBehaviour
 {
@@ -18,8 +19,8 @@ public class EnemyData : MonoBehaviour
 
     public Vector3 spawnPosition { get { return _spawnPosition; } private set { _spawnPosition = value; } }
 
-    public float getenemyhealth { get {return currentHealth; } }
-    public float getAttackPower { get { return currentAttackPower; } }
+    public float baseHealth { get { return _baseHealth; } }
+    public float currentHealth { get {return _currentHealth; } }
 
     [Header("Wander Fields")]
     [SerializeField]
@@ -58,25 +59,38 @@ public class EnemyData : MonoBehaviour
 
     [Header("Enemy Stats")]
     [SerializeField]
-    private float _baseHealth = 100f; 
-    private float startingHealth;
-    private float currentHealth;
+    private float _baseHealth = 100f;
+    [SerializeField]
+    private float _startingHealth;
+    [SerializeField]
+    private float _currentHealth;
 
     [SerializeField]
     private float _baseAttackPower = 1f;
-    private float currentAttackPower;
 
     [Header("Game Information")]
     [SerializeField]
     private GameObject _mainCharacter;
+    [SerializeField]
+    private GameObject mainCamera;
+
     private PlayerStats playerStats;
+
+
+    [Header("Health Slider Fields")]
+    GameObject healthBarSliderGameObject;
+    private Slider healthBarSlider;
+    [SerializeField]
+    private float healthBarSliderZ = 0.75f;
+    [SerializeField]
+    private float healthBarSliderY = 2.25f;
 
 
     private Vector3 _spawnPosition;
 
     public float GetHealthRatio()
     {
-        return currentHealth / startingHealth;
+        return _currentHealth / _startingHealth;
     }
 
     private void Start()
@@ -87,15 +101,46 @@ public class EnemyData : MonoBehaviour
         }
         Debug.Assert(_mainCharacter != null);
 
+        if (mainCamera == null)
+        {
+            mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        }
+        Debug.Assert(mainCamera != null);
+
         _spawnPosition = this.transform.position;
         if (playerStats == null)
         {
             playerStats = _mainCharacter.GetComponent<PlayerStats>();
         }
 
+        healthBarSliderGameObject = transform.Find("EnemyHealthBar/Slider").gameObject;
+        Debug.Assert(healthBarSliderGameObject != null);
+        healthBarSliderGameObject.transform.localPosition = new Vector3(0, healthBarSliderY, healthBarSliderZ);
+        healthBarSlider = healthBarSliderGameObject.GetComponent<Slider>();
+        Debug.Assert(healthBarSlider != null);
+
+        // Temp starting health.
+        _startingHealth = _baseHealth;
+        _currentHealth = _startingHealth;
+
         // Assign the value to startingHealth only once
-       // currentHealth = startingHealth = _baseHealth * playerStats._skill;
+       // _currentHealth = _startingHealth = _baseHealth * playerStats._skill;
 //        currentAttackPower = _baseAttackPower * playerStats._skill;
+    }
+
+    private void Update()
+    {
+        healthBarSlider.value = GetHealthRatio();
+        Vector3 sliderDirection = (mainCamera.transform.position - healthBarSliderGameObject.transform.position).normalized;
+        healthBarSliderGameObject.transform.rotation = Quaternion.LookRotation(sliderDirection);
+        if (Mathf.Approximately(healthBarSlider.value, 1f))
+        {
+            //healthBarSliderGameObject.SetActive(false);
+        } 
+        else
+        {
+            healthBarSliderGameObject.SetActive(true);
+        }
     }
     public float GetAttackPower()
     {

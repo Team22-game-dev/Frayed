@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - CinemachineTarget
+  - Enemy
+  - NPC_WeaponUser
   layers:
   - Default
   - TransparentFX
