@@ -3,18 +3,16 @@ using UnityEngine;
 
 public class OnDeathController : MonoBehaviour
 {
-    public AnimationManager animationManager; // Animator reference
-    public CharacterController characterController; // CharacterController reference
-    private Rigidbody[] ragdollBodies; // Rigidbodies added at runtime
-    private Collider[] ragdollColliders; // Colliders added at runtime
-    private bool isRagdollActive = false; // Prevent multiple activations
+    public AnimationManager animationManager;
+    public CharacterController characterController;
+    private Rigidbody[] ragdollBodies;
+    private Collider[] ragdollColliders;
+    private bool isRagdollActive = false;
 
     private void Start()
     {
         animationManager = GetComponent<AnimationManager>();
         characterController = GetComponent<CharacterController>();
-
-        // Initialize arrays to empty; they will be populated on ragdoll activation
         ragdollBodies = new Rigidbody[0];
         ragdollColliders = new Collider[0];
     }
@@ -45,116 +43,118 @@ public class OnDeathController : MonoBehaviour
             return;
 
         isRagdollActive = true;
-
-        // Add colliders and rigidbodies dynamically
         GenerateRagdollComponents();
-
-        // Enable ragdoll physics
         SetRagdollState(true);
-
-        // Apply force after physics update
         StartCoroutine(ApplyDeathForce(forceDirection, forceStrength));
     }
 
-private void GenerateRagdollComponents()
-{
-    var rigidbodies = new System.Collections.Generic.List<Rigidbody>();
-    var colliders = new System.Collections.Generic.List<Collider>();
-
-    foreach (Transform bone in GetComponentsInChildren<Transform>())
+    private void GenerateRagdollComponents()
     {
-        if (bone == transform)
-            continue;
+        var rigidbodies = new System.Collections.Generic.List<Rigidbody>();
+        var colliders = new System.Collections.Generic.List<Collider>();
 
-        // Add Rigidbody if not present
-        Rigidbody rb = bone.GetComponent<Rigidbody>();
-        if (rb == null)
+        foreach (Transform bone in GetComponentsInChildren<Transform>())
         {
-            rb = bone.gameObject.AddComponent<Rigidbody>();
-            rb.isKinematic = true; // Initially kinematic
-            rb.mass = 1f; // Adjust mass as needed
-            rb.drag = 0.5f; // Add drag to stabilize
-            rb.angularDrag = 0.5f;
-        }
-        rigidbodies.Add(rb);
+            if (bone == transform)
+                continue;
 
-        // Add Collider if not present
-        Collider col = bone.GetComponent<Collider>();
-        if (col == null)
-        {
-            if (bone.name.Contains("Arm") || bone.name.Contains("Leg"))
-            {
-                // Use CapsuleCollider for limbs
-                CapsuleCollider capsule = bone.gameObject.AddComponent<CapsuleCollider>();
-                capsule.direction = 2; // Z-axis direction
-                capsule.height = 0.5f; // Adjust to match bone length
-                capsule.radius = 0.1f; // Adjust to match bone thickness
-                capsule.center = Vector3.zero; // Adjust to align with bone
-                col = capsule;
-            }
-            else
-            {
-                // Use BoxCollider for torso, head, etc.
-                BoxCollider box = bone.gameObject.AddComponent<BoxCollider>();
-                box.size = new Vector3(0.2f, 0.2f, 0.2f); // Adjust size as needed
-                box.center = Vector3.zero; // Adjust to align with bone
-                col = box;
-            }
-        }
+            string boneName = bone.name.ToLower();
 
-        col.enabled = false; // Disable until ragdoll activation
-        colliders.Add(col);
-
-        // Add Joint if not present
-        if (bone.parent != null && bone.parent != transform)
-        {
-            Rigidbody parentRb = bone.parent.GetComponent<Rigidbody>();
-            if (parentRb != null)
+            // Ensure bone name contains "DEF" and matches the specified keywords
+            if (boneName.Contains("DEF") &&
+                (boneName.Contains("spine") || boneName.Contains("arm") ||
+                boneName.Contains("thigh") || boneName.Contains("shin") || boneName.Contains("head")))
             {
-                ConfigurableJoint joint = bone.GetComponent<ConfigurableJoint>();
-                if (joint == null)
+                // Add Rigidbody if not present
+                Rigidbody rb = bone.GetComponent<Rigidbody>();
+                if (rb == null)
                 {
-                    joint = bone.gameObject.AddComponent<ConfigurableJoint>();
-                    joint.connectedBody = parentRb;
+                    rb = bone.gameObject.AddComponent<Rigidbody>();
+                    rb.isKinematic = true; // Initially kinematic
+                    rb.mass = 1f;
+                    rb.drag = 0.5f;
+                    rb.angularDrag = 0.5f;
+                }
+                rigidbodies.Add(rb);
 
-                    // Lock linear motion
-                    joint.xMotion = ConfigurableJointMotion.Locked;
-                    joint.yMotion = ConfigurableJointMotion.Locked;
-                    joint.zMotion = ConfigurableJointMotion.Locked;
+                // Add Collider if not present
+                Collider col = bone.GetComponent<Collider>();
+                if (col == null)
+                {
+                    if (boneName.Contains("arm") || boneName.Contains("thigh") || boneName.Contains("shin") || boneName.Contains("head"))
+                    {
+                        // Use CapsuleCollider for limbs
+                        CapsuleCollider capsule = bone.gameObject.AddComponent<CapsuleCollider>();
+                        capsule.direction = 2; // Z-axis
+                        capsule.height = 0.5f;
+                        capsule.radius = 0.1f;
+                        capsule.center = Vector3.zero;
+                        col = capsule;
+                    }
+                    else
+                    {
+                        // Use BoxCollider for the spine
+                        BoxCollider box = bone.gameObject.AddComponent<BoxCollider>();
+                        box.size = new Vector3(0.2f, 0.2f, 0.2f);
+                        box.center = Vector3.zero;
+                        col = box;
+                    }
+                }
 
-                    // Configure angular motion
-                    joint.angularXMotion = ConfigurableJointMotion.Limited;
-                    joint.angularYMotion = ConfigurableJointMotion.Limited;
-                    joint.angularZMotion = ConfigurableJointMotion.Limited;
+                col.enabled = false; // Disable until ragdoll activation
+                colliders.Add(col);
 
-                    // Set rotation limits
-                    SoftJointLimit lowTwistLimit = new SoftJointLimit { limit = -20f };
-                    SoftJointLimit highTwistLimit = new SoftJointLimit { limit = 20f };
-                    SoftJointLimit swing1Limit = new SoftJointLimit { limit = 30f };
-                    SoftJointLimit swing2Limit = new SoftJointLimit { limit = 30f };
+                // Add Joint if not present
+                if (bone.parent != null && bone.parent != transform)
+                {
+                    Rigidbody parentRb = bone.parent.GetComponent<Rigidbody>();
+                    if (parentRb != null)
+                    {
+                        ConfigurableJoint joint = bone.GetComponent<ConfigurableJoint>();
+                        if (joint == null)
+                        {
+                            joint = bone.gameObject.AddComponent<ConfigurableJoint>();
+                            joint.connectedBody = parentRb;
 
-                    joint.lowAngularXLimit = lowTwistLimit;
-                    joint.highAngularXLimit = highTwistLimit;
-                    joint.angularYLimit = swing1Limit;
-                    joint.angularZLimit = swing2Limit;
+                            // Lock linear motion
+                            joint.xMotion = ConfigurableJointMotion.Locked;
+                            joint.yMotion = ConfigurableJointMotion.Locked;
+                            joint.zMotion = ConfigurableJointMotion.Locked;
 
-                    joint.enablePreprocessing = false; // Helps prevent instability
+                            // Configure angular motion
+                            joint.angularXMotion = ConfigurableJointMotion.Limited;
+                            joint.angularYMotion = ConfigurableJointMotion.Limited;
+                            joint.angularZMotion = ConfigurableJointMotion.Limited;
+
+                            // Set rotation limits
+                            SoftJointLimit lowTwistLimit = new SoftJointLimit { limit = -20f };
+                            SoftJointLimit highTwistLimit = new SoftJointLimit { limit = 20f };
+                            SoftJointLimit swing1Limit = new SoftJointLimit { limit = 30f };
+                            SoftJointLimit swing2Limit = new SoftJointLimit { limit = 30f };
+
+                            joint.lowAngularXLimit = lowTwistLimit;
+                            joint.highAngularXLimit = highTwistLimit;
+                            joint.angularYLimit = swing1Limit;
+                            joint.angularZLimit = swing2Limit;
+
+                            joint.enablePreprocessing = false; // Helps prevent instability
+                        }
+                    }
                 }
             }
         }
+
+        ragdollBodies = rigidbodies.ToArray();
+        ragdollColliders = colliders.ToArray();
     }
 
-    ragdollBodies = rigidbodies.ToArray();
-    ragdollColliders = colliders.ToArray();
-}
 
     private IEnumerator ApplyDeathForce(Vector3 forceDirection, float forceStrength)
     {
-        yield return new WaitForSeconds(0.1f); // Wait for physics to stabilize
+        yield return new WaitForSeconds(0.1f);
 
         if (ragdollBodies.Length > 0)
         {
-            // Apply force to all rigidbodies for a more stable effect
             foreach (Rigidbody rb in ragdollBodies)
             {
                 rb.AddForce(forceDirection.normalized * forceStrength, ForceMode.VelocityChange);

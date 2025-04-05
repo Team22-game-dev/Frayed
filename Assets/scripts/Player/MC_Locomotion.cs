@@ -125,6 +125,7 @@ public class MC_Locomotion : MonoBehaviour
     {
         JumpAndGravity();
         GroundedCheck();
+        animationManager.SetBool("Grounded", _grounded);
         Move();
     }
 
@@ -228,6 +229,15 @@ public class MC_Locomotion : MonoBehaviour
             // Jump
             if (inputManager.jump && jumpTimeoutDelta <= 0.0f)
             {
+                if(_speed>0)
+                {
+                    animationManager.SetTrigger("JumpFoward");
+                }
+                else
+                {
+                    animationManager.SetTrigger("JumpInPlace");
+                }
+                
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
                 _verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
 

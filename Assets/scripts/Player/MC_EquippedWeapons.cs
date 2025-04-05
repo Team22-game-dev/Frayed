@@ -32,5 +32,26 @@ public class MC_EquippedWeapon : EquippedWeaponBase
         return Input.GetKeyDown(pickupKey);
     }
 
+    public void SheathWeapon()
+    {
+        if(animationManager.GetCurrentAnimationName() == "encounter_idle")
+        {
+            // play sheathing Animation animation
+            if(weaponData != null && currentWeaponState == WeaponState.Drawn)
+            {
+                animationManager.SetTrigger(weaponData.SheathAnimation);
+            }
+            else
+            {
+                Debug.LogError("weaponData null or weapon in wrong state");
+            }
+        }
+        else
+        {
+            // dont play sheatingn animation
+            OnSheathWeapon();
+        }
+    }
+
 
 }
