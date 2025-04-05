@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 {
-    [SerializeField] private WeaponData weaponData; // local copy of weapon data
+    [SerializeField] protected WeaponData weaponData; // local copy of weapon data
     [SerializeField] private GameObject equippedWeapon; // Add equippedWeapon GameObject
 
     // to be filled with tranforms of bones the weapon will target
@@ -17,7 +17,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     private WeaponRotationData rotationComponent;  // Reference to the WeaponRotationComponent
 
-    private AnimationManager animationManager;
+    protected AnimationManager animationManager;
 
     public enum WeaponState
     {
@@ -107,118 +107,118 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         }
     }
 
-public IEnumerator EquipWeapon()
-{
-    if (weaponData == null || weaponData.Weapon == null)
+    public IEnumerator EquipWeapon()
     {
-        Debug.LogWarning("weaponData or weaponData.Weapon is null.");
-        yield break;
-    }
-
-    // Ensure weaponData.Weapon is an instance in the scene
-    if (!weaponData.Weapon.scene.IsValid())
-    {
-        Debug.LogError("weaponData.Weapon is not an instance in the scene. It might be a prefab asset.");
-        yield break;
-    }
-
-    GameObject weaponToEquip = weaponData.Weapon;
-    Debug.Log("Attempting to equip weapon: " + weaponToEquip.name);
-
-    if (animationManager == null)
-    {
-        Debug.LogError("AnimationManager is null");
-        yield break;
-    }
-
-    // Wait for the animation to finish
-    string animationName;
-    float startTime = Time.time;
-    float weaponSwitchTimeLimit = 0.5f;
-
-    do
-    {
-        animationName = animationManager.GetCurrentAnimationName();
-        if (animationName == "transition")
+        if (weaponData == null || weaponData.Weapon == null)
         {
-            Debug.Log("Animation in transition!");
-            yield return new WaitForSeconds(0.033f);
-        }
-
-        if (Time.time - startTime > weaponSwitchTimeLimit)
-        {
-            Debug.LogWarning($"Weapon equip timed out while waiting for animation to finish. Last animation: {animationName}");
+            Debug.LogWarning("weaponData or weaponData.Weapon is null.");
             yield break;
         }
-    } while (animationName == "transition");
 
-    if (!animationName.StartsWith("attack_"))
-    {
-        Debug.Log("All good to equip weapon");
-
-        equippedWeapon = weaponToEquip;
-
-        if (weaponData != null)
+        // Ensure weaponData.Weapon is an instance in the scene
+        if (!weaponData.Weapon.scene.IsValid())
         {
-            weaponData.SetUserData(this);
+            Debug.LogError("weaponData.Weapon is not an instance in the scene. It might be a prefab asset.");
+            yield break;
+        }
 
-            // Properly set the parent
-            if (weaponData.SheathedBone != null)
+        GameObject weaponToEquip = weaponData.Weapon;
+        Debug.Log("Attempting to equip weapon: " + weaponToEquip.name);
+
+        if (animationManager == null)
+        {
+            Debug.LogError("AnimationManager is null");
+            yield break;
+        }
+
+        // Wait for the animation to finish
+        string animationName;
+        float startTime = Time.time;
+        float weaponSwitchTimeLimit = 0.5f;
+
+        do
+        {
+            animationName = animationManager.GetCurrentAnimationName();
+            if (animationName == "transition")
             {
-                equippedWeapon.transform.SetParent(weaponData.SheathedBone);
-                equippedWeapon.transform.localPosition = Vector3.zero;
-                equippedWeapon.transform.localRotation = Quaternion.identity;
+                Debug.Log("Animation in transition!");
+                yield return new WaitForSeconds(0.033f);
+            }
+
+            if (Time.time - startTime > weaponSwitchTimeLimit)
+            {
+                Debug.LogWarning($"Weapon equip timed out while waiting for animation to finish. Last animation: {animationName}");
+                yield break;
+            }
+        } while (animationName == "transition");
+
+        if (!animationName.StartsWith("attack_"))
+        {
+            Debug.Log("All good to equip weapon");
+
+            equippedWeapon = weaponToEquip;
+
+            if (weaponData != null)
+            {
+                weaponData.SetUserData(this);
+
+                // Properly set the parent
+                if (weaponData.SheathedBone != null)
+                {
+                    equippedWeapon.transform.SetParent(weaponData.SheathedBone);
+                    equippedWeapon.transform.localPosition = Vector3.zero;
+                    equippedWeapon.transform.localRotation = Quaternion.identity;
+                }
+                else
+                {
+                    Debug.LogWarning("weaponData.SheathedBone is null!");
+                    // some enemies dont have sheathes try draw weapon
+                    DrawWeapon(false);
+                }
             }
             else
             {
-                Debug.LogWarning("weaponData.SheathedBone is null!");
-                // some enemies dont have sheathes try draw weapon
-                DrawWeapon(false);
+                Debug.LogError("WeaponData component not found on the equipped weapon.");
             }
         }
-        else
-        {
-            Debug.LogError("WeaponData component not found on the equipped weapon.");
-        }
     }
-}
 
     // local function to start the equip weapon coroutine
-public void StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
-{
-    if (pickedUpWeapon == null)
+    public void StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
     {
-        Debug.LogWarning("pickedUpWeapon is null");
-        return;
+        if (pickedUpWeapon == null)
+        {
+            Debug.LogWarning("pickedUpWeapon is null");
+            return;
+        }
+
+        // Get the WeaponData component from the picked-up weapon
+        WeaponData newWeaponData = pickedUpWeapon.GetComponent<WeaponData>();
+
+        if (newWeaponData == null)
+        {
+            Debug.LogError("newWeaponData is null");
+            return;
+        }
+
+        newWeaponData.Weapon = pickedUpWeapon;
+
+        Debug.Log("newWeaponData.Weapon: " + newWeaponData.Weapon);
+
+        // Assign the new weapon data
+        weaponData = newWeaponData;
+
+        
+
+        // Destroy the old equipped weapon if any
+        if (equippedWeapon != null)
+        {
+            Destroy(equippedWeapon);
+        }
+
+        Debug.Log("Starting equip weapon coroutine...");
+        StartCoroutine(EquipWeapon());
     }
-
-    // Get the WeaponData component from the picked-up weapon
-    WeaponData newWeaponData = pickedUpWeapon.GetComponent<WeaponData>();
-
-    if (newWeaponData == null)
-    {
-        Debug.LogError("newWeaponData is null");
-        return;
-    }
-
-    newWeaponData.Weapon = pickedUpWeapon;
-
-    Debug.Log("newWeaponData.Weapon: " + newWeaponData.Weapon);
-
-    // Assign the new weapon data
-    weaponData = newWeaponData;
-
-    
-
-    // Destroy the old equipped weapon if any
-    if (equippedWeapon != null)
-    {
-        Destroy(equippedWeapon);
-    }
-
-    Debug.Log("Starting equip weapon coroutine...");
-    StartCoroutine(EquipWeapon());
-}
 
 
 
@@ -289,30 +289,11 @@ public void StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
             // Two Handed Equip Logic (stretch goal)
         }
 
+        animationManager.SetBool("WeaponDrawn", true);
+
         ApplyWeaponRotation();
 
  
-    }
-
-    public void SheathWeapon()
-    {
-        if(animationManager.GetCurrentAnimationName() == "encounter_idle")
-        {
-            // play sheathing Animation animation
-            if(weaponData != null && currentWeaponState == WeaponState.Drawn)
-            {
-                animationManager.SetTrigger(weaponData.SheathAnimation);
-            }
-            else
-            {
-                Debug.LogError("weaponData null or weapon in wrong state");
-            }
-        }
-        else
-        {
-            // dont play sheatingn animation
-            OnSheathWeapon();
-        }
     }
 
     public void OnSheathWeapon()
