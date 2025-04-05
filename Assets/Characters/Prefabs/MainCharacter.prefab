@@ -16,7 +16,9 @@ GameObject:
   - component: {fileID: 7005419985995812074}
   - component: {fileID: 7030976015949841167}
   - component: {fileID: 4792826243224289047}
+  - component: {fileID: 9072756349897246931}
   - component: {fileID: 8612749129740152534}
+  - component: {fileID: 1643991919224708024}
   m_Layer: 3
   m_Name: MainCharacter
   m_TagString: Player
@@ -196,6 +198,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comboWindowTime: 0.5
   clickBuffer: 0.25
+--- !u!114 &9072756349897246931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2456836682300840533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01728b4420151425680bf246dd1689eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8612749129740152534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,6 +223,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damagePerSecond: 0.25
+--- !u!114 &1643991919224708024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2456836682300840533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c3e0b6a004cf2e6fabec450ad3f913b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationManager: {fileID: 0}
+  characterController: {fileID: 0}
 --- !u!1 &8244900443576938951
 GameObject:
   m_ObjectHideFlags: 0

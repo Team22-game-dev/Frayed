@@ -7,20 +7,41 @@ using Frayed.Input;
 
 public class GameOverScreen : MonoBehaviour
 {
+
+    // Singleton Design
+    private static GameOverScreen _instance;
+    public static GameOverScreen Instance => _instance;
+
     public GameObject GameOverBackground; // Reference to the background
     public UnityEngine.UI.Text GameOverText; // Explicit namespace
     public Button RestartButton, MainMenuButton;
+    public Vector3 gameOverTextStartPosition;
 
     private RectTransform gameOverTextRect;
-    private bool gameOverTriggered = false; // Prevent multiple calls
+
+    public bool gameOverTriggered { get { return GameOverBackground != null && GameOverBackground.activeSelf; } } // Prevent multiple calls
+
     private OptionsMenu optionsMenu;
     private InputManager inputManager;
+
+    private void Awake()
+    {
+        // Singleton pattern with explicit null check
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     void Start()
     {
         gameOverTextRect = GameOverText.GetComponent<RectTransform>();
         optionsMenu = OptionsMenu.Instance;
         inputManager = InputManager.Instance;
+        gameOverTextStartPosition = gameOverTextRect.anchoredPosition;
 
         // Hide all Game Over UI elements at start
         HideGameOver();
@@ -37,8 +58,7 @@ public class GameOverScreen : MonoBehaviour
     public void ShowGameOver()
     {
         if (gameOverTriggered) return; // Prevent multiple activations
-        gameOverTriggered = true;
-
+        gameOverTextRect.anchoredPosition = gameOverTextStartPosition;
         // Unlock mouse and lock movement.
         inputManager.UnlockMouse();
         inputManager.LockMovement();
@@ -51,7 +71,7 @@ public class GameOverScreen : MonoBehaviour
     {
         GameOverText.gameObject.SetActive(true);
 
-        Vector2 startPosition = gameOverTextRect.anchoredPosition;
+        Vector2 startPosition = gameOverTextStartPosition;
         Vector2 endPosition = new Vector2(startPosition.x, startPosition.y + 55);
 
         yield return new WaitForSeconds(2f);
@@ -78,21 +98,22 @@ public class GameOverScreen : MonoBehaviour
 
     public void RestartGame()
     {
-        UnityEngine.Debug.Log("HERE");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        HideGameOver();
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        // TODO: Use optionsMenu to reload scene for now.
+        optionsMenu.LoadScene(SceneManager.GetActiveScene().name);
         // Lock mouse and unlock movement and unpause game.
         inputManager.LockMouse();
         inputManager.UnlockMovement();
         Time.timeScale = 1f;
         // TODO: Improve logic, respawn.
-        GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = false;
-        GameObject.FindGameObjectWithTag("Player").transform.position = new Vector3(504.94f, 0f, 106.3f);
-        GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = true;
+        //GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = false;
+        //GameObject.FindGameObjectWithTag("Player").transform.position = new Vector3(504.94f, 0f, 106.3f);
+        //GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = true;
     }
 
     public void MainMenu()
     {
-        UnityEngine.Debug.Log("HERE");
         HideGameOver();
         optionsMenu.Toggle(true);
     }

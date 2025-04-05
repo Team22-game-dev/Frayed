@@ -37,15 +37,17 @@ public class OnDeathController : MonoBehaviour
             characterController.enabled = !isRagdoll;
     }
 
-    public void ActivateRagdoll(Vector3 forceDirection, float forceStrength)
+    public IEnumerator ActivateRagdoll(Vector3 forceDirection, float forceStrength)
     {
         if (isRagdollActive)
-            return;
+            yield return null;
 
         isRagdollActive = true;
         GenerateRagdollComponents();
         SetRagdollState(true);
-        StartCoroutine(ApplyDeathForce(forceDirection, forceStrength));
+        yield return StartCoroutine(ApplyDeathForce(forceDirection, forceStrength));
+        SetRagdollState(false);
+        isRagdollActive = false;
     }
 
     private void GenerateRagdollComponents()

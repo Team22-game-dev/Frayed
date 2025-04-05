@@ -18,6 +18,8 @@ public class OptionsMenu : MonoBehaviour
 
     private InputManager inputManager;
     private GameObject canvas;
+
+    private GameOverScreen gameOverScreen;
     private void Awake()
     {
         // Singleton pattern with explicit null check
@@ -35,6 +37,9 @@ public class OptionsMenu : MonoBehaviour
         inputManager = InputManager.Instance;
         canvas = this.transform.Find("Canvas").gameObject;
         Debug.Assert(canvas != null);
+
+        gameOverScreen = GameOverScreen.Instance;
+        Debug.Assert(gameOverScreen != null);
 
         Toggle(_toggled);
     }
@@ -64,7 +69,10 @@ public class OptionsMenu : MonoBehaviour
     {
         if (inputManager.optionsMenu)
         {
-            Toggle(!_toggled);
+            if (!gameOverScreen.gameOverTriggered)
+            {
+                Toggle(!_toggled);
+            }
             // Finished with the button input, set back to false.
             inputManager.optionsMenu = false;
         }
