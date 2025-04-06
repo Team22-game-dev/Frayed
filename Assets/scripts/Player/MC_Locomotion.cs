@@ -12,6 +12,7 @@ using Frayed.Input;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(MC_AnimationManager))]
 [RequireComponent(typeof(MC_Attack))]
+[RequireComponent(typeof(MC_AudioManager))]
 public class MC_Locomotion : MonoBehaviour
 {
 
@@ -96,6 +97,7 @@ public class MC_Locomotion : MonoBehaviour
     private InputManager inputManager;
     private CameraManager cameraManager;
     private MC_Attack attack;
+    private MC_AudioManager audioManager;
 
 
     private void Awake()
@@ -117,8 +119,13 @@ public class MC_Locomotion : MonoBehaviour
         Debug.Assert(cameraManager != null);
 
         animationManager = GetComponent<MC_AnimationManager>();
+        Debug.Assert(animationManager != null);
 
         attack = GetComponent<MC_Attack>();
+        Debug.Assert(attack != null);
+
+        audioManager = GetComponent<MC_AudioManager>();
+        Debug.Assert(audioManager != null);
     }
 
     private void Update()
@@ -135,8 +142,15 @@ public class MC_Locomotion : MonoBehaviour
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - groundedOffset,
             transform.position.z);
 
-        _grounded = Physics.CheckSphere(spherePosition, groundedRadius, groundLayers,
+        bool newGrounded = Physics.CheckSphere(spherePosition, groundedRadius, groundLayers,
             QueryTriggerInteraction.Ignore);
+
+        if (!_grounded && newGrounded)
+        {
+            audioManager.PlayLandingAudio();
+        }
+
+        _grounded = newGrounded;
 
     }
 
@@ -206,8 +220,12 @@ public class MC_Locomotion : MonoBehaviour
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
         // move the player
-        _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                         new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+        if (_controller.enabled)
+        {
+            _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
+                            new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
+        }
 
         _position = _controller.center;
         // Update animation

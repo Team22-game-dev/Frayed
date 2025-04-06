@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 
-[RequireComponent(typeof(MC_Locomotion))]
+[RequireComponent(typeof(MC_AudioManager))]
 public class MC_AnimationManager : AnimationManager
 {
 
@@ -20,23 +20,8 @@ public class MC_AnimationManager : AnimationManager
     [SerializeField]
     private string _animationParameterSprintHeld = "sprintHeld";
 
-
-    [SerializeField]
-    private AudioClip[] footstepAudioClips;
-
-    [SerializeField]
-    private AudioClip environmentPainSound;
-
-    [Range(0, 1)]
-    [SerializeField]
-    private float footstepAudioVolume = 0.33f;
-
-    [Range(0, 1)]
-    [SerializeField]
-    private float environmentPainSoundVolume = 0.8f;
-
-    private MC_Locomotion locomotion;
     private InputManager inputManager;
+    private MC_AudioManager audioManager;
 
     public void SetSpeed(float speed)
     {
@@ -46,28 +31,20 @@ public class MC_AnimationManager : AnimationManager
     new protected void Start()
     {
         base.Start();
-        locomotion = GetComponent<MC_Locomotion>();
-        Debug.Assert(locomotion != null);
 
         inputManager = InputManager.Instance;
         Debug.Assert(inputManager != null);
+
+        audioManager = GetComponent<MC_AudioManager>();
+        Debug.Assert(audioManager != null);
     }
 
     private void OnFootstep(AnimationEvent animationEvent)
     {
-        if (animationEvent.animatorClipInfo.weight > 0.5f && locomotion.grounded)
+        if (animationEvent.animatorClipInfo.weight > 0.5f)
         {
-            if (footstepAudioClips.Length > 0)
-            {
-                var index = Random.Range(0, footstepAudioClips.Length);
-                AudioSource.PlayClipAtPoint(footstepAudioClips[index], transform.TransformPoint(locomotion.position), footstepAudioVolume);
-            }
+            audioManager.PlayFootStepAudio();
         }
-    }
-
-    public void EnvironmentPain()
-    {
-        AudioSource.PlayClipAtPoint(environmentPainSound, transform.TransformPoint(locomotion.position), environmentPainSoundVolume);
     }
 
     private void Update()
