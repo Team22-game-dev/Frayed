@@ -818,13 +818,14 @@ MonoBehaviour:
   _chaseSpeed: 2.5
   _attackRadius: 1.75
   _attackDuration: 1
+  _attackRotationSpeed: 2.5
   _height: 2
   _baseHealth: 100
   _startingHealth: 0
   _currentHealth: 0
   _baseAttackPower: 0.25
   _mainCharacter: {fileID: 0}
-  healthBarSlider: {fileID: 0}
+  mainCamera: {fileID: 0}
   healthBarSliderZ: 0.7
   healthBarSliderY: 2.25
 --- !u!114 &6546940443472890167

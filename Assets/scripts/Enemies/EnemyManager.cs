@@ -154,6 +154,12 @@ public class EnemyManager : MonoBehaviour
 
     private void HandleAttackingState()
     {
+        // Make sure to look toward the player when attacking. In chasing state, looking toward the player is handled by the navAgent.
+        Vector3 direction = enemyData.mainCharacter.transform.position - transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        Quaternion currentRotation = transform.rotation;
+        transform.rotation = Quaternion.Lerp(currentRotation, targetRotation, Time.deltaTime * enemyData.attackRotationSpeed);
+
         // TODO: Will probably have to improve on this logic.
         timeSinceAttack += Time.deltaTime;
         if (timeSinceAttack >= enemyData.attackDuration)
@@ -206,7 +212,7 @@ public class EnemyManager : MonoBehaviour
             case State.CHASING:
                 _navMeshAgent.isStopped = false;
                 _navMeshAgent.speed = enemyData.chaseSpeed;
-                _navMeshAgent.stoppingDistance = enemyData.attackRadius;
+                _navMeshAgent.stoppingDistance = enemyData.attackRadius * 0.9f;
                 break;
             case State.READY_TO_ATTACK:
                 break;

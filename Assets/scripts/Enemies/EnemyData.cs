@@ -14,6 +14,7 @@ public class EnemyData : MonoBehaviour
     public float chaseSpeed { get { return _chaseSpeed; } private set { _chaseSpeed = value; } }
     public float attackRadius { get { return _attackRadius; } private set { _attackRadius = value; } }
     public float attackDuration { get { return _attackDuration; } private set { _attackDuration = value; } }
+    public float attackRotationSpeed { get { return _attackRotationSpeed; } private set { _attackRotationSpeed = value; } }
     public float height { get { return _height; } private set { _height = value; } }
     public GameObject mainCharacter { get { return _mainCharacter; } private set { _mainCharacter = value; } }
 
@@ -51,6 +52,8 @@ public class EnemyData : MonoBehaviour
     [SerializeField]
     [Tooltip("In seconds.")]
     private float _attackDuration = 1f;
+    [SerializeField]
+    private float _attackRotationSpeed = 2.5f;
 
 
     [Header("Enemy Character Information")]
