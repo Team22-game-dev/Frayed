@@ -4,18 +4,21 @@ using UnityEngine;
 
 public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 {
-    [SerializeField] protected WeaponData weaponData; // local copy of weapon data
-    [SerializeField] private GameObject equippedWeapon; // Add equippedWeapon GameObject
-
+    [SerializeField] 
+    protected WeaponData weaponData; // local copy of weapon data
+    [SerializeField] 
+    protected GameObject equippedWeapon; // Add equippedWeapon GameObject
+    [SerializeField]
+    protected GameObject weaponSheath;
     // to be filled with tranforms of bones the weapon will target
-    [SerializeField] private Transform WeaponHandFowardR;
-    [SerializeField] private Transform WeaponHandReverseR;
-    [SerializeField] private Transform WeaponHandFowardL;
-    [SerializeField] private Transform WeaponHandReverseL;
-    [SerializeField] private Transform SheathBoneHip;
-    [SerializeField] private Transform SheathBoneBack;
+    [SerializeField] protected Transform WeaponHandFowardR;
+    [SerializeField] protected Transform WeaponHandReverseR;
+    [SerializeField] protected Transform WeaponHandFowardL;
+    [SerializeField] protected Transform WeaponHandReverseL;
+    [SerializeField] protected Transform SheathBoneHip;
+    [SerializeField] protected Transform SheathBoneBack;
 
-    private WeaponRotationData rotationComponent;  // Reference to the WeaponRotationComponent
+    protected WeaponRotationData rotationComponent;  // Reference to the WeaponRotationComponent
 
     protected AnimationManager animationManager;
 
@@ -165,6 +168,17 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                 // Properly set the parent
                 if (weaponData.SheathedBone != null)
                 {
+                    // needs to instantiate a new instance of the sheath model.
+                    weaponSheath = Instantiate(weaponData.Sheath);
+
+                    
+
+                    weaponSheath.transform.SetParent(weaponData.SheathedBone);
+                    weaponSheath.transform.localPosition = Vector3.zero;
+                    weaponSheath.transform.localRotation = Quaternion.identity;
+
+                    ApplySheathRotation();
+
                     equippedWeapon.transform.SetParent(weaponData.SheathedBone);
                     equippedWeapon.transform.localPosition = Vector3.zero;
                     equippedWeapon.transform.localRotation = Quaternion.identity;
@@ -296,15 +310,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
  
     }
 
-    public void OnSheathWeapon()
-    {
-        currentWeaponState = WeaponState.Sheathed;
-        equippedWeapon.transform.SetParent(weaponData.SheathedBone);
-        equippedWeapon.transform.localPosition = Vector3.zero;
-        ApplyWeaponRotation();
-    }
-
-    private void ApplyWeaponRotation()
+    protected void ApplyWeaponRotation()
     {
         // Get the rotation for the weapon from the user's WeaponRotationComponent
         Quaternion weaponRotation;
@@ -326,6 +332,18 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         // Apply the rotation to the equipped weapon
         equippedWeapon.transform.localRotation = weaponRotation;
     }
+    public void ApplySheathRotation()
+    {
+        // Get the sheath rotation first
+        Quaternion sheathRotation = rotationComponent.GetSheathedWeaponRotation(weaponData.WeaponName);
+
+        // Then log it
+        Debug.Log($"Applying sheath rotation: {sheathRotation}");
+
+        // Finally, apply the rotation
+        weaponSheath.transform.localRotation = sheathRotation;
+    }
+
 
     public void DropWeapon()
     {
