@@ -81,6 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponData: {fileID: 0}
   equippedWeapon: {fileID: 0}
+  weaponSheath: {fileID: 0}
   WeaponHandFowardR: {fileID: 0}
   WeaponHandReverseR: {fileID: 0}
   WeaponHandFowardL: {fileID: 0}
@@ -179,7 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawnDaggerRotation: {x: 0.6427876, y: 0, z: 0, w: 0.76604444}
-  sheathedDaggerRotation: {x: 0, y: 0, z: 0, w: 1}
+  sheathedDaggerRotation: {x: 0.4545196, y: -0.5416751, z: -0.4545196, w: -0.5416751}
   axeRotation: {x: 0, y: 0, z: 0, w: 1}
   bowRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!114 &4792826243224289047

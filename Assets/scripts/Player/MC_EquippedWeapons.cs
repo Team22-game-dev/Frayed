@@ -26,14 +26,33 @@ public class MC_EquippedWeapon : EquippedWeaponBase
         }
     }
 
+    private void Update()
+    {
+        
+        if(isDrawn() && WillSheathWeapon())
+        {
+            SheathWeapon();
+        }
+        else
+        {
+            Debug.Log("drawn: " + isDrawn() + " will sheath: " + WillSheathWeapon());
+        }
+    }
+
     // from Base Class
     override public bool WillPickupWeapon() // If player would like to pick up the weapon they should press E
     {
         return Input.GetKeyDown(pickupKey);
     }
 
+    private bool WillSheathWeapon()
+    {
+        return Input.GetMouseButtonDown(1);
+    }
+
     public void SheathWeapon()
     {
+        Debug.Log("Sheathing weapon");
         if(animationManager.GetCurrentAnimationName() == "encounter_idle")
         {
             // play sheathing Animation animation
@@ -51,6 +70,13 @@ public class MC_EquippedWeapon : EquippedWeaponBase
             // dont play sheatingn animation
             OnSheathWeapon();
         }
+    }
+        public void OnSheathWeapon()
+    {
+        currentWeaponState = WeaponState.Sheathed;
+        equippedWeapon.transform.SetParent(weaponData.SheathedBone);
+        equippedWeapon.transform.localPosition = Vector3.zero;
+        ApplyWeaponRotation();
     }
 
 
