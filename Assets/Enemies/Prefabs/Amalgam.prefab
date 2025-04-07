@@ -818,15 +818,16 @@ MonoBehaviour:
   _chaseSpeed: 2.5
   _attackRadius: 1.75
   _attackDuration: 1
+  _attackRotationSpeed: 2.5
   _height: 2
   _baseHealth: 100
   _startingHealth: 0
   _currentHealth: 0
   _baseAttackPower: 0.25
   _mainCharacter: {fileID: 0}
-  healthBarSlider: {fileID: 0}
-  healthBarSliderZ: 0.7
-  healthBarSliderY: 2.25
+  mainCamera: {fileID: 0}
+  healthBarSliderZ: 0.6
+  healthBarSliderY: 2.2
 --- !u!114 &6546940443472890167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3540,6 +3541,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyHealthBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514253607236472180, guid: 4a6cdb248ad51104ca86fe9f1ac21241,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514253607236472180, guid: 4a6cdb248ad51104ca86fe9f1ac21241,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514253607236472180, guid: 4a6cdb248ad51104ca86fe9f1ac21241,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514253607236472180, guid: 4a6cdb248ad51104ca86fe9f1ac21241,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2.2
       objectReference: {fileID: 0}
     - target: {fileID: 6891598126301960013, guid: 4a6cdb248ad51104ca86fe9f1ac21241,
         type: 3}

@@ -33,9 +33,16 @@ public class PlayerStats : MonoBehaviour
     [SerializeField]
     public float _skill = 1;
 
+    private GameOverScreen gameOverScreen;
+
     public float Health { get { return health; } }
     public float MaxHealth { get { return maxHealth; } }
     public float MaxTotalHealth { get { return maxTotalHealth; } }
+
+    public void Start()
+    {
+        gameOverScreen = GameOverScreen.Instance;
+    }
 
     public void Heal(float health)
     {
@@ -48,7 +55,7 @@ public class PlayerStats : MonoBehaviour
         health -= dmg;
         ClampHealth();
 
-        if (health <= 0)
+        if (health <= 0 && !gameOverScreen.gameOverTriggered)
         {
             StartCoroutine(GameOver());
         }
@@ -84,11 +91,10 @@ public class PlayerStats : MonoBehaviour
         GameObject _mainCharacter = GameObject.FindGameObjectWithTag("Player");
 
         OnDeathController onDeathcontroller = _mainCharacter.GetComponent<OnDeathController>();
-        GameOverScreen gameOverScreen = FindObjectOfType<GameOverScreen>();
 
-        onDeathcontroller.ActivateRagdoll(Vector3.back, 1f);
+        yield return StartCoroutine(onDeathcontroller.ActivateRagdoll(Vector3.back, 1f));
 
-        yield return new WaitForSeconds(3f);
+        //yield return new WaitForSeconds(3f);
 
         if (gameOverScreen != null)
         {

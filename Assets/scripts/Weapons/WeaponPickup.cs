@@ -51,6 +51,7 @@ private void CreatePickupUI()
 {
     // Create Canvas
     GameObject canvasGO = new GameObject("PickupCanvas");
+    canvasGO.transform.SetParent(transform);
     pickupCanvas = canvasGO.AddComponent<Canvas>();
     pickupCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
     canvasGO.AddComponent<CanvasScaler>();
