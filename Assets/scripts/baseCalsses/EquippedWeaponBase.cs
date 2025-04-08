@@ -182,6 +182,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                     equippedWeapon.transform.SetParent(weaponData.SheathedBone);
                     equippedWeapon.transform.localPosition = Vector3.zero;
                     equippedWeapon.transform.localRotation = Quaternion.identity;
+                    currentWeaponState = WeaponState.Sheathed;
                 }
                 else
                 {
@@ -266,6 +267,45 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     }
 
+
+    public void SheathAndDrawWeapon()
+    {
+        Debug.Log("SheathAndDraw method state: " + currentWeaponState);
+        switch (currentWeaponState)
+        {
+            case WeaponState.None:
+            case WeaponState.Sheathed:
+                if(!weaponData.twoHanded) 
+                {
+                    
+                    Debug.Log("Parent weapon to hand bone");
+                    equippedWeapon.transform.SetParent(weaponData.ActionBoneR);
+                    equippedWeapon.transform.localPosition = Vector3.zero;
+                    
+                }
+                else
+                {
+                    // Two Handed Equip Logic (stretch goal)
+                }
+                currentWeaponState = WeaponState.Drawn;
+                Debug.Log("Weapon Drawn");
+                animationManager.SetBool("WeaponDrawn", true);
+
+                ApplyWeaponRotation();
+                break;
+            case WeaponState.Drawn:
+                Debug.Log("Weapon sheathed");
+                currentWeaponState = WeaponState.Sheathed;
+                equippedWeapon.transform.SetParent(weaponData.SheathedBone);
+                equippedWeapon.transform.localPosition = Vector3.zero;
+                ApplySheathRotation();
+                animationManager.SetBool("WeaponDrawn", false);
+                break;
+        }
+        
+
+    }
+
     public void DrawWeapon(bool playAnimation)
     {
         if(playAnimation)
@@ -283,31 +323,10 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         else 
         {
             // invoke the method to reparent now
-            animationManager.SetTrigger("DrawDagger");
-            OnDrawWeaponEvent();
+            Debug.Log("invoke directly");
+            animationManager.SetTrigger("WeaponPickup");
+            SheathAndDrawWeapon();
         }
-    }
-
-    public void OnDrawWeaponEvent()
-    {
-        if(!weaponData.twoHanded) 
-        {
-            currentWeaponState = WeaponState.Drawn;
-            Debug.Log("Parent weapon to hand bone");
-            equippedWeapon.transform.SetParent(weaponData.ActionBoneR);
-            equippedWeapon.transform.localPosition = Vector3.zero;
-            
-        }
-        else
-        {
-            // Two Handed Equip Logic (stretch goal)
-        }
-
-        animationManager.SetBool("WeaponDrawn", true);
-
-        ApplyWeaponRotation();
-
- 
     }
 
     protected void ApplyWeaponRotation()
