@@ -199,12 +199,12 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     }
 
     // local function to start the equip weapon coroutine
-    public void StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
+    public IEnumerator StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
     {
         if (pickedUpWeapon == null)
         {
             Debug.LogWarning("pickedUpWeapon is null");
-            return;
+            yield break;
         }
 
         // Get the WeaponData component from the picked-up weapon
@@ -213,7 +213,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         if (newWeaponData == null)
         {
             Debug.LogError("newWeaponData is null");
-            return;
+            yield break;
         }
 
         newWeaponData.Weapon = pickedUpWeapon;
@@ -232,7 +232,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         }
 
         Debug.Log("Starting equip weapon coroutine...");
-        StartCoroutine(EquipWeapon());
+        yield return StartCoroutine(EquipWeapon());
     }
 
 
