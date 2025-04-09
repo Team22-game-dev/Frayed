@@ -107,7 +107,7 @@ private void CreatePickupUI()
                 if (user.WillPickupWeapon())
                 {
                     newUser = user;
-                    PickupWeapon();
+                    StartCoroutine(PickupWeapon());
                     break;
                 }
             }
@@ -140,7 +140,7 @@ private void CreatePickupUI()
         }
     }
 
-    private void PickupWeapon()
+    private IEnumerator PickupWeapon()
     {
         pickupPromptUI.enabled = false;
         sphereCollider.enabled = false;
@@ -151,7 +151,7 @@ private void CreatePickupUI()
         if (newUser == null)
         {
             Debug.LogError("Attempted to equip a weapon with a null user.");
-            return;
+            yield break;
         }
 
         if (newUser.hasWeaponEquipped())
@@ -160,7 +160,7 @@ private void CreatePickupUI()
         }
         else
         {
-            newUser.StartEquipWeaponCoroutine(gameObject);
+            yield return newUser.StartEquipWeaponCoroutine(gameObject);
             newUser.DrawWeapon(false);
         }
     }

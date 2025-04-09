@@ -199,12 +199,12 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     }
 
     // local function to start the equip weapon coroutine
-    public void StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
+    public IEnumerator StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
     {
         if (pickedUpWeapon == null)
         {
             Debug.LogWarning("pickedUpWeapon is null");
-            return;
+            yield break;
         }
 
         // Get the WeaponData component from the picked-up weapon
@@ -213,7 +213,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         if (newWeaponData == null)
         {
             Debug.LogError("newWeaponData is null");
-            return;
+            yield break;
         }
 
         newWeaponData.Weapon = pickedUpWeapon;
@@ -232,7 +232,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         }
 
         Debug.Log("Starting equip weapon coroutine...");
-        StartCoroutine(EquipWeapon());
+        yield return StartCoroutine(EquipWeapon());
     }
 
 
@@ -308,11 +308,16 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     public void DrawWeapon(bool playAnimation)
     {
-        if(playAnimation)
+        string currentAnimation = animationManager.GetCurrentAnimationName();
+
+        if(playAnimation && currentAnimation == "Idle_rest")
         {
             // start animation and wait for animation event to parent to hand on OnDrawAnimation
+     
+   
             if (weaponData != null && currentWeaponState == WeaponState.Sheathed)
             {
+                Debug.Log("Playing draw animation");
                 animationManager.SetTrigger(weaponData.DrawAnimation);
             }
             else
