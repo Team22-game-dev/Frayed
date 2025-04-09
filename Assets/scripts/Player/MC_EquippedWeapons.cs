@@ -33,10 +33,6 @@ public class MC_EquippedWeapon : EquippedWeaponBase
         {
             SheathWeapon();
         }
-        else
-        {
-            Debug.Log("drawn: " + isDrawn() + " will sheath: " + WillSheathWeapon());
-        }
     }
 
     // from Base Class
@@ -68,16 +64,10 @@ public class MC_EquippedWeapon : EquippedWeaponBase
         else
         {
             // dont play sheatingn animation
-            OnSheathWeapon();
+            SheathAndDrawWeapon();
         }
     }
-        public void OnSheathWeapon()
-    {
-        currentWeaponState = WeaponState.Sheathed;
-        equippedWeapon.transform.SetParent(weaponData.SheathedBone);
-        equippedWeapon.transform.localPosition = Vector3.zero;
-        ApplyWeaponRotation();
-    }
+
 
 
 }
