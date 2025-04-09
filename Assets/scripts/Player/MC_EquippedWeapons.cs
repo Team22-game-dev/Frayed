@@ -64,6 +64,16 @@ public class MC_EquippedWeapon : EquippedWeaponBase
                     yield break;
                 }
             }
+            else
+            {
+                string animationName = animationManager.GetCurrentAnimationName();
+                if (animationName == "jogg_w_dagger")
+                {
+                    animationManager.SetTrigger("SheathDagger");
+                    SheathAndDrawWeapon();
+                    yield break;
+                }
+            }
 
             yield return null; // check again next frame
         }

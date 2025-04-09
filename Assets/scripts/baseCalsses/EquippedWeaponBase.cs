@@ -308,11 +308,16 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     public void DrawWeapon(bool playAnimation)
     {
-        if(playAnimation)
+        string currentAnimation = animationManager.GetCurrentAnimationName();
+
+        if(playAnimation && currentAnimation == "Idle_rest")
         {
             // start animation and wait for animation event to parent to hand on OnDrawAnimation
+     
+   
             if (weaponData != null && currentWeaponState == WeaponState.Sheathed)
             {
+                Debug.Log("Playing draw animation");
                 animationManager.SetTrigger(weaponData.DrawAnimation);
             }
             else
