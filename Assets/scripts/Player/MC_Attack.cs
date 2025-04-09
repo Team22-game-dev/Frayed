@@ -41,22 +41,29 @@ public class MC_Attack : AttackBase
             return;
         }
 
-        if (equippedWeaponController.isDrawn())
+        if(equippedWeaponController.hasWeaponEquipped())
         {
-            if (currentState == AttackState.Idle)
+            if (equippedWeaponController.isDrawn())
             {
-                StartAttack();
+                if (currentState == AttackState.Idle)
+                {
+                    StartAttack();
+                }
+                else if (currentState == AttackState.Attacking && (currentTime - lastAttackTime <= comboWindowTime))
+                {
+                    attackQueued = true;
+                    Debug.Log("Attack queued for combo!");
+                }
             }
-            else if (currentState == AttackState.Attacking && (currentTime - lastAttackTime <= comboWindowTime))
+            else
             {
-                attackQueued = true;
-                Debug.Log("Attack queued for combo!");
+                Debug.Log("Weapon not Drawn");
+                equippedWeaponController.DrawWeapon(true);
             }
         }
         else
         {
-            Debug.Log("Weapon not Drawn");
-            equippedWeaponController.DrawWeapon(true);
+            return;
         }
     }
 
