@@ -329,7 +329,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         {
             // invoke the method to reparent now
             Debug.Log("invoke directly");
-            animationManager.SetTrigger("WeaponPickup");
+            animationManager.SetTrigger("DrawDagger");
             SheathAndDrawWeapon();
         }
     }
