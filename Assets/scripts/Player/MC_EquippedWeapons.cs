@@ -31,7 +31,7 @@ public class MC_EquippedWeapon : EquippedWeaponBase
         
         if(isDrawn() && WillSheathWeapon())
         {
-            SheathWeapon();
+            StartCoroutine(SheathWeapon());
         }
     }
 
@@ -46,27 +46,31 @@ public class MC_EquippedWeapon : EquippedWeaponBase
         return Input.GetMouseButtonDown(1);
     }
 
-    public void SheathWeapon()
+    public IEnumerator SheathWeapon()
     {
-        Debug.Log("Sheathing weapon");
-        if(animationManager.GetCurrentAnimationName() == "encounter_idle")
+        float start = Time.time;
+        while (Time.time - start <= 0.5f)
         {
-            // play sheathing Animation animation
-            if(weaponData != null && currentWeaponState == WeaponState.Drawn)
+            if (animationManager.GetCurrentAnimationName() == "encounter_idle")
             {
-                animationManager.SetTrigger(weaponData.SheathAnimation);
+                if (weaponData != null && currentWeaponState == WeaponState.Drawn)
+                {
+                    animationManager.SetTrigger(weaponData.SheathAnimation);
+                    yield break;
+                }
+                else
+                {
+                    Debug.LogError("weaponData null or weapon in wrong state");
+                    yield break;
+                }
             }
-            else
-            {
-                Debug.LogError("weaponData null or weapon in wrong state");
-            }
+
+            yield return null; // check again next frame
         }
-        else
-        {
-            // dont play sheatingn animation
-            SheathAndDrawWeapon();
-        }
+
+        Debug.Log("sheath time out");
     }
+
 
 
 
