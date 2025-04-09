@@ -56,6 +56,11 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
+    public bool GetBool(string parameterName)
+    {
+        return animator.GetBool(parameterName);
+    }
+
     // Trigger a parameter in the Animator
     public void SetTrigger(string parameterName)
     {

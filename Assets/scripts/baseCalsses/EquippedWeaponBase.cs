@@ -51,10 +51,10 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         if(hasWeaponEquipped())
             currentWeaponState = WeaponState.Sheathed;
         else
+        {
             currentWeaponState = WeaponState.None;
             rotationComponent = GetComponent<WeaponRotationData>();
-        if(rotationComponent == null)
-            Debug.LogError("Rotation Component Not found!");
+        }
     }
 
     
@@ -289,7 +289,11 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                 }
                 currentWeaponState = WeaponState.Drawn;
                 Debug.Log("Weapon Drawn");
-                animationManager.SetBool("WeaponDrawn", true);
+                bool isDrawn = animationManager.GetBool("WeaponDrawn");
+                if (isDrawn != true)
+                {
+                    animationManager.SetBool("WeaponDrawn", true);
+                }
 
                 ApplyWeaponRotation();
                 break;
