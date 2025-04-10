@@ -18,6 +18,10 @@ public class MC_Attack : AttackBase
     private float lastAttackTime;
     private bool attackQueued;
 
+    private float drawTime = -1.0f;
+    private float attackTime = -1.0f;
+    private const float drawBuffer = .3f;
+
     void Start()
     {
         currentState = AttackState.Idle;
@@ -41,8 +45,9 @@ public class MC_Attack : AttackBase
             return;
         }
 
-        if(equippedWeaponController.hasWeaponEquipped())
+        if(equippedWeaponController.hasWeaponEquipped() && Time.time - drawTime > drawBuffer)
         {
+            drawTime = Time.time;
             if (equippedWeaponController.isDrawn())
             {
                 if (currentState == AttackState.Idle)
@@ -59,6 +64,7 @@ public class MC_Attack : AttackBase
             {
                 Debug.Log("Weapon not Drawn");
                 equippedWeaponController.DrawWeapon(true);
+                
             }
         }
         else
@@ -93,5 +99,10 @@ public class MC_Attack : AttackBase
             currentState = AttackState.Idle;
             animationManager.SetBool("isAttacking", false); // Reset the attacking flag
         }
+    }
+
+    public float GetLastDrawTime()
+    {
+        return drawTime;
     }
 }
