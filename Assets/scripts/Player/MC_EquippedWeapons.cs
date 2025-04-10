@@ -12,9 +12,14 @@ public class MC_EquippedWeapon : EquippedWeaponBase
     private static MC_EquippedWeapon _instance; // the local private _instance
     public static MC_EquippedWeapon Instance => _instance;
 
+    private MC_Attack mc_AttackController;
+
     new private void Awake()
     {
         base.Awake();
+
+        mc_AttackController = GetComponent<MC_Attack>();
+
         if(_instance != null && _instance != this)
         {
             Destroy(this.gameObject);
@@ -48,37 +53,44 @@ public class MC_EquippedWeapon : EquippedWeaponBase
 
     public IEnumerator SheathWeapon()
     {
-        float start = Time.time;
-        while (Time.time - start <= 0.5f)
+        if(Time.time - mc_AttackController.GetLastDrawTime() > 0.3f)
         {
-            if (animationManager.GetCurrentAnimationName() == "encounter_idle")
+            float start = Time.time;
+            while (Time.time - start <= 0.5f)
             {
-                if (weaponData != null && currentWeaponState == WeaponState.Drawn)
+                if (animationManager.GetCurrentAnimationName() == "encounter_idle")
                 {
-                    animationManager.SetTrigger(weaponData.SheathAnimation);
-                    yield break;
+                    if (weaponData != null && currentWeaponState == WeaponState.Drawn)
+                    {
+                        animationManager.SetTrigger(weaponData.SheathAnimation);
+                        yield break;
+                    }
+                    else
+                    {
+                        Debug.LogError("weaponData null or weapon in wrong state");
+                        yield break;
+                    }
                 }
                 else
                 {
-                    Debug.LogError("weaponData null or weapon in wrong state");
-                    yield break;
+                    string animationName = animationManager.GetCurrentAnimationName();
+                    if (animationName == "jogg_w_dagger")
+                    {
+                        animationManager.SetTrigger("SheathDagger");
+                        SheathAndDrawWeapon();
+                        yield break;
+                    }
                 }
-            }
-            else
-            {
-                string animationName = animationManager.GetCurrentAnimationName();
-                if (animationName == "jogg_w_dagger")
-                {
-                    animationManager.SetTrigger("SheathDagger");
-                    SheathAndDrawWeapon();
-                    yield break;
-                }
+
+                yield return null; // check again next frame
             }
 
-            yield return null; // check again next frame
+            Debug.Log("sheath time out");
         }
-
-        Debug.Log("sheath time out");
+        else
+        {
+            Debug.Log("sheath blocked by draw time buffer");
+        }
     }
 
 
