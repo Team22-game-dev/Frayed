@@ -4,14 +4,8 @@ using UnityEngine;
 
 public class MC_Attack : AttackBase
 {
-    public enum AttackState
-    {
-        Idle,
-        Attacking,
-        Combo
-    };
-
-    public AttackState currentState { get; private set; }
+    public float GetLastDrawTime() => drawTime;
+        
 
     [SerializeField] private float comboWindowTime = 0.5f; // Time to trigger a combo attack
     [SerializeField] private float clickBuffer = 0.25f; // Prevent button mashing
@@ -19,8 +13,19 @@ public class MC_Attack : AttackBase
     private bool attackQueued;
 
     private float drawTime = -1.0f;
-    private float attackTime = -1.0f;
+    //private float attackTime = -1.0f;
     private const float drawBuffer = .3f;
+
+
+    override
+    public bool IsAttacking() => currentState == AttackState.Attacking;
+    protected AttackState currentState { get; private set; }
+    protected enum AttackState
+    {
+        Idle,
+        Attacking,
+        Combo
+    };
 
     void Start()
     {
@@ -38,6 +43,8 @@ public class MC_Attack : AttackBase
     {
         float currentTime = Time.time;
 
+        MC_EquippedWeapon mcWeapon = equippedWeaponController as MC_EquippedWeapon;
+
         // Ignore attacks if clicking too fast
         if (currentTime - lastAttackTime < clickBuffer)
         {
@@ -45,7 +52,10 @@ public class MC_Attack : AttackBase
             return;
         }
 
-        if(equippedWeaponController.hasWeaponEquipped() && Time.time - drawTime > drawBuffer)
+        if(equippedWeaponController.hasWeaponEquipped() && 
+            currentTime - drawTime > drawBuffer && 
+            currentTime - mcWeapon.GetSheathingTime() > 0.5f
+            )
         {
             drawTime = Time.time;
             if (equippedWeaponController.isDrawn())
@@ -101,8 +111,5 @@ public class MC_Attack : AttackBase
         }
     }
 
-    public float GetLastDrawTime()
-    {
-        return drawTime;
-    }
+
 }

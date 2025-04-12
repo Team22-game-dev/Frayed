@@ -21,6 +21,8 @@ public class WeaponPickup : MonoBehaviour
     [SerializeField]
     private List<EquippedWeaponBase> userWeaponController;
 
+    private BoxCollider boxCollider;
+
     private EquippedWeaponBase newUser;
 
     // UI Elements
@@ -140,30 +142,55 @@ private void CreatePickupUI()
         }
     }
 
-    private IEnumerator PickupWeapon()
+private IEnumerator PickupWeapon()
+{
+    boxCollider = GetComponent<BoxCollider>();
+
+
+    if (boxCollider == null || sphereCollider == null || rigidBody == null)
     {
-        pickupPromptUI.enabled = false;
-        sphereCollider.enabled = false;
-        
-        rigidBody.isKinematic = true;
-        rigidBody.useGravity = false;
-
-        if (newUser == null)
-        {
-            Debug.LogError("Attempted to equip a weapon with a null user.");
-            yield break;
-        }
-
-        if (newUser.hasWeaponEquipped())
-        {
-            // TODO: Implement logic to send weapon to inventory
-        }
-        else
-        {
-            yield return newUser.StartEquipWeaponCoroutine(gameObject);
-            newUser.DrawWeapon(false);
-        }
+        Debug.LogError("Missing required components on weapon.");
+        yield break;
     }
+
+    pickupPromptUI.enabled = false;
+
+    // Disable pickup detection
+    sphereCollider.enabled = false;
+
+    // Prepare damage collider
+    boxCollider.enabled = true;
+    boxCollider.isTrigger = true;
+   // boxCollider.isTrigger = true;
+
+    // Disable physics for equipped state
+    rigidBody.isKinematic = true;
+    rigidBody.useGravity = false;
+
+    // Don't deactivate — just wait one frame to ensure collider states update
+    yield return null;
+
+    // Assign user and handle equip
+    if (newUser == null)
+    {
+        Debug.LogError("Attempted to equip a weapon with a null user.");
+        yield break;
+    }
+
+    if (newUser.hasWeaponEquipped())
+    {
+        // Optional: Add logic to store the current weapon
+    }
+    else
+    {
+        yield return newUser.StartEquipWeaponCoroutine(gameObject);
+        newUser.DrawWeapon(false);
+    }
+
+    // Optional: Set layer after successful pickup
+    gameObject.layer = LayerMask.NameToLayer("Weapons");
+}
+
 
     public void DropWeapon()
     {

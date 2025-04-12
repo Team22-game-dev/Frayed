@@ -2,40 +2,66 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class TakeDameageBase : MonoBehaviour
+public abstract class TakeDamageBase : MonoBehaviour
 {
 
     void OnTriggerEnter(Collider other)
     {
-        // Check if the object the weapon entered is on the Weapons layer
-        if (other.gameObject.layer == LayerMask.NameToLayer("Weapons"))
+        if (other.gameObject.layer != LayerMask.NameToLayer("Weapons"))
         {
-            GameObject attackingWeapon = other.gameObject;
-            // Handle the trigger with another object on the Weapons layer
-            Debug.Log("Weapon entered " + gameObject.name + "'s collider from the Weapons layer!");
-            GameObject attacker = GetAttacker(attackingWeapon);
-            if(attacker != null)
-            {
-                Debug.Log("Attacking Weapon: " + other.gameObject.name);
-                HandleDamage(attacker, attackingWeapon);
-            }
-            else
-            {
-                Debug.Log("Random weapon collider");
-            }
-            
+           // Debug.Log("Collided with: " + other.name);
+            return;
         }
+
+        Debug.Log($"Weapon {other.name} entered {gameObject.name}'s collider from the Weapons layer!");
+
+        GameObject attackingWeapon = other.gameObject;
+        GameObject attacker = GetAttacker(attackingWeapon);
+
+        if (attacker == null)
+        {
+            Debug.Log("Random weapon collider: " + attackingWeapon.name);
+            return;
+        }
+        else
+        {
+            Debug.Log($"Attaker was: {attacker.name}");
+        }
+
+        IAttack attackSM = attacker.GetComponent<IAttack>();
+        if (attackSM == null)
+        {
+            Debug.LogError("IAttack not found");
+        }
+        if(!attackSM.IsAttacking())
+        {
+            Debug.Log("Wasn't trying to attack");
+            return;
+        }
+
+        //Debug.Log("Attacking Weapon: " + attackingWeapon.name);
+        HandleDamage(attacker, attackingWeapon);
     }
+
 
     private GameObject GetAttacker(GameObject attackingWeapon)
     {
         if (attackingWeapon != null)
         {
+
+            var weaponData = attackingWeapon.GetComponent<WeaponData>();
+            if(weaponData != null)
+            {
+                var attacker = weaponData.GetOwner();
+                if(attacker != null)
+                    return attacker;
+            }
+
             Transform root = attackingWeapon.transform;
 
             while (root.parent != null)
             {
-                Debug.Log("layer: " + root.gameObject.layer);
+                //Debug.Log("layer: " + root.gameObject.layer);
                 root = root.parent;
             }
 

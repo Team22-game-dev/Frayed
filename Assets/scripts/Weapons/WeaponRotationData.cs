@@ -9,6 +9,7 @@ public class WeaponRotationData : MonoBehaviour
     [Header("Weapon Rotation Data")]
     [SerializeField] private Quaternion drawnDaggerRotation = Quaternion.identity;
     [SerializeField] private Quaternion sheathedDaggerRotation = Quaternion.identity;
+    [SerializeField] private Quaternion amalgamSwordRotation = Quaternion.identity;
 
     [SerializeField] private Quaternion axeRotation = Quaternion.identity;
     [SerializeField] private Quaternion bowRotation = Quaternion.identity;
@@ -20,7 +21,7 @@ public class WeaponRotationData : MonoBehaviour
         {
             case "dagger":
                 return drawnDaggerRotation;
-            case "DNE1":
+            case "amalgamsword":
                 return axeRotation;
             case "DNE2":
                 return bowRotation;

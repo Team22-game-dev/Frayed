@@ -14,6 +14,8 @@ public class MC_EquippedWeapon : EquippedWeaponBase
 
     private MC_Attack mc_AttackController;
 
+    private float sheathingTime = -1.0f;
+
     new private void Awake()
     {
         base.Awake();
@@ -55,6 +57,7 @@ public class MC_EquippedWeapon : EquippedWeaponBase
     {
         if(Time.time - mc_AttackController.GetLastDrawTime() > 0.3f)
         {
+            sheathingTime = Time.time;
             float start = Time.time;
             while (Time.time - start <= 0.5f)
             {
@@ -94,6 +97,10 @@ public class MC_EquippedWeapon : EquippedWeaponBase
     }
 
 
+    public float GetSheathingTime()
+    {
+        return sheathingTime;
+    }
 
 
 }

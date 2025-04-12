@@ -4,116 +4,127 @@ using UnityEngine;
 
 public class AmalgamAttack : EnemyAttack
 {
-    [SerializeField]
-    GameObject amalgamSwordPrefab;
+    override
+    //public bool IsAttacking() => currentState == AttackState.Attacking;
+
+    public bool IsAttacking()
+    {
+        Debug.Log("Amalgam is attacking " + (currentState == AttackState.Attacking) + " current state: " + currentState);
+        return (currentState == AttackState.Attacking);
+    }
+    public enum AttackState
+    {
+        Idle,
+        PreparingAttack,
+        Transition,
+        Attacking,
+        Recovering
+    }
+
+    public AttackState currentState { get; private set; } = AttackState.Idle;
+
+    [SerializeField] private GameObject amalgamSwordPrefab;
     private GameObject SwordInstance;
 
     private Transform handBoneR, handBoneL;
-    
+
     private SphereCollider clawSphereLeftHand;
     private SphereCollider clawSphereRightHand;
 
-    override public void Attack(){
-        Debug.Log("Amalgam Attacks!");
+    override public void Attack()
+    {
+        if (currentState != AttackState.Idle) return;
 
-        if(enemyManager.enemyData.GetHealthRatio() < .51)
+        if(animationManager.GetBool("useSword"))
+        {
+            swordAttack();
+        }
+        else if (enemyManager.enemyData.GetHealthRatio() < .50f)
         {
             clawSphereLeftHand.enabled = false;
             clawSphereRightHand.enabled = false;
 
-
-            if(!equippedWeaponController.isDrawn())
-            {   
-                
+            if (!equippedWeaponController.isDrawn() && animationManager.GetCurrentAnimationName() != "DrawSword")
+            {
                 animationManager.SetTrigger("DrawSword");
+                
             }
-
-            StartCoroutine(swordAttack());
         }
         else
         {
             clawAttack();
         }
-        
     }
 
     private void clawAttack()
     {
+        if (currentState != AttackState.Idle) return;
+
+        currentState = AttackState.PreparingAttack;
+
         Debug.Log("Claw Attack!");
-        // Check if hand sphered created if not instrnatiate them to collide to cause damage
-        if(clawSphereLeftHand == null || clawSphereRightHand == null){
+        if (clawSphereLeftHand == null || clawSphereRightHand == null)
+        {
             Debug.Log("ClawSpheres null");
-            if(handBoneL == null || handBoneR == null)
+            if (handBoneL == null || handBoneR == null)
             {
                 Debug.LogError("Hand bones null on Amalgam!");
+                currentState = AttackState.Idle;
                 return;
             }
             return;
         }
 
-        animationManager.SetTrigger("ClawAttack");
+        animationManager.SetTrigger("Attack");
+        currentState = AttackState.Attacking;
+        StartCoroutine(ResetStateAfterDelay(1f)); // or however long the animation is
     }
 
-    private IEnumerator swordAttack()
+    private void swordAttack()
     {
-        int trys = 0;
-        do{
-            if(!equippedWeaponController.hasWeaponEquipped())
-            {
-                
-                
-                Debug.LogWarning("Amalgam Sword not equipped!");
+        currentState = AttackState.PreparingAttack;
 
-                if(trys < 4)
-                {
-                     yield return new WaitForSeconds(.33f);
-                }
-                else
-                {
-                    Debug.LogError("Equip Amalgam Sword failed");
-                     yield break;
-                }
-            
+            if (!equippedWeaponController.hasWeaponEquipped())
+            {
+                Debug.LogWarning("Amalgam Sword not equipped!");
+                return;
             }
             else
             {
-                animationManager.SetTrigger("SwordAttack");
-                break; // break while loop
+                currentState = AttackState.Attacking;
+                animationManager.SetTrigger("Attack");
+                StartCoroutine(ResetStateAfterDelay(0.893f)); // length of the sword attack anim
             }
-        }while(true);
-        
     }
-
 
     public void AttackInterrupt()
     {
-        if(enemyManager.currentState != EnemyManager.State.READY_TO_ATTACK)
+        if (enemyManager.currentState != EnemyManager.State.READY_TO_ATTACK)
+        {
             animationManager.SetTrigger("InterruptAttack");
+            currentState = AttackState.Idle;
+        }
     }
+
     public void InstantiateSword()
     {
         SwordInstance = Instantiate(amalgamSwordPrefab, handBoneR.position, handBoneR.rotation);
     }
 
-
-
     new void Start()
     {
-        Debug.Log("AmalgamAttack Start");
-        Debug.Log("Addign colliders to " + gameObject.name);
         base.Start();
-
         StartCoroutine(DelayedInit());
     }
 
     private IEnumerator DelayedInit()
     {
-        yield return new WaitForEndOfFrame(); // Ensures all Start() calls have executed
+        yield return new WaitForEndOfFrame();
 
         if (equippedWeaponController != null)
         {
             Dictionary<string, Transform> boneData = equippedWeaponController.GetWeaponBoneData;
-            if (boneData != null && boneData.Count > 0) // Ensure dictionary isn't empty
+            if (boneData != null && boneData.Count > 0)
             {
                 handBoneL = boneData["WeaponHandFowardL"];
                 handBoneR = boneData["WeaponHandFowardR"];
@@ -143,5 +154,39 @@ public class AmalgamAttack : EnemyAttack
         }
     }
 
+    private IEnumerator ResetStateAfterDelay(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        currentState = AttackState.Idle;
+    }
 
+    private void EquipAmalgamSword()
+    {
+        Debug.Log("trying to equip amalgam sword");
+              
+
+        StartCoroutine(EquipSword());            
+    }
+
+    private IEnumerator EquipSword()
+    {
+        var start = Time.time;
+        GameObject sword = Instantiate(amalgamSwordPrefab);
+        
+
+        yield return null; // wait a frame
+        
+        WeaponData weaponData = sword.GetComponent<WeaponData>();
+        weaponData.PrepForUse();
+
+        yield return null;
+
+        yield return equippedWeaponController.StartEquipWeaponCoroutine(sword);
+
+        equippedWeaponController.DrawWeapon(false);
+        yield return null;
+        animationManager.SetBool("useSword", true);
+        Debug.Log("useSword: " + animationManager.GetBool("useSword"));
+
+    }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WeaponData : MonoBehaviour
 {
+    public float GetWeaponPower() => _weaponPower;
+
     // Enum to track the state of the weapon (now public)
     public enum State
     {
@@ -13,11 +15,14 @@ public class WeaponData : MonoBehaviour
         Drawn       // In hand, actively being used
     }
     
+    [Header("Weapon Information")]
     public GameObject Weapon;
     public GameObject Sheath;
     public string WeaponName;
-    [SerializeField] string weaponType;
-    public float attackPower;
+    [SerializeField] 
+    string weaponType;
+    [SerializeField]
+    public float _weaponPower;
     public float damage;
 
     private MeshCollider damageCollider;
@@ -37,6 +42,7 @@ public class WeaponData : MonoBehaviour
     public Vector3 actionBoneLocalRotationAdjustments;
 
     private EquippedWeaponBase user; // reference to the EquippedWeapon of the user
+    private GameObject owner;
 
     private State currentState = State.Dropped;
 
@@ -46,7 +52,7 @@ public class WeaponData : MonoBehaviour
     public static readonly State EquippedState = State.Equipped;
     public static readonly State DrawnState = State.Drawn;
 
-
+    public GameObject GetOwner() => owner;
 
     // Get the current state of the weapon
     public State GetWeaponState()
@@ -56,6 +62,7 @@ public class WeaponData : MonoBehaviour
 
     public void SetUserData(EquippedWeaponBase equippedWeapon)
     {
+        owner = equippedWeapon.gameObject;
         user = equippedWeapon;
         if(user != null)
         {
@@ -110,5 +117,34 @@ public class WeaponData : MonoBehaviour
                 Debug.LogWarning("Unknown weapon state");
                 break;
         }
+    }
+
+    public void PrepForUse()
+    {
+        var rb = GetComponent<Rigidbody>();
+        var boxCollider = GetComponent<BoxCollider>();
+        var sphereCollider = GetComponent<SphereCollider>();
+
+        if(rb == null)
+        {
+            Debug.LogError("Rigidbody not found! on " + gameObject.name);
+        } 
+        if(boxCollider == null)
+        {
+            Debug.LogError("BoxCollider not found! on " + gameObject.name);
+
+        }
+        if (sphereCollider == null)
+        {
+            Debug.LogError("sphereCollider not found! on " + gameObject.name);
+            return;
+        }
+
+        rb.useGravity = false;
+        rb.isKinematic = true;
+
+        sphereCollider.enabled = false;
+        boxCollider.enabled = true;
+        boxCollider.isTrigger = true;
     }
 }

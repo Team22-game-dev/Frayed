@@ -158,7 +158,7 @@ public class MC_Locomotion : MonoBehaviour
     {
         // Set target speed based on conditions.
         float targetSpeed;
-        if (attack.currentState != MC_Attack.AttackState.Idle)
+        if (attack.IsAttacking())
         {
             targetSpeed = attackSpeed;
         } else if (inputManager.sprint)
