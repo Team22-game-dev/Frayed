@@ -63,6 +63,9 @@ public class EnemyManager : MonoBehaviour
         if (characterController == null)
         {
             characterController = this.gameObject.AddComponent<CharacterController>();
+
+            characterController.height = 2.25f;
+            characterController.center = new Vector3(0,1,0);
         }
 
         // Configure NavMeshAgent

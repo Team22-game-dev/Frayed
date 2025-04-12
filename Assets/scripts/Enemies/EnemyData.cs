@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyData : MonoBehaviour
+public class EnemyData : MonoBehaviour, IAttackData
 {
     public bool enableWanderBehavior { get { return _enableWanderBehavior; } private set { _enableWanderBehavior = value; } }
     public float maximumWanderRadius { get { return _maximumWanderRadius; } private set { _maximumWanderRadius = value; } }
@@ -16,12 +16,15 @@ public class EnemyData : MonoBehaviour
     public float attackDuration { get { return _attackDuration; } private set { _attackDuration = value; } }
     public float attackRotationSpeed { get { return _attackRotationSpeed; } private set { _attackRotationSpeed = value; } }
     public float height { get { return _height; } private set { _height = value; } }
+    public float GetAttackPower () => _baseAttackPower;
     public GameObject mainCharacter { get { return _mainCharacter; } private set { _mainCharacter = value; } }
 
     public Vector3 spawnPosition { get { return _spawnPosition; } private set { _spawnPosition = value; } }
 
     public float baseHealth { get { return _baseHealth; } }
     public float currentHealth { get {return _currentHealth; } }
+
+    public void TakeDamage(float damage) => _currentHealth -= damage;
 
     [Header("Wander Fields")]
     [SerializeField]
@@ -144,10 +147,6 @@ public class EnemyData : MonoBehaviour
         {
             healthBarSliderGameObject.SetActive(true);
         }
-    }
-    public float GetAttackPower()
-    {
-        return _baseAttackPower;
     }
 
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AttackBase : MonoBehaviour
+public abstract class AttackBase : MonoBehaviour, IAttack
 {
     protected EquippedWeaponBase equippedWeaponController;
 
@@ -11,7 +11,7 @@ public abstract class AttackBase : MonoBehaviour
 
     public void Awake()
     {
-        Debug.Log("Attack Base Awake!");
+        //Debug.Log("Attack Base Awake!");
         animationManager = GetComponent<AnimationManager>();
         equippedWeaponController = GetComponent<EquippedWeaponBase>();
 
@@ -33,5 +33,7 @@ public abstract class AttackBase : MonoBehaviour
     public abstract bool AttackTrigger();
 
     public abstract void Attack();
+
+    public abstract bool IsAttacking();
 
 }

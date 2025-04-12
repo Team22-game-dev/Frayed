@@ -177,7 +177,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                     weaponSheath.transform.localPosition = Vector3.zero;
                     weaponSheath.transform.localRotation = Quaternion.identity;
 
-                    ApplySheathRotation();
+                    //ApplySheathRotation();
 
                     equippedWeapon.transform.SetParent(weaponData.SheathedBone);
                     equippedWeapon.transform.localPosition = Vector3.zero;
@@ -201,6 +201,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     // local function to start the equip weapon coroutine
     public IEnumerator StartEquipWeaponCoroutine(GameObject pickedUpWeapon)
     {
+        Debug.Log("StartEquipWeaponCoroutine with: " + pickedUpWeapon.name + " by " + gameObject.name);
         if (pickedUpWeapon == null)
         {
             Debug.LogWarning("pickedUpWeapon is null");
@@ -242,6 +243,11 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         return equippedWeapon; // Return equipped weapon
     }
 
+    public WeaponData GetWeaponData()
+    {
+        return weaponData;
+    }
+
     public bool UnEquipWeapon()
     {
         // removes the Weapon datas references to the users bones changes weapon into "rag-doll state"
@@ -271,6 +277,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     public void SheathAndDrawWeapon()
     {
         Debug.Log("SheathAndDraw method state: " + currentWeaponState);
+        bool isDrawn = animationManager.GetBool("WeaponDrawn");
         switch (currentWeaponState)
         {
             case WeaponState.None:
@@ -289,7 +296,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                 }
                 currentWeaponState = WeaponState.Drawn;
                 Debug.Log("Weapon Drawn");
-                bool isDrawn = animationManager.GetBool("WeaponDrawn");
+                
                 if (isDrawn != true)
                 {
                     animationManager.SetBool("WeaponDrawn", true);
@@ -302,8 +309,11 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                 currentWeaponState = WeaponState.Sheathed;
                 equippedWeapon.transform.SetParent(weaponData.SheathedBone);
                 equippedWeapon.transform.localPosition = Vector3.zero;
-                ApplySheathRotation();
-                animationManager.SetBool("WeaponDrawn", false);
+                //ApplySheathRotation();
+                if (isDrawn == true)
+                {
+                    animationManager.SetBool("WeaponDrawn", false);
+                }
                 break;
         }
         
@@ -401,7 +411,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     }
     public bool hasWeaponEquipped()
     {
-        Debug.Log("Checking if Weapon is equipped!");
+        //Debug.Log("Checking if Weapon is equipped!" + (equippedWeapon != null));
         return equippedWeapon != null;
     }
     public bool isDrawn()

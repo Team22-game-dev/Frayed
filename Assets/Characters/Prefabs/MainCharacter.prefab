@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 8612749129740152534}
   - component: {fileID: 1643991919224708024}
   - component: {fileID: 349553583912087717}
+  - component: {fileID: 5809834050403929700}
   m_Layer: 3
   m_Name: MainCharacter
   m_TagString: Player
@@ -253,6 +254,19 @@ MonoBehaviour:
   footstepAudioVolume: 0.33
   landingAudioVolume: 0.4
   environmentPainSoundVolume: 0.8
+--- !u!114 &5809834050403929700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2456836682300840533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed669346035ddd9e59bce3ce6435497c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackPower: 1
 --- !u!1 &8244900443576938951
 GameObject:
   m_ObjectHideFlags: 0
