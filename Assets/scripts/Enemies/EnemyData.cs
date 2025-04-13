@@ -141,7 +141,7 @@ public class EnemyData : MonoBehaviour, IAttackData
         healthBarSliderGameObject.transform.rotation = Quaternion.LookRotation(sliderDirection);
         if (Mathf.Approximately(healthBarSlider.value, 1f))
         {
-            //healthBarSliderGameObject.SetActive(false);
+            healthBarSliderGameObject.SetActive(false);
         } 
         else
         {
