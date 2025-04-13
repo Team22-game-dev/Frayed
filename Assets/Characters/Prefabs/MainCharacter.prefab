@@ -130,6 +130,8 @@ MonoBehaviour:
   moveSpeed: 2
   sprintSpeed: 5.335
   attackSpeed: 1
+  backwardSpeed: 1.5
+  sidewaySpeed: 2
   rotationSmoothTime: 0.12
   speedChangeRate: 10
   jumpHeight: 1.2
