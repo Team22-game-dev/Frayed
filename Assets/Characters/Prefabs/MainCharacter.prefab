@@ -129,7 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2
   sprintSpeed: 5.335
-  attackSpeed: 0.4
+  attackSpeed: 1
   rotationSmoothTime: 0.12
   speedChangeRate: 10
   jumpHeight: 1.2
@@ -170,6 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawnDaggerRotation: {x: 0.6427876, y: 0, z: 0, w: 0.76604444}
   sheathedDaggerRotation: {x: 0.4545196, y: -0.5416751, z: -0.4545196, w: -0.5416751}
+  amalgamSwordRotation: {x: 0, y: 0, z: 0, w: 1}
   axeRotation: {x: 0, y: 0, z: 0, w: 1}
   bowRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!114 &4792826243224289047
