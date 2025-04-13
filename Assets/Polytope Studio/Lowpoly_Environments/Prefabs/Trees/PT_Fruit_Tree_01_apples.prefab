@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3315714296393109856}
   - component: {fileID: 7901795786038575910}
   - component: {fileID: 7525788340159858592}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PT_Fruit_Tree_01_apples_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 163004174657376329}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6419187236850804161}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7901795786038575910
 MeshFilter:
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 2364243790871939078}
   - component: {fileID: 4604217538834115015}
   - component: {fileID: 6038074568851490021}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PT_Fruit_Tree_01_apples_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,13 +109,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4396159832342145111}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6419187236850804161}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4604217538834115015
 MeshFilter:
@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6419187236850804161}
   - component: {fileID: 2256188382494855856}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PT_Fruit_Tree_01_apples
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192,6 +192,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5935278547815300987}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -201,7 +202,6 @@ Transform:
   - {fileID: 3315714296393109856}
   - {fileID: 2364243790871939078}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &2256188382494855856
 LODGroup:
@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 2123385224588831687}
   - component: {fileID: 4006941177706727810}
   - component: {fileID: 340751423047132367}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PT_Fruit_Tree_01_apples_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,13 +255,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7513603357302551873}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6419187236850804161}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4006941177706727810
 MeshFilter:
