@@ -27,7 +27,15 @@ public class MC_Locomotion : MonoBehaviour
 
     [Tooltip("Attack speed of the character in m/s")]
     [SerializeField]
-    private float attackSpeed = 0.4f;
+    private float attackSpeed = 1f;
+
+    [Tooltip("Move backward speed of the character in m/s")]
+    [SerializeField]
+    private float backwardSpeed = 1.5f;
+
+    [Tooltip("Move sideways speed of the character in m/s")]
+    [SerializeField]
+    private float sidewaySpeed = 2.0f;
 
     [Tooltip("How fast the character turns to face movement direction")]
     [Range(0.0f, 0.3f)]
@@ -69,6 +77,8 @@ public class MC_Locomotion : MonoBehaviour
     private LayerMask groundLayers;
 
     public bool grounded { get { return _grounded; } set { _grounded = value; } }
+    public bool walkingBackwards { get { return _walkingBackwards; } set { _walkingBackwards = value; } }
+    public bool walkingSideways { get { return _walkingSideways; } set { _walkingSideways = value; } }
     public float speed { get { return _speed; } set { _speed = value; } }
     public float animationBlend { get { return _animationBlend; } set { _animationBlend = value; } }
     public float targetRotation { get { return _targetRotation; } set { _targetRotation = value; } }
@@ -80,6 +90,8 @@ public class MC_Locomotion : MonoBehaviour
 
     // Player
     private bool _grounded = true;
+    private bool _walkingBackwards;
+    private bool _walkingSideways;
     private float _speed;
     private float _animationBlend;
     private float _targetRotation = 0.0f;
@@ -98,6 +110,7 @@ public class MC_Locomotion : MonoBehaviour
     private CameraManager cameraManager;
     private MC_Attack attack;
     private MC_AudioManager audioManager;
+    private MC_EquippedWeapon equippedWeapon;
 
 
     private void Awake()
@@ -126,6 +139,9 @@ public class MC_Locomotion : MonoBehaviour
 
         audioManager = GetComponent<MC_AudioManager>();
         Debug.Assert(audioManager != null);
+
+        equippedWeapon = GetComponent<MC_EquippedWeapon>();
+        Debug.Assert(equippedWeapon != null);
     }
 
     private void Update()
@@ -156,15 +172,32 @@ public class MC_Locomotion : MonoBehaviour
 
     private void Move()
     {
+        // normalise input direction
+        Vector3 inputDirection = new Vector3(inputManager.move.x, 0.0f, inputManager.move.y).normalized;
+
+        _walkingBackwards = (equippedWeapon.currentWeaponState == EquippedWeaponBase.WeaponState.Drawn && inputDirection.z < 0.0f);
+        _walkingSideways = (equippedWeapon.currentWeaponState == EquippedWeaponBase.WeaponState.Drawn 
+                            && Mathf.Approximately(inputDirection.z, 0.0f) && (inputDirection.x > 0.0f || inputDirection.x < 0.0f));
+
         // Set target speed based on conditions.
         float targetSpeed;
         if (attack.IsAttacking())
         {
             targetSpeed = attackSpeed;
-        } else if (inputManager.sprint)
+        }
+        else if (_walkingBackwards)
+        {
+            targetSpeed = backwardSpeed;
+        }
+        else if (_walkingSideways)
+        {
+            targetSpeed = sidewaySpeed;
+        }
+        else if (inputManager.sprint)
         {
             targetSpeed = sprintSpeed;
-        } else
+        } 
+        else
         {
             targetSpeed = moveSpeed;
         }
@@ -200,31 +233,45 @@ public class MC_Locomotion : MonoBehaviour
         _animationBlend = Mathf.Lerp(_animationBlend, _speed, Time.deltaTime * speedChangeRate);
         if (_animationBlend < 0.01f) _animationBlend = 0f;
 
-        // normalise input direction
-        Vector3 inputDirection = new Vector3(inputManager.move.x, 0.0f, inputManager.move.y).normalized;
-
-        // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-        // if there is a move input rotate player when the player is moving
-        if (inputManager.move != Vector2.zero)
+        if (equippedWeapon.currentWeaponState == EquippedWeaponBase.WeaponState.Drawn)
         {
-
-            _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
-                              cameraManager.mainCamera.transform.eulerAngles.y;
+            _targetRotation = cameraManager.mainCamera.transform.eulerAngles.y;
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
-                rotationSmoothTime);
+                    rotationSmoothTime);
+            Vector3 targetDirection = Quaternion.Euler(0.0f, rotation, 0.0f) * Vector3.forward;
+            transform.rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
 
-            // rotate to face input direction relative to camera position
-            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            // move the player
+            if (_controller.enabled)
+            {
+                _controller.Move(transform.rotation * inputDirection * (_speed * Time.deltaTime) +
+                                new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            }
         }
-
-        Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
-
-        // move the player
-        if (_controller.enabled)
+        else
         {
-            _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                            new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+            // if there is a move input rotate player when the player is moving
+            if (inputManager.move != Vector2.zero)
+            {
 
+                _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
+                                  cameraManager.mainCamera.transform.eulerAngles.y;
+                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
+                    rotationSmoothTime);
+
+                // rotate to face input direction relative to camera position
+                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            }
+
+            Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+
+            // move the player
+            if (_controller.enabled)
+            {
+                _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
+                                new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            }
         }
 
         _position = _controller.center;

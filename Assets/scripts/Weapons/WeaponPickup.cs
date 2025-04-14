@@ -128,7 +128,14 @@ private void CreatePickupUI()
         userWeaponController.Add(userComponent);
 
         if (other.CompareTag("Player"))
-            pickupPromptUI.enabled = true;
+        {
+            MC_EquippedWeapon mcEquippedWeapon = (MC_EquippedWeapon)userComponent;
+            // TODO: Add better logic once inventory is implemented.
+            if (!mcEquippedWeapon.hasWeaponEquipped())
+            {
+                pickupPromptUI.enabled = true;
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)

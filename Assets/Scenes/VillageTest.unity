@@ -807,7 +807,7 @@ Terrain:
   m_ReflectionProbeUsage: 1
   m_MaterialTemplate: {fileID: 2100000, guid: 594ea882c5a793440b60ff72d896021e, type: 2}
   m_BakeLightProbesForTrees: 1
-  m_PreserveTreePrototypeLayers: 0
+  m_PreserveTreePrototypeLayers: 1
   m_DeringLightProbesForTrees: 1
   m_ReceiveGI: 1
   m_ScaleInLightmap: 0.0256
@@ -3620,6 +3620,11 @@ PrefabInstance:
     - target: {fileID: 1560601628073206214, guid: 3494377b2b17f024394cac317ad3811f,
         type: 3}
       propertyPath: m_Follow
+      value: 
+      objectReference: {fileID: 624219978}
+    - target: {fileID: 1560601628073206214, guid: 3494377b2b17f024394cac317ad3811f,
+        type: 3}
+      propertyPath: m_LookAt
       value: 
       objectReference: {fileID: 624219978}
     - target: {fileID: 2670423057232084553, guid: 3494377b2b17f024394cac317ad3811f,

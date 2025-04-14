@@ -63,7 +63,7 @@ public class DamageIndicator : MonoBehaviour
         }
     }
 
-    public IEnumerator DamageTextSequence(GameObject textPrefabInstance, float damage, Vector3 hitPosition, Color color)
+    private IEnumerator DamageTextSequence(GameObject textPrefabInstance, float damage, Vector3 hitPosition, Color color)
     {
         GameObject damageText = textPrefabInstance.transform.Find("DamageText").gameObject;
         RectTransform rectTransform = damageText.GetComponent<RectTransform>();

@@ -52,8 +52,6 @@ public class MC_TakeDamageController : TakeDamageBase
                 Debug.Log("DamageDealt: " + damageDealt);
                 PlayerStats.Instance.TakeDamage(damageDealt);
 
-                // TODO: For testing purposes. The plan is to use damage indicators only for player damaging enemy.
-                DamageIndicator.Instance.IndicateDamage(damageDealt * 100f, attackingWeapon.transform.position);
             }
         }
         else
