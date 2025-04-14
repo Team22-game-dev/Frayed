@@ -92,7 +92,7 @@ public class MC_Inventory : MonoBehaviour
     public IEnumerator StoreAndEquip(GameObject item)
     {
         Store(item, false);
-        yield return StartCoroutine(Equip(storedItems[storedItems.Count - 1]));
+        yield return StartCoroutine(Switch(storedItems.Count - 1));
     }
 
     private IEnumerator Equip(GameObject item)
@@ -139,6 +139,10 @@ public class MC_Inventory : MonoBehaviour
             }
             inventoryIndex = index;
             readyToSwitch = true;
+        }
+        else
+        {
+            Debug.Log($"Was not ready to switch to item {index}. Skipped.");
         }
     }
 
