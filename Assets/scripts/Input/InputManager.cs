@@ -23,7 +23,8 @@ namespace Frayed.Input
         public bool jump { get { return _jump; } set { _jump = value; } }
         public bool sprint { get { return _sprint; } private set { _sprint = value; } }
         // Public setter and getter.
-        public bool optionsMenu { get { return _optionsMenu; } set { _optionsMenu = value; } }
+        public bool toggleOptionsMenu { get { return _toggleOptionsMenu; } set { _toggleOptionsMenu = value; } }
+        public bool toggleInventory { get { return _toggleInventory; } set { _toggleInventory = value; } }
 
         [Header("Character Input Values")]
         [SerializeField]
@@ -35,7 +36,9 @@ namespace Frayed.Input
         [SerializeField]
         private bool _sprint;
         [SerializeField]
-        private bool _optionsMenu;
+        private bool _toggleOptionsMenu;
+        [SerializeField]
+        private bool _toggleInventory;
 
         [Header("Movement Settings")]
         public bool movementLocked = false;
@@ -93,9 +96,14 @@ namespace Frayed.Input
             SprintInput(value.isPressed);
         }
 
-        public void OnOptionsMenu(InputValue value)
+        public void OnToggleOptionsMenu(InputValue value)
         {
-            OptionsMenuInput(value.isPressed);
+            ToggleOptionsMenuInput(value.isPressed);
+        }
+
+        public void OnToggleInventory(InputValue value)
+        {
+            ToggleInventoryInput(value.isPressed);
         }
 
 #endif
@@ -121,10 +129,16 @@ namespace Frayed.Input
             _sprint = newSprintState;
         }
 
-        public void OptionsMenuInput(bool newOptionsMenuState)
+        public void ToggleOptionsMenuInput(bool newToggleOptionsMenuState)
         {
             // Always be true due to Action being button.
-            _optionsMenu = newOptionsMenuState;
+            _toggleOptionsMenu = newToggleOptionsMenuState;
+        }
+
+        public void ToggleInventoryInput(bool newToggleInventoryState)
+        {
+            // Always be true due to Action being button.
+            _toggleInventory = newToggleInventoryState;
         }
 
         private void OnApplicationFocus(bool hasFocus)

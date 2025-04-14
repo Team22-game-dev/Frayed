@@ -22,6 +22,8 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     protected AnimationManager animationManager;
 
+    protected MC_Inventory mcInventory;
+
     public enum WeaponState
     {
         None,
@@ -55,6 +57,9 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
             currentWeaponState = WeaponState.None;
             rotationComponent = GetComponent<WeaponRotationData>();
         }
+
+        mcInventory = MC_Inventory.Instance;
+        Debug.Assert(mcInventory != null);
     }
 
     
@@ -254,7 +259,14 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         if(hasWeaponEquipped())
         {
             // remove this users transform data from weapon
-            equippedWeapon.transform.SetParent(null);
+            if (gameObject.CompareTag("Player"))
+            {
+                mcInventory.Store(equippedWeapon);
+            }
+            else
+            {
+                equippedWeapon.transform.SetParent(null);
+            }
             weaponData.ActionBoneL = null;
             weaponData.ActionBoneR = null;
             weaponData.SheathedBone = null;
@@ -262,6 +274,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
             // remove weapon and its data from this user
             weaponData = null;
             equippedWeapon = null;
+            currentWeaponState = WeaponState.None;
             return false;
         }
         else

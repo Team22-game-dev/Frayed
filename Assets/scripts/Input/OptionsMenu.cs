@@ -67,14 +67,14 @@ public class OptionsMenu : MonoBehaviour
 
     public void Update()
     {
-        if (inputManager.optionsMenu)
+        if (inputManager.toggleOptionsMenu)
         {
             if (!gameOverScreen.gameOverTriggered)
             {
                 Toggle(!_toggled);
             }
             // Finished with the button input, set back to false.
-            inputManager.optionsMenu = false;
+            inputManager.toggleOptionsMenu = false;
         }
     }
 
