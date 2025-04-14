@@ -23,6 +23,7 @@ public class MC_Inventory : MonoBehaviour
 
     private MC_EquippedWeapon mcEquippedWeapon;
     private InputManager inputManager;
+    private OptionsMenu optionsMenu;
 
     private readonly GameObject hand = null;
 
@@ -54,6 +55,9 @@ public class MC_Inventory : MonoBehaviour
         inputManager = InputManager.Instance;
         Debug.Assert(inputManager != null);
 
+        optionsMenu = OptionsMenu.Instance;
+        Debug.Assert(inputManager != null);
+
         readyToSwitch = true;
     }
 
@@ -61,9 +65,12 @@ public class MC_Inventory : MonoBehaviour
     {
         if (inputManager.toggleInventory)
         {
-            Toggle(!_toggled);
-            // TODO: Temp logic to demonstrate functional item switching via tab key.
-            Next();
+            if (!optionsMenu.toggled)
+            {
+                Toggle(!_toggled);
+                // TODO: Temp logic to demonstrate functional item switching via tab key.
+                Next();
+            }
             inputManager.toggleInventory = false;
         }
     }
