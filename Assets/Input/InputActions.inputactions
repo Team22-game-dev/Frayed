@@ -42,9 +42,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "OptionsMenu",
+                    "name": "Toggle Options Menu",
                     "type": "Button",
                     "id": "00d4eb77-a6ef-4c37-a7e9-ee6d6a616679",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Toggle Inventory",
+                    "type": "Button",
+                    "id": "3cc17954-738c-43a6-86f5-d6e1b42825d9",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -235,7 +244,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";KeyboardMouse",
-                    "action": "OptionsMenu",
+                    "action": "Toggle Options Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -246,7 +255,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "OptionsMenu",
+                    "action": "Toggle Options Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "599f3807-a2fc-40c4-918d-8ed8283c7437",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "Toggle Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c939ae1a-9c56-41b6-afe0-dfa64256b19b",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Toggle Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

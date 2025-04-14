@@ -67,14 +67,14 @@ public class OptionsMenu : MonoBehaviour
 
     public void Update()
     {
-        if (inputManager.optionsMenu)
+        if (inputManager.toggleOptionsMenu)
         {
             if (!gameOverScreen.gameOverTriggered)
             {
                 Toggle(!_toggled);
             }
             // Finished with the button input, set back to false.
-            inputManager.optionsMenu = false;
+            inputManager.toggleOptionsMenu = false;
         }
     }
 
@@ -96,7 +96,7 @@ public class OptionsMenu : MonoBehaviour
         else if (sceneName == "VillageTest")
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = false;
-            GameObject.FindGameObjectWithTag("Player").transform.position = new Vector3(292.2f, 13.5f, 230.4f);
+            GameObject.FindGameObjectWithTag("Player").transform.position = new Vector3(328.58f, 8.75f, 238.33f);
             GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = true;
         }
         Toggle(false);

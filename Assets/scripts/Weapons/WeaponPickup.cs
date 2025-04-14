@@ -25,6 +25,8 @@ public class WeaponPickup : MonoBehaviour
 
     private EquippedWeaponBase newUser;
 
+    private MC_Inventory mcInventory;
+
     // UI Elements
     [SerializeField]
     private Sprite pickupPrompt;  // Assign this in the Inspector
@@ -43,48 +45,51 @@ public class WeaponPickup : MonoBehaviour
 
         userWeaponController = new List<EquippedWeaponBase>();
 
+        mcInventory = MC_Inventory.Instance;
+        Debug.Assert(mcInventory != null);
+
         CreatePickupUI();
 
         // Set layer to "Weapons"
         gameObject.layer = LayerMask.NameToLayer("Weapons");
     }
 
-private void CreatePickupUI()
-{
-    // Create Canvas
-    GameObject canvasGO = new GameObject("PickupCanvas");
-    canvasGO.transform.SetParent(transform);
-    pickupCanvas = canvasGO.AddComponent<Canvas>();
-    pickupCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-    canvasGO.AddComponent<CanvasScaler>();
-    canvasGO.AddComponent<GraphicRaycaster>();
-
-    // Create Image
-    GameObject imageGO = new GameObject("PickupPrompt");
-    imageGO.transform.SetParent(canvasGO.transform);
-    pickupPromptUI = imageGO.AddComponent<Image>();
-    pickupPromptUI.sprite = pickupPrompt;
-    pickupPromptUI.enabled = false;  // Initially hidden
-
-    // Adjust size while preserving aspect ratio
-    RectTransform rt = pickupPromptUI.GetComponent<RectTransform>();
-
-    if (pickupPrompt != null)
+    private void CreatePickupUI()
     {
-        float originalWidth = pickupPrompt.rect.width;
-        float originalHeight = pickupPrompt.rect.height;
-        float aspectRatio = originalWidth / originalHeight;
+        // Create Canvas
+        GameObject canvasGO = new GameObject("PickupCanvas");
+        canvasGO.transform.SetParent(transform);
+        pickupCanvas = canvasGO.AddComponent<Canvas>();
+        pickupCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvasGO.AddComponent<CanvasScaler>();
+        canvasGO.AddComponent<GraphicRaycaster>();
 
-        float targetHeight = 50; // Set base height
-        float targetWidth = targetHeight * aspectRatio; // Maintain aspect ratio
+        // Create Image
+        GameObject imageGO = new GameObject("PickupPrompt");
+        imageGO.transform.SetParent(canvasGO.transform);
+        pickupPromptUI = imageGO.AddComponent<Image>();
+        pickupPromptUI.sprite = pickupPrompt;
+        pickupPromptUI.enabled = false;  // Initially hidden
 
-        rt.sizeDelta = new Vector2(targetWidth, targetHeight);
+        // Adjust size while preserving aspect ratio
+        RectTransform rt = pickupPromptUI.GetComponent<RectTransform>();
+
+        if (pickupPrompt != null)
+        {
+            float originalWidth = pickupPrompt.rect.width;
+            float originalHeight = pickupPrompt.rect.height;
+            float aspectRatio = originalWidth / originalHeight;
+
+            float targetHeight = 50; // Set base height
+            float targetWidth = targetHeight * aspectRatio; // Maintain aspect ratio
+
+            rt.sizeDelta = new Vector2(targetWidth, targetHeight);
+        }
+        else
+        {
+            rt.sizeDelta = new Vector2(70, 70);  // Fallback default size
+        }
     }
-    else
-    {
-        rt.sizeDelta = new Vector2(70, 70);  // Fallback default size
-    }
-}
 
 
     private void Update()
@@ -106,7 +111,7 @@ private void CreatePickupUI()
 
             foreach (EquippedWeaponBase user in userWeaponController)
             {
-                if (user.WillPickupWeapon())
+                if (user.WillPickupWeapon() && (!user.gameObject.CompareTag("Player") || pickupPromptUI.enabled))
                 {
                     newUser = user;
                     StartCoroutine(PickupWeapon());
@@ -129,9 +134,7 @@ private void CreatePickupUI()
 
         if (other.CompareTag("Player"))
         {
-            MC_EquippedWeapon mcEquippedWeapon = (MC_EquippedWeapon)userComponent;
-            // TODO: Add better logic once inventory is implemented.
-            if (!mcEquippedWeapon.hasWeaponEquipped())
+            if (!mcInventory.Contains(this.gameObject))
             {
                 pickupPromptUI.enabled = true;
             }
@@ -149,54 +152,61 @@ private void CreatePickupUI()
         }
     }
 
-private IEnumerator PickupWeapon()
-{
-    boxCollider = GetComponent<BoxCollider>();
-
-
-    if (boxCollider == null || sphereCollider == null || rigidBody == null)
+    private IEnumerator PickupWeapon()
     {
-        Debug.LogError("Missing required components on weapon.");
-        yield break;
+        boxCollider = GetComponent<BoxCollider>();
+
+
+        if (boxCollider == null || sphereCollider == null || rigidBody == null)
+        {
+            Debug.LogError("Missing required components on weapon.");
+            yield break;
+        }
+
+        pickupPromptUI.enabled = false;
+
+        // Disable pickup detection
+        sphereCollider.enabled = false;
+
+        // Prepare damage collider
+        boxCollider.enabled = true;
+        boxCollider.isTrigger = true;
+        // boxCollider.isTrigger = true;
+
+        // Disable physics for equipped state
+        rigidBody.isKinematic = true;
+        rigidBody.useGravity = false;
+
+        // Don't deactivate — just wait one frame to ensure collider states update
+        yield return null;
+
+        // Assign user and handle equip
+        if (newUser == null)
+        {
+            Debug.LogError("Attempted to equip a weapon with a null user.");
+            yield break;
+        }
+
+        if (newUser.gameObject.CompareTag("Player"))
+        {
+            if (newUser.hasWeaponEquipped())
+            {
+                mcInventory.Store(this.gameObject);
+            }
+            else
+            {
+                yield return StartCoroutine(mcInventory.StoreAndEquip(this.gameObject));
+            }
+        }
+        else
+        {
+            yield return newUser.StartEquipWeaponCoroutine(this.gameObject);
+            newUser.DrawWeapon(false);
+        }
+
+        // Optional: Set layer after successful pickup
+        gameObject.layer = LayerMask.NameToLayer("Weapons");
     }
-
-    pickupPromptUI.enabled = false;
-
-    // Disable pickup detection
-    sphereCollider.enabled = false;
-
-    // Prepare damage collider
-    boxCollider.enabled = true;
-    boxCollider.isTrigger = true;
-   // boxCollider.isTrigger = true;
-
-    // Disable physics for equipped state
-    rigidBody.isKinematic = true;
-    rigidBody.useGravity = false;
-
-    // Don't deactivate — just wait one frame to ensure collider states update
-    yield return null;
-
-    // Assign user and handle equip
-    if (newUser == null)
-    {
-        Debug.LogError("Attempted to equip a weapon with a null user.");
-        yield break;
-    }
-
-    if (newUser.hasWeaponEquipped())
-    {
-        // Optional: Add logic to store the current weapon
-    }
-    else
-    {
-        yield return newUser.StartEquipWeaponCoroutine(gameObject);
-        newUser.DrawWeapon(false);
-    }
-
-    // Optional: Set layer after successful pickup
-    gameObject.layer = LayerMask.NameToLayer("Weapons");
-}
 
 
     public void DropWeapon()
