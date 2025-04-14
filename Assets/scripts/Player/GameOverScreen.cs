@@ -23,7 +23,7 @@ public class GameOverScreen : MonoBehaviour
 
     private OptionsMenu optionsMenu;
     private InputManager inputManager;
-
+    private MC_Inventory mcInventory;
     private void Awake()
     {
         // Singleton pattern with explicit null check
@@ -42,6 +42,9 @@ public class GameOverScreen : MonoBehaviour
         optionsMenu = OptionsMenu.Instance;
         inputManager = InputManager.Instance;
         gameOverTextStartPosition = gameOverTextRect.anchoredPosition;
+
+        mcInventory = MC_Inventory.Instance;
+        UnityEngine.Debug.Assert(mcInventory != null);
 
         // Hide all Game Over UI elements at start
         HideGameOver();
@@ -69,6 +72,8 @@ public class GameOverScreen : MonoBehaviour
 
     IEnumerator GameOverSequence()
     {
+        yield return StartCoroutine(mcInventory.ClearInventory());
+
         GameOverText.gameObject.SetActive(true);
 
         Vector2 startPosition = gameOverTextStartPosition;

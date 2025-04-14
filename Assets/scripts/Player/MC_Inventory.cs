@@ -18,6 +18,7 @@ public class MC_Inventory : MonoBehaviour
     [SerializeField]
     private int inventoryIndex;
 
+    [SerializeField]
     private List<GameObject> storedItems;
     private HashSet<GameObject> storedItemsSet;
 
@@ -26,6 +27,7 @@ public class MC_Inventory : MonoBehaviour
     private OptionsMenu optionsMenu;
 
     private readonly GameObject hand = null;
+    private readonly int handInventoryIndex = 0;
 
     private bool readyToSwitch;
 
@@ -45,7 +47,7 @@ public class MC_Inventory : MonoBehaviour
     {
         storedItems = new List<GameObject>();
         storedItems.Add(hand);
-        inventoryIndex = 0;
+        inventoryIndex = handInventoryIndex;
 
         storedItemsSet = new HashSet<GameObject>();
 
@@ -161,6 +163,18 @@ public class MC_Inventory : MonoBehaviour
         else
         {
 
+        }
+    }
+
+    public IEnumerator ClearInventory()
+    {
+        yield return StartCoroutine(Switch(handInventoryIndex));
+        for (int i = storedItems.Count-1; i >= 1; --i)
+        {
+            GameObject item = storedItems[i];
+            storedItems.RemoveAt(i);
+            storedItemsSet.Remove(item);
+            Destroy(item);
         }
     }
 
