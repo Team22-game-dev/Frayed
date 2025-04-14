@@ -14,10 +14,11 @@ public class EnemyData : MonoBehaviour, IAttackData
     public float chaseSpeed { get { return _chaseSpeed; } private set { _chaseSpeed = value; } }
     public float attackRadius { get { return _attackRadius; } private set { _attackRadius = value; } }
     public float attackDuration { get { return _attackDuration; } private set { _attackDuration = value; } }
-    public float attackRotationSpeed { get { return _attackRotationSpeed; } private set { _attackRotationSpeed = value; } }
+    public float angularSpeed { get { return _angularSpeed; } private set { _angularSpeed = value; } }
     public float height { get { return _height; } private set { _height = value; } }
     public float GetAttackPower () => _baseAttackPower;
     public GameObject mainCharacter { get { return _mainCharacter; } private set { _mainCharacter = value; } }
+    public Rigidbody rb { get { return _rb; } private set { _rb = value; } }
 
     public Vector3 spawnPosition { get { return _spawnPosition; } private set { _spawnPosition = value; } }
 
@@ -55,8 +56,10 @@ public class EnemyData : MonoBehaviour, IAttackData
     [SerializeField]
     [Tooltip("In seconds.")]
     private float _attackDuration = 1f;
+
     [SerializeField]
-    private float _attackRotationSpeed = 2.5f;
+    [Tooltip("In deg/s.")]
+    private float _angularSpeed = 90f;
 
 
     [Header("Enemy Character Information")]
@@ -81,6 +84,7 @@ public class EnemyData : MonoBehaviour, IAttackData
     private GameObject mainCamera;
 
     private PlayerStats playerStats;
+    private Rigidbody _rb;
 
 
     [Header("Health Slider Fields")]
@@ -125,6 +129,9 @@ public class EnemyData : MonoBehaviour, IAttackData
         healthBarSlider = healthBarSliderGameObject.GetComponent<Slider>();
         Debug.Assert(healthBarSlider != null);
 
+        _rb = GetComponent<Rigidbody>();
+        Debug.Assert(_rb != null);
+
         // Temp starting health.
         _startingHealth = _baseHealth;
         _currentHealth = _startingHealth;
@@ -141,7 +148,7 @@ public class EnemyData : MonoBehaviour, IAttackData
         healthBarSliderGameObject.transform.rotation = Quaternion.LookRotation(sliderDirection);
         if (Mathf.Approximately(healthBarSlider.value, 1f))
         {
-            //healthBarSliderGameObject.SetActive(false);
+            healthBarSliderGameObject.SetActive(false);
         } 
         else
         {
