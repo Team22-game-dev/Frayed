@@ -821,7 +821,7 @@ MonoBehaviour:
   _chaseSpeed: 2.5
   _attackRadius: 1.75
   _attackDuration: 1
-  _attackRotationSpeed: 2.5
+  _angularSpeed: 90
   _height: 2
   _baseHealth: 100
   _startingHealth: 0

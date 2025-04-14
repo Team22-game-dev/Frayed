@@ -31,7 +31,6 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
 
 
-  
 
     private float timeSinceAttack;
     private float timeStanding;
@@ -146,6 +145,10 @@ public class EnemyManager : MonoBehaviour
     {
         //_navMeshAgent.SetDestination(enemyData.mainCharacter.transform.position);
         TrySetDestination(enemyData.mainCharacter.transform.position);
+        if (ReachedDestination())
+        {
+            MoveTowardPlayerWithoutNavAgent(enemyData.chaseSpeed);
+        }
     }
 
     private void HandleReadyToAttackState()
@@ -157,11 +160,7 @@ public class EnemyManager : MonoBehaviour
 
     private void HandleAttackingState()
     {
-        // Make sure to look toward the player when attacking. In chasing state, looking toward the player is handled by the navAgent.
-        Vector3 direction = enemyData.mainCharacter.transform.position - transform.position;
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        Quaternion currentRotation = transform.rotation;
-        transform.rotation = Quaternion.Lerp(currentRotation, targetRotation, Time.deltaTime * enemyData.attackRotationSpeed);
+        MoveTowardPlayerWithoutNavAgent(enemyData.chaseSpeed);
 
         // TODO: Will probably have to improve on this logic.
         timeSinceAttack += Time.deltaTime;
@@ -178,8 +177,27 @@ public class EnemyManager : MonoBehaviour
         if (path.corners.Length > 0)
         {
             // Go to the last location of the path to the desiredDestination (even if it's unreachable).
-            _navMeshAgent.SetDestination(path.corners.Last());
+            //_navMeshAgent.SetDestination(path.corners.Last());
+            _navMeshAgent.SetPath(path);
             //Debug.Log(path.corners.Last());
+        }
+    }
+
+    private void MoveTowardPlayerWithoutNavAgent(float speed)
+    {
+        Vector3 playerHorizontalPosition = new Vector3(enemyData.mainCharacter.transform.position.x, 0f, enemyData.mainCharacter.transform.position.z);
+        Vector3 enemyHorizontalPosition = new Vector3(transform.position.x, 0f, transform.position.z);
+
+        Vector3 direction = playerHorizontalPosition - enemyHorizontalPosition;
+        // Make sure to look toward the player if not handled by the navAgent.
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, enemyData.angularSpeed * Time.deltaTime);
+
+        float horizontalDistance = (playerHorizontalPosition - enemyHorizontalPosition).magnitude;
+        if (horizontalDistance >= enemyData.attackRadius)
+        {
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = direction.normalized * speed;
         }
     }
 
@@ -211,11 +229,13 @@ public class EnemyManager : MonoBehaviour
                 _navMeshAgent.isStopped = false;
                 _navMeshAgent.speed = enemyData.wanderSpeed;
                 _navMeshAgent.stoppingDistance = 1f;
+                _navMeshAgent.angularSpeed = enemyData.angularSpeed;
                 break;
             case State.CHASING:
                 _navMeshAgent.isStopped = false;
                 _navMeshAgent.speed = enemyData.chaseSpeed;
-                _navMeshAgent.stoppingDistance = enemyData.attackRadius * 0.9f;
+                _navMeshAgent.stoppingDistance = enemyData.attackRadius;
+                _navMeshAgent.angularSpeed = enemyData.angularSpeed;
                 break;
             case State.READY_TO_ATTACK:
                 break;
