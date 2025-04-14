@@ -140,27 +140,37 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         }
 
         // Wait for the animation to finish
-        string animationName;
+        string animationName = animationManager.GetCurrentAnimationName(); ;
         float startTime = Time.time;
-        float weaponSwitchTimeLimit = 0.5f;
+        float weaponSwitchTimeLimit = 1.0f;
 
-        do
+        while (animationName == "transition" || animationName.StartsWith("attack_"))
         {
-            animationName = animationManager.GetCurrentAnimationName();
-            if (animationName == "transition")
-            {
-                Debug.Log("Animation in transition!");
-                yield return new WaitForSeconds(0.033f);
-            }
-
             if (Time.time - startTime > weaponSwitchTimeLimit)
             {
                 Debug.LogWarning($"Weapon equip timed out while waiting for animation to finish. Last animation: {animationName}");
                 yield break;
             }
-        } while (animationName == "transition");
+            yield return new WaitForSeconds(0.033f);
+            animationName = animationManager.GetCurrentAnimationName();
+        }
+        // do
+        // {
+        //     animationName = animationManager.GetCurrentAnimationName();
+        //     if (animationName == "transition")
+        //     {
+        //         Debug.Log("Animation in transition!");
+        //         yield return new WaitForSeconds(0.033f);
+        //     }
 
-        if (!animationName.StartsWith("attack_"))
+        //     if (Time.time - startTime > weaponSwitchTimeLimit)
+        //     {
+        //         Debug.LogWarning($"Weapon equip timed out while waiting for animation to finish. Last animation: {animationName}");
+        //         yield break;
+        //     }
+        // } while (animationName == "transition");
+
+        if (!(animationName == "transition" || animationName.StartsWith("attack_")))
         {
             Debug.Log("All good to equip weapon");
 
@@ -200,6 +210,10 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
             {
                 Debug.LogError("WeaponData component not found on the equipped weapon.");
             }
+        }
+        else
+        {
+            Debug.LogError("Was NOT all good to equip weapon. Oops!");
         }
     }
 

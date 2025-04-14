@@ -20,6 +20,7 @@ public class MC_Inventory : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> storedItems;
+
     private HashSet<GameObject> storedItemsSet;
 
     private MC_EquippedWeapon mcEquippedWeapon;
@@ -29,7 +30,12 @@ public class MC_Inventory : MonoBehaviour
     private readonly GameObject hand = null;
     private readonly int handInventoryIndex = 0;
 
+    [SerializeField]
     private bool readyToSwitch;
+    [SerializeField]
+    private float timeSinceSwitch;
+    [SerializeField]
+    private float readyToSwitchTimeout = 3.0f;
 
     private void Awake()
     {
@@ -61,6 +67,7 @@ public class MC_Inventory : MonoBehaviour
         Debug.Assert(inputManager != null);
 
         readyToSwitch = true;
+        timeSinceSwitch = 0.0f;
     }
 
     private void Update()
@@ -74,6 +81,13 @@ public class MC_Inventory : MonoBehaviour
                 Next();
             }
             inputManager.toggleInventory = false;
+        }
+
+        // TODO: Temp logic to reset readyToSwitch if error occurs while equipping since finally statements are wonky with coroutines.
+        timeSinceSwitch += Time.deltaTime;
+        if (timeSinceSwitch > readyToSwitchTimeout && !readyToSwitch)
+        {
+            readyToSwitch = true;
         }
     }
 
@@ -140,6 +154,7 @@ public class MC_Inventory : MonoBehaviour
                 yield return StartCoroutine(Equip(storedItems[index]));
             }
             inventoryIndex = index;
+            timeSinceSwitch = 0.0f;
             readyToSwitch = true;
         }
         else
@@ -169,7 +184,7 @@ public class MC_Inventory : MonoBehaviour
     public IEnumerator ClearInventory()
     {
         yield return StartCoroutine(Switch(handInventoryIndex));
-        for (int i = storedItems.Count-1; i >= 1; --i)
+        for (int i = storedItems.Count - 1; i >= 1; --i)
         {
             GameObject item = storedItems[i];
             storedItems.RemoveAt(i);

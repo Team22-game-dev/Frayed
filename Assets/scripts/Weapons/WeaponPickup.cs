@@ -111,7 +111,7 @@ public class WeaponPickup : MonoBehaviour
 
             foreach (EquippedWeaponBase user in userWeaponController)
             {
-                if (user.WillPickupWeapon() && pickupPromptUI.enabled)
+                if (user.WillPickupWeapon() && (!user.gameObject.CompareTag("Player") || pickupPromptUI.enabled))
                 {
                     newUser = user;
                     StartCoroutine(PickupWeapon());
