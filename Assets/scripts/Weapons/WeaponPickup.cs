@@ -134,7 +134,7 @@ public class WeaponPickup : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            if (!mcInventory.Contains(this.gameObject))
+            if (!mcInventory.Contains(weaponData))
             {
                 pickupPromptUI.enabled = true;
             }
@@ -191,11 +191,11 @@ public class WeaponPickup : MonoBehaviour
         {
             if (newUser.hasWeaponEquipped())
             {
-                mcInventory.Store(this.gameObject);
+                mcInventory.Store(weaponData);
             }
             else
             {
-                yield return StartCoroutine(mcInventory.StoreAndEquip(this.gameObject));
+                yield return StartCoroutine(mcInventory.StoreAndEquip(weaponData));
             }
         }
         else

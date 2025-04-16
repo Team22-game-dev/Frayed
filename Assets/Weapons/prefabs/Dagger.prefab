@@ -126,6 +126,7 @@ MonoBehaviour:
   weaponType: 
   _weaponPower: 2
   damage: 1
+  sprite: {fileID: 21300000, guid: f39892235e25ece43b03cd469fc43f08, type: 3}
   DrawAnimation: DrawDagger
   SheathAnimation: SheathDagger
   twoHanded: 0

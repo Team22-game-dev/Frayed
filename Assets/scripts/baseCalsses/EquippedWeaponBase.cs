@@ -275,7 +275,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
             // remove this users transform data from weapon
             if (gameObject.CompareTag("Player"))
             {
-                mcInventory.Store(equippedWeapon);
+                mcInventory.Store(weaponData);
             }
             else
             {
