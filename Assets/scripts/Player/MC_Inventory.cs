@@ -28,6 +28,7 @@ public class MC_Inventory : MonoBehaviour
     private MC_EquippedWeapon mcEquippedWeapon;
     private InputManager inputManager;
     private OptionsMenu optionsMenu;
+    private GameOverScreen gameOverScreen;
 
     private InventoryItem hand;
     private readonly int handInventoryIndex = 0;
@@ -62,10 +63,10 @@ public class MC_Inventory : MonoBehaviour
         Debug.Assert(hand != null);
 
         storedItems = new List<InventoryItem>();
-        storedItems.Add(hand);
-        inventoryIndex = handInventoryIndex;
-
         storedItemsSet = new HashSet<string>();
+
+        Store(hand);
+        inventoryIndex = handInventoryIndex;
 
         mcEquippedWeapon = MC_EquippedWeapon.Instance;
         Debug.Assert(mcEquippedWeapon != null);
@@ -88,6 +89,9 @@ public class MC_Inventory : MonoBehaviour
         indexText = this.transform.Find("Canvas/Circle/Index").GetComponent<TMP_Text>();
         Debug.Assert(text != null);
 
+        gameOverScreen = GameOverScreen.Instance;
+        Debug.Assert(gameOverScreen != null);
+
         readyToSwitch = true;
         timeSinceSwitch = 0.0f;
 
@@ -96,24 +100,27 @@ public class MC_Inventory : MonoBehaviour
 
     private void Update()
     {
-        if (inputManager.toggleInventory)
+        if (!optionsMenu.toggled && !gameOverScreen.gameOverTriggered)
         {
-            if (!optionsMenu.toggled)
+            if (inputManager.toggleInventory)
             {
                 Toggle(!_toggled);
             }
-            inputManager.toggleInventory = false;
-        }
 
-        if (_toggled)
-        {
-            if (inputManager.inventoryNextItem)
+            if (_toggled)
             {
-                Next();
-            }
-            else if (inputManager.inventoryPrevItem)
-            {
-                Prev();
+                if (inputManager.inventoryNextItem)
+                {
+                    Next();
+                }
+                else if (inputManager.inventoryPrevItem)
+                {
+                    Prev();
+                }
+                else if (inputManager.inventoryDropWeapon)
+                {
+                    DropCurrentWeapon();
+                }
             }
         }
 
@@ -123,6 +130,10 @@ public class MC_Inventory : MonoBehaviour
         {
             readyToSwitch = true;
         }
+
+        // Reset inventory input manager buttons.
+        inputManager.inventoryDropWeapon = false;
+        inputManager.toggleInventory = false;
     }
 
     public void Store(InventoryItem item, bool unequip = true)
@@ -146,11 +157,27 @@ public class MC_Inventory : MonoBehaviour
         yield return StartCoroutine(Switch(storedItems.Count - 1));
     }
 
+    public void DropCurrentWeapon()
+    {
+        InventoryItem currentItem = storedItems[inventoryIndex];
+        if (currentItem == hand)
+        {
+            return;
+        }
+        mcEquippedWeapon.DropWeapon();
+        inventoryIndex = handInventoryIndex;
+        // Not the most efficent but it's okay.
+        bool deletedFromList = storedItems.Remove(currentItem);
+        bool deletedFromSet = storedItemsSet.Remove(currentItem.getInventoryName());
+        UpdateInventoryUI();
+        Debug.Assert(deletedFromList);
+        Debug.Assert(deletedFromSet);
+    }
+
     private IEnumerator Equip(InventoryItem item)
     {
         Debug.Assert(Contains(item));
         GameObject itemGameObject = item.gameObject;
-        mcEquippedWeapon.UnEquipWeapon();
         yield return StartCoroutine(mcEquippedWeapon.StartEquipWeaponCoroutine(itemGameObject));
         itemGameObject.SetActive(true);
         mcEquippedWeapon.DrawWeapon(false);
@@ -181,11 +208,10 @@ public class MC_Inventory : MonoBehaviour
         if (readyToSwitch)
         {
             readyToSwitch = false;
-            if (storedItems[index] == hand)
-            {
-                mcEquippedWeapon.UnEquipWeapon();
-            }
-            else
+            InventoryItem currentItem = storedItems[inventoryIndex];
+            mcEquippedWeapon.UnEquipWeapon();
+            Store(currentItem);
+            if (storedItems[index] != hand)
             {
                 yield return StartCoroutine(Equip(storedItems[index]));
             }

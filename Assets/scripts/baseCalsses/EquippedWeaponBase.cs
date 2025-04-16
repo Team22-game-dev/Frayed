@@ -21,9 +21,6 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     protected WeaponRotationData rotationComponent;  // Reference to the WeaponRotationComponent
 
     protected AnimationManager animationManager;
-
-    protected MC_Inventory mcInventory;
-
     public enum WeaponState
     {
         None,
@@ -58,8 +55,6 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
             rotationComponent = GetComponent<WeaponRotationData>();
         }
 
-        mcInventory = MC_Inventory.Instance;
-        Debug.Assert(mcInventory != null);
     }
 
     
@@ -273,14 +268,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         if(hasWeaponEquipped())
         {
             // remove this users transform data from weapon
-            if (gameObject.CompareTag("Player"))
-            {
-                mcInventory.Store(weaponData);
-            }
-            else
-            {
-                equippedWeapon.transform.SetParent(null);
-            }
+            equippedWeapon.transform.SetParent(null);
             weaponData.ActionBoneL = null;
             weaponData.ActionBoneR = null;
             weaponData.SheathedBone = null;
@@ -415,13 +403,15 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         if(hasWeaponEquipped())
         {
             // make refrence to rb before losing refrence to weapon 
-            Rigidbody rb = equippedWeapon.GetComponent<Rigidbody>();
-            if(rb != null)
+            //Rigidbody rb = equippedWeapon.GetComponent<Rigidbody>();
+            WeaponPickup weaponPickup = equippedWeapon.GetComponent<WeaponPickup>();
+            if(weaponPickup != null)
             {
                 if(!UnEquipWeapon())
                 {
-                    rb.isKinematic = false;
-                    rb.useGravity = true;
+                    weaponPickup.DropWeapon();
+                    //rb.isKinematic = false;
+                    //rb.useGravity = true;
                 }
                 else
                 {

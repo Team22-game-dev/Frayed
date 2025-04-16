@@ -76,6 +76,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Inventory Drop Weapon",
+                    "type": "Button",
+                    "id": "460438d7-3ba1-4002-9a1c-33ea499d724c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -313,10 +322,10 @@
                 {
                     "name": "",
                     "id": "01c37403-b608-40db-af36-55945757844c",
-                    "path": "<Gamepad>/rightStick/up",
+                    "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Gamepad",
                     "action": "Inventory Next Item",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -327,7 +336,7 @@
                     "path": "<Mouse>/scroll/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";KeyboardMouse",
                     "action": "Inventory Prev Item",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -335,11 +344,33 @@
                 {
                     "name": "",
                     "id": "0786a3a4-06a5-443d-9691-a8a3003a3786",
-                    "path": "<Gamepad>/rightStick/down",
+                    "path": "<Gamepad>/dpad/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Gamepad",
                     "action": "Inventory Prev Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cd1c9e68-a804-4221-a5fc-d158376661d4",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "Inventory Drop Weapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "069d4cbf-9231-46fa-8ff1-cf13def680bc",
+                    "path": "<Gamepad>/{Back}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Inventory Drop Weapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

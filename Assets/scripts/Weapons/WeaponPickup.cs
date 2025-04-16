@@ -111,7 +111,11 @@ public class WeaponPickup : MonoBehaviour
 
             foreach (EquippedWeaponBase user in userWeaponController)
             {
-                if (user.WillPickupWeapon() && (!user.gameObject.CompareTag("Player") || pickupPromptUI.enabled))
+                if (user == null)
+                {
+                    userWeaponController.Remove(user);
+                }
+                else if (user.WillPickupWeapon() && (!user.gameObject.CompareTag("Player") || pickupPromptUI.enabled))
                 {
                     newUser = user;
                     StartCoroutine(PickupWeapon());
@@ -212,6 +216,7 @@ public class WeaponPickup : MonoBehaviour
     public void DropWeapon()
     {
         sphereCollider.enabled = true;
+        boxCollider.isTrigger = false;
         rigidBody.isKinematic = false;
         rigidBody.useGravity = true;
     }
