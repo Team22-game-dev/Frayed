@@ -91,7 +91,7 @@ public class MC_Inventory : MonoBehaviour
         readyToSwitch = true;
         timeSinceSwitch = 0.0f;
 
-        Toggle(true);
+        Toggle(false);
     }
 
     private void Update()
@@ -100,11 +100,21 @@ public class MC_Inventory : MonoBehaviour
         {
             if (!optionsMenu.toggled)
             {
-                //Toggle(!_toggled);
-                // TODO: Temp logic to demonstrate functional item switching via tab key.
-                Next();
+                Toggle(!_toggled);
             }
             inputManager.toggleInventory = false;
+        }
+
+        if (_toggled)
+        {
+            if (inputManager.inventoryNextItem)
+            {
+                Next();
+            }
+            else if (inputManager.inventoryPrevItem)
+            {
+                Prev();
+            }
         }
 
         // TODO: Temp logic to reset readyToSwitch if error occurs while equipping since finally statements are wonky with coroutines.

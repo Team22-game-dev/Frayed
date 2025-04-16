@@ -25,6 +25,8 @@ namespace Frayed.Input
         // Public setter and getter.
         public bool toggleOptionsMenu { get { return _toggleOptionsMenu; } set { _toggleOptionsMenu = value; } }
         public bool toggleInventory { get { return _toggleInventory; } set { _toggleInventory = value; } }
+        public bool inventoryNextItem { get { return _inventoryNextItem; } private set { _inventoryNextItem = value; } }
+        public bool inventoryPrevItem { get { return _inventoryPrevItem; } private set { _inventoryPrevItem = value; } }
 
         [Header("Character Input Values")]
         [SerializeField]
@@ -39,6 +41,10 @@ namespace Frayed.Input
         private bool _toggleOptionsMenu;
         [SerializeField]
         private bool _toggleInventory;
+        [SerializeField]
+        private bool _inventoryNextItem;
+        [SerializeField]
+        private bool _inventoryPrevItem;
 
         [Header("Movement Settings")]
         public bool movementLocked = false;
@@ -106,6 +112,16 @@ namespace Frayed.Input
             ToggleInventoryInput(value.isPressed);
         }
 
+        public void OnInventoryNextItem(InputValue value)
+        {
+            InventoryNextItemInput(value.isPressed);
+        }
+
+        public void OnInventoryPrevItem(InputValue value)
+        {
+            InventoryPrevItemInput(value.isPressed);
+        }
+
 #endif
 
         public void MoveInput(Vector2 newMoveDirection)
@@ -139,6 +155,16 @@ namespace Frayed.Input
         {
             // Always be true due to Action being button.
             _toggleInventory = newToggleInventoryState;
+        }
+
+        public void InventoryNextItemInput(bool newInventoryNextItemState)
+        {
+            _inventoryNextItem = newInventoryNextItemState;
+        }
+
+        public void InventoryPrevItemInput(bool newInventoryPrevItemState)
+        {
+            _inventoryPrevItem = newInventoryPrevItemState;
         }
 
         private void OnApplicationFocus(bool hasFocus)
