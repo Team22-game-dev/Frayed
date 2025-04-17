@@ -74,6 +74,18 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
+    public void ResetTrigger(string parameterName)
+    {
+        if (animator != null)
+        {
+            animator.ResetTrigger(parameterName);
+        }
+        else
+        {
+            Debug.LogWarning($"{nameof(Animator)} not set in {nameof(AnimationManager)}.");
+        }
+    }
+
     // Get the name of the currently playing animation asynchronously
     public string GetCurrentAnimationName()
     {

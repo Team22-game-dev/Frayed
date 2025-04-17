@@ -13,7 +13,7 @@ public abstract class TakeDamageBase : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Weapon {other.name} entered {gameObject.name}'s collider from the Weapons layer!");
+        //Debug.Log($"Weapon {other.name} entered {gameObject.name}'s collider from the Weapons layer!");
 
         GameObject attackingWeapon = other.gameObject;
         GameObject attacker = GetAttacker(attackingWeapon);
@@ -23,10 +23,7 @@ public abstract class TakeDamageBase : MonoBehaviour
             Debug.Log("Random weapon collider: " + attackingWeapon.name);
             return;
         }
-        else
-        {
-            Debug.Log($"Attaker was: {attacker.name}");
-        }
+
 
         IAttack attackSM = attacker.GetComponent<IAttack>();
         if (attackSM == null)
@@ -35,7 +32,7 @@ public abstract class TakeDamageBase : MonoBehaviour
         }
         if(!attackSM.IsAttacking())
         {
-            Debug.Log("Wasn't trying to attack");
+           // Debug.Log("Wasn't trying to attack");
             return;
         }
 

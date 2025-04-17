@@ -23,7 +23,7 @@ public abstract class AttackBase : MonoBehaviour, IAttack
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         // check for attack input based on derived class.
         if(AttackTrigger())

@@ -123,11 +123,12 @@ MonoBehaviour:
   Weapon: {fileID: 919132149155446097, guid: 91bcf08669419711883c3fd013bc5b15, type: 3}
   Sheath: {fileID: 919132149155446097, guid: 9ce4ef66f51ba7b52a90028d88fd9b12, type: 3}
   WeaponName: Dagger
-  weaponType: 
+  weaponType: Dagger
   _weaponPower: 2
   damage: 1
-  DrawAnimation: DrawDagger
-  SheathAnimation: SheathDagger
+  numAttacks: 2
+  WeaponType: 
+  SheathAnimation: Sheath
   twoHanded: 0
   ActionBoneRequired: WeaponHandFowardR
   ActionBoneTwoRequired: WeaponHandFowardL

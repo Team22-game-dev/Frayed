@@ -77,7 +77,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         WeaponHandFowardL = FindDeepBoneByName(rootBone, "weapon-fwrd-ctrl.L");
         WeaponHandReverseL = FindDeepBoneByName(rootBone, "weapon-bkwrd-ctrl.L");
         SheathBoneHip = FindDeepBoneByName(rootBone, "DEF-hip-Sheath");
-        SheathBoneBack = FindDeepBoneByName(rootBone, "DEF-back-Sheath");
+        SheathBoneBack = FindDeepBoneByName(rootBone, "DEF-back-sheath");
 
         Debug.Log("Bone: " + WeaponHandFowardR?.name + " " + WeaponHandReverseR?.name + " " + WeaponHandFowardL?.name + 
             " " + WeaponHandReverseL?.name + " " + SheathBoneHip?.name + " " + SheathBoneBack?.name);
@@ -154,21 +154,6 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
             yield return new WaitForSeconds(0.033f);
             animationName = animationManager.GetCurrentAnimationName();
         }
-        // do
-        // {
-        //     animationName = animationManager.GetCurrentAnimationName();
-        //     if (animationName == "transition")
-        //     {
-        //         Debug.Log("Animation in transition!");
-        //         yield return new WaitForSeconds(0.033f);
-        //     }
-
-        //     if (Time.time - startTime > weaponSwitchTimeLimit)
-        //     {
-        //         Debug.LogWarning($"Weapon equip timed out while waiting for animation to finish. Last animation: {animationName}");
-        //         yield break;
-        //     }
-        // } while (animationName == "transition");
 
         if (!(animationName == "transition" || animationName.StartsWith("attack_")))
         {
@@ -192,7 +177,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                     weaponSheath.transform.localPosition = Vector3.zero;
                     weaponSheath.transform.localRotation = Quaternion.identity;
 
-                    //ApplySheathRotation();
+                    ApplySheathRotation();
 
                     equippedWeapon.transform.SetParent(weaponData.SheathedBone);
                     equippedWeapon.transform.localPosition = Vector3.zero;
@@ -262,10 +247,8 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         return equippedWeapon; // Return equipped weapon
     }
 
-    public WeaponData GetWeaponData()
-    {
-        return weaponData;
-    }
+    public WeaponData GetWeaponData() => weaponData;
+
 
     public bool UnEquipWeapon()
     {
@@ -300,11 +283,32 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     }
 
+    private bool animationReady = false;
+
+
+    public void ParentToHand()
+    {
+        animationReady = true;
+    }
+
+    private IEnumerator WaitToParentToHand()
+    {
+        yield return new WaitUntil(() => animationReady);
+
+        Debug.Log("Parent weapon to hand bone");
+        equippedWeapon.transform.SetParent(weaponData.ActionBoneR);
+        equippedWeapon.transform.localPosition = Vector3.zero;
+
+
+        ApplyWeaponRotation();
+
+    }
+
 
     public void SheathAndDrawWeapon()
     {
         Debug.Log("SheathAndDraw method state: " + currentWeaponState);
-        bool isDrawn = animationManager.GetBool("WeaponDrawn");
+        bool isDrawn = animationManager.GetBool(weaponData.GetWeaponType());
         switch (currentWeaponState)
         {
             case WeaponState.None:
@@ -312,9 +316,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                 if(!weaponData.twoHanded) 
                 {
                     
-                    Debug.Log("Parent weapon to hand bone");
-                    equippedWeapon.transform.SetParent(weaponData.ActionBoneR);
-                    equippedWeapon.transform.localPosition = Vector3.zero;
+                    StartCoroutine(WaitToParentToHand());
                     
                 }
                 else
@@ -326,20 +328,23 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                 
                 if (isDrawn != true)
                 {
-                    animationManager.SetBool("WeaponDrawn", true);
+                    animationManager.SetBool(weaponData.WeaponName, true);
+                    animationManager.SetTrigger("Draw");
                 }
 
-                ApplyWeaponRotation();
+
                 break;
             case WeaponState.Drawn:
                 Debug.Log("Weapon sheathed");
                 currentWeaponState = WeaponState.Sheathed;
                 equippedWeapon.transform.SetParent(weaponData.SheathedBone);
                 equippedWeapon.transform.localPosition = Vector3.zero;
-                //ApplySheathRotation();
+                ApplyWeaponRotation();
                 if (isDrawn == true)
                 {
-                    animationManager.SetBool("WeaponDrawn", false);
+                    Debug.Log("Setting animation manager from sheath/draw draw -> sheath");
+                    animationManager.SetTrigger("Sheath");
+                    StartCoroutine(DelayedBoolOff());
                 }
                 break;
         }
@@ -347,46 +352,36 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     }
 
+    IEnumerator DelayedBoolOff()
+    {
+        yield return null; // wait one frame
+        animationManager.SetBool(weaponData.GetWeaponType(), false);
+    }
+
+
     public void DrawWeapon(bool playAnimation)
     {
-        string currentAnimation = animationManager.GetCurrentAnimationName();
 
-        if(playAnimation && currentAnimation == "Idle_rest")
-        {
-            // start animation and wait for animation event to parent to hand on OnDrawAnimation
-     
-   
-            if (weaponData != null && currentWeaponState == WeaponState.Sheathed)
-            {
-                Debug.Log("Playing draw animation");
-                animationManager.SetTrigger(weaponData.DrawAnimation);
-            }
-            else
-            {
-                Debug.Log("Weapon was null or in wrong state");
-            }
-        } 
-        else 
-        {
-            // invoke the method to reparent now
-            Debug.Log("invoke directly");
-            animationManager.SetTrigger("DrawDagger");
-            SheathAndDrawWeapon();
-        }
+        SheathAndDrawWeapon();
+
     }
 
     protected void ApplyWeaponRotation()
     {
+
+        Debug.Log("Applying rotation for " + gameObject.name);
         // Get the rotation for the weapon from the user's WeaponRotationComponent
         Quaternion weaponRotation;
 
         switch(currentWeaponState)
         {
             case WeaponState.Drawn:
-                weaponRotation = rotationComponent.GetDrawnWeaponRotation(weaponData.WeaponName);
+                Debug.Log("State is Drawn");
+                weaponRotation = rotationComponent.GetDrawnWeaponRotation(weaponData.GetWeaponType());
                 break;
             case WeaponState.Sheathed:
-                weaponRotation = rotationComponent.GetSheathedWeaponRotation(weaponData.WeaponName);
+                Debug.Log("State is Sheathed");
+                weaponRotation = rotationComponent.GetSheathedWeaponRotation(weaponData.GetWeaponType());
                 break;
             default:
                 Debug.LogError("weapon in wrong state to get rotation");
@@ -400,7 +395,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     public void ApplySheathRotation()
     {
         // Get the sheath rotation first
-        Quaternion sheathRotation = rotationComponent.GetSheathedWeaponRotation(weaponData.WeaponName);
+        Quaternion sheathRotation = rotationComponent.GetSheathedWeaponRotation(weaponData.GetWeaponType());
 
         // Then log it
         Debug.Log($"Applying sheath rotation: {sheathRotation}");
@@ -445,6 +440,9 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
     {
         return currentWeaponState == WeaponState.Drawn;
     }
+
+
+
 
 
 }

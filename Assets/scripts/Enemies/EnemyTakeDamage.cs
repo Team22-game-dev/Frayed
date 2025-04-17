@@ -11,7 +11,7 @@ public class EnemyTakeDamage : TakeDamageBase
             //Debug.Log("collision with self! " + attacker.name + " weapon: " + attackingWeapon.name);
             return;
         }
-        Debug.LogWarning("Enemy Taking Damage! " + attacker.name + " with " + attackingWeapon.name);
+       // Debug.LogWarning("Enemy Taking Damage! " + attacker.name + " with " + attackingWeapon.name);
         var attackerData = attacker.GetComponent<IAttackData>(); 
         var equippedWeaponBase = attacker.GetComponent<EquippedWeaponBase>();
         var enemyData = GetComponent<EnemyData>(); // Note: class names are PascalCase in C#
