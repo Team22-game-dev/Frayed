@@ -57,36 +57,40 @@ public class MC_EquippedWeapon : EquippedWeaponBase
     {
         if(Time.time - mc_AttackController.GetLastDrawTime() > 0.3f)
         {
+            Debug.Log("Sheathing weapon");
             sheathingTime = Time.time;
             float start = Time.time;
-            while (Time.time - start <= 0.5f)
-            {
-                if (animationManager.GetCurrentAnimationName() == "encounter_idle")
-                {
-                    if (weaponData != null && currentWeaponState == WeaponState.Drawn)
-                    {
-                        animationManager.SetTrigger(weaponData.SheathAnimation);
-                        yield break;
-                    }
-                    else
-                    {
-                        Debug.LogError("weaponData null or weapon in wrong state");
-                        yield break;
-                    }
-                }
-                else
-                {
-                    string animationName = animationManager.GetCurrentAnimationName();
-                    if (animationName == "jogg_w_dagger")
-                    {
-                        animationManager.SetTrigger("SheathDagger");
-                        SheathAndDrawWeapon();
-                        yield break;
-                    }
-                }
+            // while (Time.time - start <= 0.5f)
+            // {
+                
+            //     // if (animationManager.GetCurrentAnimationName() == "encounter_idle")
+            //     // {
+            //     //     if (weaponData != null && currentWeaponState == WeaponState.Drawn)
+            //     //     {
+            //     //         SheathAndDrawWeapon();
+            //     //         yield break;
+            //     //     }
+            //     //     else
+            //     //     {
+            //     //         Debug.LogError("weaponData null or weapon in wrong state");
+            //     //         yield break;
+            //     //     }
+            //     // }
+            //     // else
+            //     // {
+            //     //     string animationName = animationManager.GetCurrentAnimationName();
+            //     //     if (animationName == "jogg_w_dagger")
+            //     //     {
+            //     //         //animationManager.SetTrigger("SheathDagger");
+            //     //         SheathAndDrawWeapon();
+            //     //         yield break;
+            //     //     }
+            //     // }
 
-                yield return null; // check again next frame
-            }
+               
+            // }
+            yield return null;
+            SheathAndDrawWeapon();
 
             Debug.Log("sheath time out");
         }

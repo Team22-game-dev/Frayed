@@ -9,7 +9,7 @@ public class AmalgamAttack : EnemyAttack
 
     public bool IsAttacking()
     {
-        Debug.Log("Amalgam is attacking " + (currentState == AttackState.Attacking) + " current state: " + currentState);
+        //Debug.Log("Amalgam is attacking " + (currentState == AttackState.Attacking) + " current state: " + currentState);
         return (currentState == AttackState.Attacking);
     }
     public enum AttackState
@@ -35,7 +35,7 @@ public class AmalgamAttack : EnemyAttack
     {
         if (currentState != AttackState.Idle) return;
 
-        if(animationManager.GetBool("useSword"))
+        if(animationManager.GetBool("Sword"))
         {
             swordAttack();
         }
@@ -46,8 +46,7 @@ public class AmalgamAttack : EnemyAttack
 
             if (!equippedWeaponController.isDrawn() && animationManager.GetCurrentAnimationName() != "DrawSword")
             {
-                animationManager.SetTrigger("DrawSword");
-                
+                StartCoroutine(EquipSword());  
             }
         }
         else
@@ -97,14 +96,7 @@ public class AmalgamAttack : EnemyAttack
             }
     }
 
-    public void AttackInterrupt()
-    {
-        if (enemyManager.currentState != EnemyManager.State.READY_TO_ATTACK)
-        {
-            animationManager.SetTrigger("InterruptAttack");
-            currentState = AttackState.Idle;
-        }
-    }
+
 
     public void InstantiateSword()
     {
@@ -160,14 +152,6 @@ public class AmalgamAttack : EnemyAttack
         currentState = AttackState.Idle;
     }
 
-    private void EquipAmalgamSword()
-    {
-        Debug.Log("trying to equip amalgam sword");
-              
-
-        StartCoroutine(EquipSword());            
-    }
-
     private IEnumerator EquipSword()
     {
         var start = Time.time;
@@ -183,10 +167,10 @@ public class AmalgamAttack : EnemyAttack
 
         yield return equippedWeaponController.StartEquipWeaponCoroutine(sword);
 
-        equippedWeaponController.DrawWeapon(false);
+        //equippedWeaponController.DrawWeapon(false);
         yield return null;
-        animationManager.SetBool("useSword", true);
-        Debug.Log("useSword: " + animationManager.GetBool("useSword"));
+        //animationManager.SetBool("Sword", true);
+        Debug.Log("useSword: " + animationManager.GetBool("Sword"));
 
     }
 }

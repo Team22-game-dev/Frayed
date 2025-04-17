@@ -108,17 +108,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Weapon: {fileID: 6688306434070704163}
-  Sheath: {fileID: 0}
-  WeaponName: AmalgamSword
+  Sheath: {fileID: 919132149155446097, guid: fda5cdf04ec91ba18b9108ec5ebaf30f, type: 3}
+  WeaponName: Sword
   weaponType: Sword
   _weaponPower: 5
   damage: 0
-  DrawAnimation: DrawSword
-  SheathAnimation: SheathBack
+  numAttacks: 2
+  WeaponType: 
+  SheathAnimation: WeaponSheathBack
   twoHanded: 0
   ActionBoneRequired: WeaponHandFowardR
   ActionBoneTwoRequired: WeaponHandFowardL
-  SheathBoneRequired: BackSheathBone
+  SheathBoneRequired: WeaponSheathBack
   ActionBoneR: {fileID: 0}
   ActionBoneL: {fileID: 0}
   SheathedBone: {fileID: 0}

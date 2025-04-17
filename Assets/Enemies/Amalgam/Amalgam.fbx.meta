@@ -261,7 +261,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0.23348725
-        functionName: EquipAmalgamSword
+        functionName: ParentToHand
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

@@ -279,6 +279,12 @@ public class MC_Locomotion : MonoBehaviour
         animationManager.SetSpeed(_animationBlend);
     }
 
+    IEnumerator DelayedJumpReset()
+    {
+        yield return null;
+        animationManager.ResetTrigger("Jump");
+    }
+
     private void JumpAndGravity()
     {
         if (_grounded)
@@ -294,14 +300,9 @@ public class MC_Locomotion : MonoBehaviour
             // Jump
             if (inputManager.jump && jumpTimeoutDelta <= 0.0f)
             {
-                if(_speed>0)
-                {
-                    animationManager.SetTrigger("JumpFoward");
-                }
-                else
-                {
-                    animationManager.SetTrigger("JumpInPlace");
-                }
+
+                animationManager.SetTrigger("Jump");
+                StartCoroutine(DelayedJumpReset());
                 
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
                 _verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
