@@ -110,7 +110,6 @@ public class MC_Locomotion : MonoBehaviour
     private CameraManager cameraManager;
     private MC_Attack attack;
     private MC_AudioManager audioManager;
-    private MC_EquippedWeapon equippedWeapon;
 
 
     private void Awake()
@@ -140,8 +139,6 @@ public class MC_Locomotion : MonoBehaviour
         audioManager = GetComponent<MC_AudioManager>();
         Debug.Assert(audioManager != null);
 
-        equippedWeapon = GetComponent<MC_EquippedWeapon>();
-        Debug.Assert(equippedWeapon != null);
     }
 
     private void Update()
@@ -175,8 +172,8 @@ public class MC_Locomotion : MonoBehaviour
         // normalise input direction
         Vector3 inputDirection = new Vector3(inputManager.move.x, 0.0f, inputManager.move.y).normalized;
 
-        _walkingBackwards = (equippedWeapon.currentWeaponState == EquippedWeaponBase.WeaponState.Drawn && inputDirection.z < 0.0f);
-        _walkingSideways = (equippedWeapon.currentWeaponState == EquippedWeaponBase.WeaponState.Drawn 
+        _walkingBackwards = (cameraManager.mode == CameraManager.Mode.ThirdPersonCombat && inputDirection.z < 0.0f);
+        _walkingSideways = (cameraManager.mode == CameraManager.Mode.ThirdPersonCombat
                             && Mathf.Approximately(inputDirection.z, 0.0f) && (inputDirection.x > 0.0f || inputDirection.x < 0.0f));
 
         // Set target speed based on conditions.
@@ -233,7 +230,7 @@ public class MC_Locomotion : MonoBehaviour
         _animationBlend = Mathf.Lerp(_animationBlend, _speed, Time.deltaTime * speedChangeRate);
         if (_animationBlend < 0.01f) _animationBlend = 0f;
 
-        if (equippedWeapon.currentWeaponState == EquippedWeaponBase.WeaponState.Drawn)
+        if (cameraManager.mode == CameraManager.Mode.ThirdPersonCombat)
         {
             _targetRotation = cameraManager.mainCamera.transform.eulerAngles.y;
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,

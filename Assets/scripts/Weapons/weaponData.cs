@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class WeaponData : MonoBehaviour
+public class WeaponData : InventoryItem
 {
     public float GetWeaponPower() => _weaponPower;
     public int GetNumAttacks() => numAttacks;
@@ -27,6 +28,7 @@ public class WeaponData : MonoBehaviour
     [SerializeField]
     public float _weaponPower;
     public float damage;
+    public Sprite sprite;
 
     [SerializeField]
     private int numAttacks;
@@ -156,5 +158,17 @@ public class WeaponData : MonoBehaviour
         sphereCollider.enabled = false;
         boxCollider.enabled = true;
         boxCollider.isTrigger = true;
+    }
+
+    override
+        public string getInventoryName()
+    {
+        return WeaponName;
+    }
+
+    override
+        public Sprite getInventorySprite()
+    {
+        return sprite;
     }
 }

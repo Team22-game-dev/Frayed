@@ -22,25 +22,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &5294382940625208704
-RectTransform:
+--- !u!4 &5294382940625208704
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6903104627069079725}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 9.466406}
+  m_LocalPosition: {x: -2.1748867, y: 0.95, z: 9.466406}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.1748867, y: 0.95}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!33 &7577080866205981910
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -126,6 +122,7 @@ MonoBehaviour:
   weaponType: Dagger
   _weaponPower: 2
   damage: 1
+  sprite: {fileID: 21300000, guid: f39892235e25ece43b03cd469fc43f08, type: 3}
   numAttacks: 2
   WeaponType: 
   SheathAnimation: Sheath
@@ -163,7 +160,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!65 &3263247043871229504
 BoxCollider:
   m_ObjectHideFlags: 0

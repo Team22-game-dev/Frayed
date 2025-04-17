@@ -113,6 +113,7 @@ MonoBehaviour:
   weaponType: Sword
   _weaponPower: 5
   damage: 0
+  sprite: {fileID: 21300000, guid: 0694e89a330e85b43aeb281cff9b38dc, type: 3}
   numAttacks: 2
   WeaponType: 
   SheathAnimation: WeaponSheathBack
@@ -150,7 +151,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &1293281679685666595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,7 +183,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

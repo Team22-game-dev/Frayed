@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Frayed.Input;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class MC_Inventory : MonoBehaviour
 {
@@ -19,15 +21,16 @@ public class MC_Inventory : MonoBehaviour
     private int inventoryIndex;
 
     [SerializeField]
-    private List<GameObject> storedItems;
+    private List<InventoryItem> storedItems;
 
-    private HashSet<GameObject> storedItemsSet;
+    private HashSet<string> storedItemsSet;
 
     private MC_EquippedWeapon mcEquippedWeapon;
     private InputManager inputManager;
     private OptionsMenu optionsMenu;
+    private GameOverScreen gameOverScreen;
 
-    private readonly GameObject hand = null;
+    private InventoryItem hand;
     private readonly int handInventoryIndex = 0;
 
     [SerializeField]
@@ -36,6 +39,11 @@ public class MC_Inventory : MonoBehaviour
     private float timeSinceSwitch;
     [SerializeField]
     private float readyToSwitchTimeout = 3.0f;
+
+    private GameObject canvasGameObject;
+    private Image image;
+    private TMP_Text text;
+    private TMP_Text indexText;
 
     private void Awake()
     {
@@ -51,11 +59,14 @@ public class MC_Inventory : MonoBehaviour
 
     private void Start()
     {
-        storedItems = new List<GameObject>();
-        storedItems.Add(hand);
-        inventoryIndex = handInventoryIndex;
+        hand = this.transform.Find("Hand").GetComponent<WeaponData>();
+        Debug.Assert(hand != null);
 
-        storedItemsSet = new HashSet<GameObject>();
+        storedItems = new List<InventoryItem>();
+        storedItemsSet = new HashSet<string>();
+
+        Store(hand);
+        inventoryIndex = handInventoryIndex;
 
         mcEquippedWeapon = MC_EquippedWeapon.Instance;
         Debug.Assert(mcEquippedWeapon != null);
@@ -66,21 +77,51 @@ public class MC_Inventory : MonoBehaviour
         optionsMenu = OptionsMenu.Instance;
         Debug.Assert(inputManager != null);
 
+        canvasGameObject = this.transform.Find("Canvas").gameObject;
+        Debug.Assert(canvasGameObject != null);
+
+        image = this.transform.Find("Canvas/Circle/Image").GetComponent<Image>();
+        Debug.Assert(image != null);
+
+        text = this.transform.Find("Canvas/Circle/Text").GetComponent<TMP_Text>();
+        Debug.Assert(text != null);
+
+        indexText = this.transform.Find("Canvas/Circle/Index").GetComponent<TMP_Text>();
+        Debug.Assert(text != null);
+
+        gameOverScreen = GameOverScreen.Instance;
+        Debug.Assert(gameOverScreen != null);
+
         readyToSwitch = true;
         timeSinceSwitch = 0.0f;
+
+        Toggle(false);
     }
 
     private void Update()
     {
-        if (inputManager.toggleInventory)
+        if (!optionsMenu.toggled && !gameOverScreen.gameOverTriggered)
         {
-            if (!optionsMenu.toggled)
+            if (inputManager.toggleInventory)
             {
                 Toggle(!_toggled);
-                // TODO: Temp logic to demonstrate functional item switching via tab key.
-                Next();
             }
-            inputManager.toggleInventory = false;
+
+            if (_toggled)
+            {
+                if (inputManager.inventoryNextItem)
+                {
+                    Next();
+                }
+                else if (inputManager.inventoryPrevItem)
+                {
+                    Prev();
+                }
+                else if (inputManager.inventoryDropWeapon)
+                {
+                    DropCurrentWeapon();
+                }
+            }
         }
 
         // TODO: Temp logic to reset readyToSwitch if error occurs while equipping since finally statements are wonky with coroutines.
@@ -89,34 +130,56 @@ public class MC_Inventory : MonoBehaviour
         {
             readyToSwitch = true;
         }
+
+        // Reset inventory input manager buttons.
+        inputManager.inventoryDropWeapon = false;
+        inputManager.toggleInventory = false;
     }
 
-    public void Store(GameObject item, bool unequip = true)
+    public void Store(InventoryItem item, bool unequip = true)
     {
         if (!Contains(item))
         {
             storedItems.Add(item);
-            storedItemsSet.Add(item);
+            storedItemsSet.Add(item.getInventoryName());
         }
+        GameObject itemGameObject = item.gameObject;
         if (unequip)
         {
             item.transform.SetParent(this.transform);
-            item.SetActive(false);
+            itemGameObject.SetActive(false);
         }
     }
 
-    public IEnumerator StoreAndEquip(GameObject item)
+    public IEnumerator StoreAndEquip(InventoryItem item)
     {
         Store(item, false);
         yield return StartCoroutine(Switch(storedItems.Count - 1));
     }
 
-    private IEnumerator Equip(GameObject item)
+    public void DropCurrentWeapon()
+    {
+        InventoryItem currentItem = storedItems[inventoryIndex];
+        if (currentItem == hand)
+        {
+            return;
+        }
+        mcEquippedWeapon.DropWeapon();
+        inventoryIndex = handInventoryIndex;
+        // Not the most efficent but it's okay.
+        bool deletedFromList = storedItems.Remove(currentItem);
+        bool deletedFromSet = storedItemsSet.Remove(currentItem.getInventoryName());
+        UpdateInventoryUI();
+        Debug.Assert(deletedFromList);
+        Debug.Assert(deletedFromSet);
+    }
+
+    private IEnumerator Equip(InventoryItem item)
     {
         Debug.Assert(Contains(item));
-        mcEquippedWeapon.UnEquipWeapon();
-        yield return StartCoroutine(mcEquippedWeapon.StartEquipWeaponCoroutine(item));
-        item.SetActive(true);
+        GameObject itemGameObject = item.gameObject;
+        yield return StartCoroutine(mcEquippedWeapon.StartEquipWeaponCoroutine(itemGameObject));
+        itemGameObject.SetActive(true);
         mcEquippedWeapon.DrawWeapon(false);
     }
 
@@ -145,15 +208,15 @@ public class MC_Inventory : MonoBehaviour
         if (readyToSwitch)
         {
             readyToSwitch = false;
-            if (storedItems[index] == hand)
-            {
-                mcEquippedWeapon.UnEquipWeapon();
-            }
-            else
+            InventoryItem currentItem = storedItems[inventoryIndex];
+            mcEquippedWeapon.UnEquipWeapon();
+            Store(currentItem);
+            if (storedItems[index] != hand)
             {
                 yield return StartCoroutine(Equip(storedItems[index]));
             }
             inventoryIndex = index;
+            UpdateInventoryUI();
             timeSinceSwitch = 0.0f;
             readyToSwitch = true;
         }
@@ -163,9 +226,24 @@ public class MC_Inventory : MonoBehaviour
         }
     }
 
-    public bool Contains(GameObject item)
+    private void UpdateInventoryUI()
     {
-        return storedItemsSet.Contains(item);
+        InventoryItem item = storedItems[inventoryIndex];
+        image.sprite = item.getInventorySprite();
+        text.text = item.getInventoryName();
+        if (storedItems.Count <= 1)
+        {
+            indexText.text = "1";
+        }
+        else
+        {
+            indexText.text = $"<  {inventoryIndex + 1}  >";
+        }
+    }
+
+    public bool Contains(InventoryItem item)
+    {
+        return storedItemsSet.Contains(item.getInventoryName());
     }
 
     public void Toggle(bool state)
@@ -173,11 +251,12 @@ public class MC_Inventory : MonoBehaviour
         _toggled = state;
         if (_toggled)
         {
-
+            UpdateInventoryUI();
+            canvasGameObject.SetActive(true);
         }
         else
         {
-
+            canvasGameObject.SetActive(false);
         }
     }
 
@@ -186,9 +265,9 @@ public class MC_Inventory : MonoBehaviour
         yield return StartCoroutine(Switch(handInventoryIndex));
         for (int i = storedItems.Count - 1; i >= 1; --i)
         {
-            GameObject item = storedItems[i];
+            InventoryItem item = storedItems[i];
             storedItems.RemoveAt(i);
-            storedItemsSet.Remove(item);
+            storedItemsSet.Remove(item.getInventoryName());
             Destroy(item);
         }
     }
