@@ -28,6 +28,8 @@ namespace Frayed.Input
         public bool inventoryNextItem { get { return _inventoryNextItem; } private set { _inventoryNextItem = value; } }
         public bool inventoryPrevItem { get { return _inventoryPrevItem; } private set { _inventoryPrevItem = value; } }
         public bool inventoryDropWeapon { get { return _inventoryDropWeapon; } set { _inventoryDropWeapon = value; } }
+        public bool switchCameraView { get { return _switchCameraView; } set { _switchCameraView = value; } }
+
 
         [Header("Character Input Values")]
         [SerializeField]
@@ -48,6 +50,8 @@ namespace Frayed.Input
         private bool _inventoryPrevItem;
         [SerializeField]
         private bool _inventoryDropWeapon;
+        [SerializeField]
+        private bool _switchCameraView;
 
         [Header("Movement Settings")]
         public bool movementLocked = false;
@@ -130,6 +134,11 @@ namespace Frayed.Input
             InventoryDropWeaponInput(value.isPressed);
         }
 
+        public void OnSwitchCameraView(InputValue value)
+        {
+            SwitchCameraViewInput(value.isPressed);
+        }
+
 #endif
 
         public void MoveInput(Vector2 newMoveDirection)
@@ -179,6 +188,12 @@ namespace Frayed.Input
         {
             // Always be true due to Action being button.
             _inventoryDropWeapon = newInventoryDropWeaponState;
+        }
+
+        public void SwitchCameraViewInput(bool newSwitchCameraViewState)
+        {
+            // Always be true due to Action being button.
+            _switchCameraView = newSwitchCameraViewState;
         }
 
         private void OnApplicationFocus(bool hasFocus)

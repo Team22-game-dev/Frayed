@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Frayed.Input;
 using UnityEngine.Windows;
+using Cinemachine;
 
 namespace Frayed.Camera
 {    
@@ -12,6 +13,14 @@ namespace Frayed.Camera
         // Singleton Design
         private static CameraManager _instance;
         public static CameraManager Instance => _instance;
+
+        public enum Mode
+        {
+            ThirdPersonStandard,
+            ThirdPersonCombat
+        }
+
+        public Mode mode = Mode.ThirdPersonStandard;
 
         private InputManager inputManager;
 
@@ -26,18 +35,15 @@ namespace Frayed.Camera
         [SerializeField]
         private float lookThreshold = 0.01f;
 
-        [Header("Cinemachine")]
         [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
         [SerializeField]
         private GameObject cinemachineCameraTarget;
 
         [Tooltip("How far in degrees can you move the camera up")]
-        [SerializeField]
         private float topClamp = 70.0f;
 
         [Tooltip("How far in degrees can you move the camera down")]
-        [SerializeField]
-        private float bottomClamp = -30.0f;
+        private float bottomClamp = -15.0f;
 
         [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
         [SerializeField]
@@ -46,6 +52,11 @@ namespace Frayed.Camera
         // cinemachine
         private float cinemachineTargetYaw;
         private float cinemachineTargetPitch;
+        private GameObject cinemachineVirtualCameraGameObject;
+        private CinemachineVirtualCamera cinemachineVirtualCamera;
+
+        private OptionsMenu optionsMenu;
+        private GameOverScreen gameOverScreen;
 
         private void Awake()
         {
@@ -70,6 +81,72 @@ namespace Frayed.Camera
         {
             inputManager = InputManager.Instance;
             Debug.Assert(inputManager != null);
+
+            optionsMenu = OptionsMenu.Instance;
+            Debug.Assert(optionsMenu != null);
+
+            gameOverScreen = GameOverScreen.Instance;
+            Debug.Assert(gameOverScreen != null);
+
+            cinemachineVirtualCameraGameObject = GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject;
+            Debug.Assert(cinemachineVirtualCameraGameObject != null);
+
+            cinemachineVirtualCamera = cinemachineVirtualCameraGameObject.GetComponent<CinemachineVirtualCamera>();
+            Debug.Assert(cinemachineVirtualCamera != null);
+
+            ChangeMode(Mode.ThirdPersonStandard);
+        }
+
+        private void Update()
+        {
+            if (!optionsMenu.toggled && !gameOverScreen.gameOverTriggered)
+            {
+                if (inputManager.switchCameraView)
+                {
+                    switch (mode)
+                    {
+                        case Mode.ThirdPersonStandard:
+                            ChangeMode(Mode.ThirdPersonCombat);
+                            break;
+                        case Mode.ThirdPersonCombat:
+                            ChangeMode(Mode.ThirdPersonStandard);
+                            break;
+                        default:
+                            Debug.Assert(false);
+                            break;
+                    }
+                }
+            }
+
+            // Reset camera input buttons.
+            inputManager.switchCameraView = false;
+        }
+
+        public void ChangeMode(Mode newMode)
+        {
+            mode = newMode;
+            Cinemachine3rdPersonFollow cinemachine3rdPersonFollow = cinemachineVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+            Debug.Assert(cinemachine3rdPersonFollow != null);
+            switch (mode)
+            {
+                case Mode.ThirdPersonStandard:
+                    topClamp = 70.0f;
+                    bottomClamp = -15.0f;
+                    cinemachine3rdPersonFollow.ShoulderOffset.y = 0.0f;
+                    cinemachine3rdPersonFollow.CameraSide = 0.6f;
+                    cinemachine3rdPersonFollow.CameraDistance = 4.0f;
+                    break;
+                case Mode.ThirdPersonCombat:
+                    topClamp = 10.0f;
+                    bottomClamp = -15.0f;
+                    cinemachine3rdPersonFollow.ShoulderOffset.y = 0.25f;
+                    cinemachine3rdPersonFollow.CameraSide = 0.8f;
+                    cinemachine3rdPersonFollow.CameraDistance = 2.0f;
+                    break;
+                default:
+                    Debug.Assert(false);
+                    break;
+            }
         }
 
         private void LateUpdate()
