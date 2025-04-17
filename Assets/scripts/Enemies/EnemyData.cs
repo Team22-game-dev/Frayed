@@ -25,7 +25,7 @@ public class EnemyData : MonoBehaviour, IAttackData
     public float baseHealth { get { return _baseHealth; } }
     public float currentHealth { get {return _currentHealth; } }
 
-    public void TakeDamage(float damage) => _currentHealth -= damage;
+    public void TakeDamage(float damage) => _currentHealth = Mathf.Max(0.0f, _currentHealth - damage);
 
     [Header("Wander Fields")]
     [SerializeField]
@@ -153,6 +153,12 @@ public class EnemyData : MonoBehaviour, IAttackData
         else
         {
             healthBarSliderGameObject.SetActive(true);
+        }
+
+        // TODO: Temp dummy logic to kill enemies for now.
+        if (Mathf.Approximately(GetHealthRatio(), 0.0f))
+        {
+            gameObject.SetActive(false);
         }
     }
 
