@@ -948,8 +948,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawnDaggerRotation: {x: 0, y: 0, z: 0, w: 1}
-  sheathedDaggerRotation: {x: 0, y: 0, z: 0, w: 1}
-  amalgamSwordRotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
+  sheathedDaggerRotation: {x: 0.70710677, y: 0, z: 0, w: -0.70710677}
+  swordRotation: {x: 0.70710677, y: 0, z: 0, w: -0.70710677}
+  swordSheathRotation: {x: 0, y: 0, z: 0, w: 1}
   axeRotation: {x: 0, y: 0, z: 0, w: 1}
   bowRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!1 &2895302443934387576

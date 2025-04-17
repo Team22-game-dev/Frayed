@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class WeaponData : InventoryItem
 {
     public float GetWeaponPower() => _weaponPower;
+    public int GetNumAttacks() => numAttacks;
+
+    public string GetWeaponType() => weaponType;
 
     // Enum to track the state of the weapon (now public)
     public enum State
@@ -27,16 +30,23 @@ public class WeaponData : InventoryItem
     public float damage;
     public Sprite sprite;
 
+    [SerializeField]
+    private int numAttacks;
+
+    [SerializeField]
+    public string WeaponType;
+
     private MeshCollider damageCollider;
 
-    public string DrawAnimation;
+    
     public string SheathAnimation;
 
 
     public bool twoHanded;
     public string ActionBoneRequired; // To be set in prefab
     public string ActionBoneTwoRequired; // To be set in prefab
-    public string SheathBoneRequired; // to be set in prefab
+    [SerializeField]
+    private string SheathBoneRequired; // to be set in prefab
 
     public Transform ActionBoneR;  // Bone for when the weapon is drawn (e.g., Right hand)
     public Transform ActionBoneL;  // "..." Left Hand

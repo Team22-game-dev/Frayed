@@ -16,6 +16,9 @@ public class MC_Attack : AttackBase
     //private float attackTime = -1.0f;
     private const float drawBuffer = .3f;
 
+    private int currentAttack = 0;
+    private int nextAttack = 0;
+
 
     override
     public bool IsAttacking() => currentState == AttackState.Attacking;
@@ -32,6 +35,19 @@ public class MC_Attack : AttackBase
         currentState = AttackState.Idle;
         lastAttackTime = -comboWindowTime; // Ensure first attack can trigger
         attackQueued = false;
+    }
+
+    new
+    void Update()
+    {
+        base.Update(); // run abstract Update process
+        if(Time.time - lastAttackTime > 0.6f)
+        {
+            currentAttack = nextAttack = 0; // reset attacks sequence if pause between attack requests 
+
+            animationManager.SetInt("attackNumber", nextAttack);
+        }
+        
     }
 
     override public bool AttackTrigger()
@@ -66,8 +82,7 @@ public class MC_Attack : AttackBase
                 }
                 else if (currentState == AttackState.Attacking && (currentTime - lastAttackTime <= comboWindowTime))
                 {
-                    attackQueued = true;
-                    Debug.Log("Attack queued for combo!");
+                    Debug.Log("Still attakcing, wait for animation event");
                 }
             }
             else
@@ -87,28 +102,28 @@ public class MC_Attack : AttackBase
     {
         Debug.Log("Starting attack!");
         lastAttackTime = Time.time;
-        animationManager.SetBool("isAttacking", true);
+        animationManager.SetTrigger("Attack");
+
+
+        WeaponData weaponData = equippedWeaponController.GetWeaponData();
+
+        if(weaponData == null)
+        {
+            Debug.LogError("Weapon data is null when trying tun increment attack");
+        }
+
+        nextAttack = (currentAttack + 1) % weaponData.GetNumAttacks();
         currentState = AttackState.Attacking;
     }
 
     // Called by an Animation Event at the end of an attack animation
     public void AttackEnd()
     {
-        Debug.Log("Attack ended. Current state: " + currentState);
-
-        if (attackQueued)
-        {
-            Debug.Log("Executing queued attack!");
-            attackQueued = false;
-            currentState = AttackState.Combo;
-            StartAttack();
-        }
-        else
-        {
-            Debug.Log("Returning to idle.");
-            currentState = AttackState.Idle;
-            animationManager.SetBool("isAttacking", false); // Reset the attacking flag
-        }
+        
+        animationManager.SetInt("attackNumber", nextAttack);
+        currentAttack = nextAttack;
+        currentState = AttackState.Idle;
+        
     }
 
 
