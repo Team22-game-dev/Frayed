@@ -35,25 +35,34 @@ public class OptionsMenu : MonoBehaviour
     public void Start()
     {
         inputManager = InputManager.Instance;
+        Debug.Assert(inputManager != null);
+
         canvas = this.transform.Find("Canvas").gameObject;
         Debug.Assert(canvas != null);
 
         gameOverScreen = GameOverScreen.Instance;
         Debug.Assert(gameOverScreen != null);
 
+        if (_toggled)
+        {
+            ++inputManager.disableInputCount;
+        }
         Toggle(_toggled);
     }
 
     public void Toggle(bool state)
     {
-        _toggled = state;
-        if (_toggled)
+        if (state)
         {
             canvas.SetActive(true);
             // Pause game.
             Time.timeScale = 0f;
             inputManager.UnlockMouse();
             inputManager.LockMovement();
+            if (state != _toggled)
+            {
+                ++inputManager.disableInputCount;
+            }
         }
         else
         {
@@ -62,7 +71,12 @@ public class OptionsMenu : MonoBehaviour
             Time.timeScale = 1f;
             inputManager.LockMouse();
             inputManager.UnlockMovement();
+            if (state != _toggled)
+            {
+                --inputManager.disableInputCount;
+            }
         }
+        _toggled = state;
     }
 
     public void Update()

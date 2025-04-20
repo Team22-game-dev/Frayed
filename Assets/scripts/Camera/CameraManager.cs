@@ -55,9 +55,6 @@ namespace Frayed.Camera
         private GameObject cinemachineVirtualCameraGameObject;
         private CinemachineVirtualCamera cinemachineVirtualCamera;
 
-        private OptionsMenu optionsMenu;
-        private GameOverScreen gameOverScreen;
-
         private void Awake()
         {
             // Singleton pattern with explicit null check
@@ -82,12 +79,6 @@ namespace Frayed.Camera
             inputManager = InputManager.Instance;
             Debug.Assert(inputManager != null);
 
-            optionsMenu = OptionsMenu.Instance;
-            Debug.Assert(optionsMenu != null);
-
-            gameOverScreen = GameOverScreen.Instance;
-            Debug.Assert(gameOverScreen != null);
-
             cinemachineVirtualCameraGameObject = GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject;
             Debug.Assert(cinemachineVirtualCameraGameObject != null);
 
@@ -99,22 +90,19 @@ namespace Frayed.Camera
 
         private void Update()
         {
-            if (!optionsMenu.toggled && !gameOverScreen.gameOverTriggered)
+            if (inputManager.switchCameraView)
             {
-                if (inputManager.switchCameraView)
+                switch (mode)
                 {
-                    switch (mode)
-                    {
-                        case Mode.ThirdPersonStandard:
-                            ChangeMode(Mode.ThirdPersonCombat);
-                            break;
-                        case Mode.ThirdPersonCombat:
-                            ChangeMode(Mode.ThirdPersonStandard);
-                            break;
-                        default:
-                            Debug.Assert(false);
-                            break;
-                    }
+                    case Mode.ThirdPersonStandard:
+                        ChangeMode(Mode.ThirdPersonCombat);
+                        break;
+                    case Mode.ThirdPersonCombat:
+                        ChangeMode(Mode.ThirdPersonStandard);
+                        break;
+                    default:
+                        Debug.Assert(false);
+                        break;
                 }
             }
 

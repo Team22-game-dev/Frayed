@@ -17,6 +17,8 @@ namespace Frayed.Input
         private static InputManager _instance;
         public static InputManager Instance => _instance;
 
+        public int disableInputCount { get { return _disableInputCount; } set { _disableInputCount = value; } }
+        public bool inputDisabled { get { return (_disableInputCount > 0); } }
         public Vector2 move { get { return _move; } private set { _move = value; } }
         public Vector2 look { get { return _look; } private set { _look = value; } }
         // Public setter and getter.
@@ -29,9 +31,16 @@ namespace Frayed.Input
         public bool inventoryPrevItem { get { return _inventoryPrevItem; } private set { _inventoryPrevItem = value; } }
         public bool inventoryDropWeapon { get { return _inventoryDropWeapon; } set { _inventoryDropWeapon = value; } }
         public bool switchCameraView { get { return _switchCameraView; } set { _switchCameraView = value; } }
+        public bool movementLocked { get { return _movementLocked; } private set { _movementLocked = value; } }
+        public bool cursorLocked { get { return _cursorLocked; } private set { _cursorLocked = value; } }
+        public bool cursorInputForLook { get { return _cursorInputForLook; } private set { _cursorInputForLook = value; } }
+
+        [Header("Input Manager settings")]
+        [SerializeField]
+        public int _disableInputCount = 0;
 
 
-        [Header("Character Input Values")]
+        [Header("Player Input Values")]
         [SerializeField]
         private Vector2 _move;
         [SerializeField]
@@ -54,11 +63,11 @@ namespace Frayed.Input
         private bool _switchCameraView;
 
         [Header("Movement Settings")]
-        public bool movementLocked = false;
+        private bool _movementLocked = false;
 
         [Header("Mouse Cursor Settings")]
-        public bool cursorLocked = true;
-        public bool cursorInputForLook = true;
+        private bool _cursorLocked = true;
+        private bool _cursorInputForLook = true;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput playerInput;
@@ -74,6 +83,7 @@ namespace Frayed.Input
             }
             _instance = this;
             DontDestroyOnLoad(gameObject);
+            _disableInputCount = 0;
         }
 
         private void Start()
@@ -81,31 +91,57 @@ namespace Frayed.Input
             playerInput = GetComponent<PlayerInput>();
         }
 
+        private void Update()
+        {
+            if (inputDisabled)
+            {
+                _move = new Vector2(0.0f, 0.0f);
+                _look = new Vector2(0.0f, 0.0f);
+                _jump = false;
+                _sprint = false;
+                _toggleInventory = false;
+                _inventoryNextItem = false;
+                _inventoryPrevItem = false;
+                _inventoryDropWeapon = false;
+                _switchCameraView = false;
+            }
+        }
+
 #if ENABLE_INPUT_SYSTEM
 
         public void OnMove(InputValue value)
         {
-            if (!movementLocked)
+            if (inputDisabled || movementLocked)
             {
-                MoveInput(value.Get<Vector2>());
+                return;
             }
+            MoveInput(value.Get<Vector2>());
         }
 
         public void OnLook(InputValue value)
         {
-            if (cursorInputForLook)
+            if (inputDisabled || !cursorInputForLook)
             {
-                LookInput(value.Get<Vector2>());
+                return;
             }
+            LookInput(value.Get<Vector2>());
         }
 
         public void OnJump(InputValue value)
         {
+            if (inputDisabled || movementLocked)
+            {
+                return;
+            }
             JumpInput(value.isPressed);
         }
 
         public void OnSprint(InputValue value)
         {
+            if (inputDisabled || movementLocked)
+            {
+                return;
+            }
             SprintInput(value.isPressed);
         }
 
@@ -116,26 +152,46 @@ namespace Frayed.Input
 
         public void OnToggleInventory(InputValue value)
         {
+            if (inputDisabled)
+            {
+                return;
+            }
             ToggleInventoryInput(value.isPressed);
         }
 
         public void OnInventoryNextItem(InputValue value)
         {
+            if (inputDisabled)
+            {
+                return;
+            }
             InventoryNextItemInput(value.isPressed);
         }
 
         public void OnInventoryPrevItem(InputValue value)
         {
+            if (inputDisabled)
+            {
+                return;
+            }
             InventoryPrevItemInput(value.isPressed);
         }
 
         public void OnInventoryDropWeapon(InputValue value)
         {
+            if (inputDisabled)
+            {
+                return;
+            }
             InventoryDropWeaponInput(value.isPressed);
         }
 
         public void OnSwitchCameraView(InputValue value)
         {
+            if (inputDisabled)
+            {
+                return;
+            }
             SwitchCameraViewInput(value.isPressed);
         }
 
@@ -197,7 +253,7 @@ namespace Frayed.Input
 
         private void OnApplicationFocus(bool hasFocus)
         {
-            SetCursorState(cursorLocked);
+            SetCursorState(_cursorLocked);
         }
 
         private void SetCursorState(bool newState)
@@ -207,27 +263,27 @@ namespace Frayed.Input
 
         public void LockMovement()
         {
-            movementLocked = true;
+            _movementLocked = true;
             // Stop all current movement.
             _move = new Vector2(0f, 0f);
         }
 
         public void UnlockMovement()
         {
-            movementLocked = false;
+            _movementLocked = false;
         }
 
         public void LockMouse()
         {
-            cursorLocked = true;
-            cursorInputForLook = true;
+            _cursorLocked = true;
+            _cursorInputForLook = true;
             SetCursorState(true);
         }
 
         public void UnlockMouse()
         {
-            cursorLocked = false;
-            cursorInputForLook = false;
+            _cursorLocked = false;
+            _cursorInputForLook = false;
             SetCursorState(false);
             // Stop all camera movement.
             _look = new Vector2(0f, 0f);

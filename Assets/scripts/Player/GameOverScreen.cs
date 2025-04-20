@@ -47,11 +47,19 @@ public class GameOverScreen : MonoBehaviour
         UnityEngine.Debug.Assert(mcInventory != null);
 
         // Hide all Game Over UI elements at start
+        if (gameOverTriggered)
+        {
+            ++inputManager.disableInputCount;
+        }
         HideGameOver();
     }
 
     void HideGameOver()
     {
+        if (gameOverTriggered)
+        {
+            --inputManager.disableInputCount;
+        }
         GameOverBackground.SetActive(false);
         GameOverText.gameObject.SetActive(false);
         RestartButton.gameObject.SetActive(false);
@@ -67,6 +75,7 @@ public class GameOverScreen : MonoBehaviour
         inputManager.LockMovement();
 
         GameOverBackground.SetActive(true); // Show background
+        ++inputManager.disableInputCount;
         StartCoroutine(GameOverSequence());
     }
 

@@ -30,8 +30,6 @@ public class MC_Inventory : MonoBehaviour
 
     private MC_EquippedWeapon mcEquippedWeapon;
     private InputManager inputManager;
-    private OptionsMenu optionsMenu;
-    private GameOverScreen gameOverScreen;
 
     private InventoryItem hand;
     private readonly int handInventoryIndex = 0;
@@ -78,9 +76,6 @@ public class MC_Inventory : MonoBehaviour
         inputManager = InputManager.Instance;
         Debug.Assert(inputManager != null);
 
-        optionsMenu = OptionsMenu.Instance;
-        Debug.Assert(inputManager != null);
-
         canvasGameObject = this.transform.Find("Canvas").gameObject;
         Debug.Assert(canvasGameObject != null);
 
@@ -93,9 +88,6 @@ public class MC_Inventory : MonoBehaviour
         indexText = this.transform.Find("Canvas/Circle/Index").GetComponent<TMP_Text>();
         Debug.Assert(text != null);
 
-        gameOverScreen = GameOverScreen.Instance;
-        Debug.Assert(gameOverScreen != null);
-
         readyToSwitch = true;
         timeSinceSwitch = 0.0f;
 
@@ -104,34 +96,28 @@ public class MC_Inventory : MonoBehaviour
 
     private void Update()
     {
-        if (!optionsMenu.toggled && !gameOverScreen.gameOverTriggered)
-        {
-            if (_toggled != inputManager.toggleInventory)
-            {
-                Toggle(inputManager.toggleInventory);
-            }
 
-            if (_toggled)
+        Toggle(inputManager.toggleInventory);
+        if (_toggled)
+        {
+            if (inputManager.inventoryNextItem)
             {
-                if (inputManager.inventoryNextItem)
-                {
-                    Next();
-                }
-                else if (inputManager.inventoryPrevItem)
-                {
-                    Prev();
-                }
-                else if (inputManager.inventoryDropWeapon)
-                {
-                    StartCoroutine(DropWeapon(desiredInventoryIndex));
-                }
+                Next();
             }
-            else
+            else if (inputManager.inventoryPrevItem)
             {
-                if (desiredInventoryIndex != inventoryIndex)
-                {
-                    StartCoroutine(Switch(desiredInventoryIndex));
-                }
+                Prev();
+            }
+            else if (inputManager.inventoryDropWeapon)
+            {
+                StartCoroutine(DropWeapon(desiredInventoryIndex));
+            }
+        }
+        else
+        {
+            if (desiredInventoryIndex != inventoryIndex)
+            {
+                StartCoroutine(Switch(desiredInventoryIndex));
             }
         }
 
@@ -278,7 +264,6 @@ public class MC_Inventory : MonoBehaviour
 
     public void Toggle(bool state)
     {
-        _toggled = state;
         if (_toggled)
         {
             UpdateInventoryUI();
@@ -288,6 +273,7 @@ public class MC_Inventory : MonoBehaviour
         {
             canvasGameObject.SetActive(false);
         }
+        _toggled = state;
     }
 
     public IEnumerator ClearInventory()
