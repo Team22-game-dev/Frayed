@@ -4,12 +4,12 @@ using Frayed.Input;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class OptionsMenu : MonoBehaviour
+public class Menu : MonoBehaviour
 {
 
     // Singleton Design
-    private static OptionsMenu _instance;
-    public static OptionsMenu Instance => _instance;
+    private static Menu _instance;
+    public static Menu Instance => _instance;
 
     public bool toggled { get { return _toggled; } private set { _toggled = value; } }
 
@@ -81,14 +81,14 @@ public class OptionsMenu : MonoBehaviour
 
     public void Update()
     {
-        if (inputManager.toggleOptionsMenu)
+        if (inputManager.toggleMenu)
         {
             if (!gameOverScreen.gameOverTriggered)
             {
                 Toggle(!_toggled);
             }
             // Finished with the button input, set back to false.
-            inputManager.toggleOptionsMenu = false;
+            inputManager.toggleMenu = false;
         }
     }
 

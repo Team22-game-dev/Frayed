@@ -21,7 +21,7 @@ public class GameOverScreen : MonoBehaviour
 
     public bool gameOverTriggered { get { return GameOverBackground != null && GameOverBackground.activeSelf; } } // Prevent multiple calls
 
-    private OptionsMenu optionsMenu;
+    private Menu menu;
     private InputManager inputManager;
     private MC_Inventory mcInventory;
     private void Awake()
@@ -39,7 +39,7 @@ public class GameOverScreen : MonoBehaviour
     void Start()
     {
         gameOverTextRect = GameOverText.GetComponent<RectTransform>();
-        optionsMenu = OptionsMenu.Instance;
+        menu = Menu.Instance;
         inputManager = InputManager.Instance;
         gameOverTextStartPosition = gameOverTextRect.anchoredPosition;
 
@@ -114,8 +114,8 @@ public class GameOverScreen : MonoBehaviour
     {
         HideGameOver();
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        // TODO: Use optionsMenu to reload scene for now.
-        optionsMenu.LoadScene(SceneManager.GetActiveScene().name);
+        // TODO: Use options menu to reload scene for now.
+        menu.LoadScene(SceneManager.GetActiveScene().name);
         // Lock mouse and unlock movement and unpause game.
         inputManager.LockMouse();
         inputManager.UnlockMovement();
@@ -129,6 +129,6 @@ public class GameOverScreen : MonoBehaviour
     public void MainMenu()
     {
         HideGameOver();
-        optionsMenu.Toggle(true);
+        menu.Toggle(true);
     }
 }

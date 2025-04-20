@@ -25,7 +25,7 @@ namespace Frayed.Input
         public bool jump { get { return _jump; } set { _jump = value; } }
         public bool sprint { get { return _sprint; } private set { _sprint = value; } }
         // Public setter and getter.
-        public bool toggleOptionsMenu { get { return _toggleOptionsMenu; } set { _toggleOptionsMenu = value; } }
+        public bool toggleMenu { get { return _toggleMenu; } set { _toggleMenu = value; } }
         public bool toggleInventory { get { return _toggleInventory; } set { _toggleInventory = value; } }
         public bool inventoryNextItem { get { return _inventoryNextItem; } private set { _inventoryNextItem = value; } }
         public bool inventoryPrevItem { get { return _inventoryPrevItem; } private set { _inventoryPrevItem = value; } }
@@ -50,7 +50,7 @@ namespace Frayed.Input
         [SerializeField]
         private bool _sprint;
         [SerializeField]
-        private bool _toggleOptionsMenu;
+        private bool _toggleMenu;
         [SerializeField]
         private bool _toggleInventory;
         [SerializeField]
@@ -145,9 +145,9 @@ namespace Frayed.Input
             SprintInput(value.isPressed);
         }
 
-        public void OnToggleOptionsMenu(InputValue value)
+        public void OnToggleMenu(InputValue value)
         {
-            ToggleOptionsMenuInput(value.isPressed);
+            ToggleMenuInput(value.isPressed);
         }
 
         public void OnToggleInventory(InputValue value)
@@ -218,10 +218,10 @@ namespace Frayed.Input
             _sprint = newSprintState;
         }
 
-        public void ToggleOptionsMenuInput(bool newToggleOptionsMenuState)
+        public void ToggleMenuInput(bool newToggleMenuState)
         {
             // Always be true due to Action being button.
-            _toggleOptionsMenu = newToggleOptionsMenuState;
+            _toggleMenu = newToggleMenuState;
         }
 
         public void ToggleInventoryInput(bool newToggleInventoryState)
