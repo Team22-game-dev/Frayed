@@ -10,7 +10,7 @@ public class MC_Attack : AttackBase
     [SerializeField] private float comboWindowTime = 0.5f; // Time to trigger a combo attack
     [SerializeField] private float clickBuffer = 0.25f; // Prevent button mashing
     private float lastAttackTime;
-    private bool attackQueued;
+    //private bool attackQueued;
 
     private float drawTime = -1.0f;
     //private float attackTime = -1.0f;
@@ -27,14 +27,14 @@ public class MC_Attack : AttackBase
     {
         Idle,
         Attacking,
-        Combo
+        //Combo
     };
 
     void Start()
     {
         currentState = AttackState.Idle;
         lastAttackTime = -comboWindowTime; // Ensure first attack can trigger
-        attackQueued = false;
+        //attackQueued = false;
     }
 
     new
@@ -44,7 +44,8 @@ public class MC_Attack : AttackBase
         if(Time.time - lastAttackTime > 0.6f)
         {
             currentAttack = nextAttack = 0; // reset attacks sequence if pause between attack requests 
-
+            currentState = AttackState.Idle;
+            animationManager.ResetTrigger("Attack");
             animationManager.SetInt("attackNumber", nextAttack);
         }
         
