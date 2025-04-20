@@ -52,7 +52,7 @@
                 },
                 {
                     "name": "Toggle Inventory",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "3cc17954-738c-43a6-86f5-d6e1b42825d9",
                     "expectedControlType": "",
                     "processors": "",

@@ -170,7 +170,6 @@ namespace Frayed.Input
 
         public void ToggleInventoryInput(bool newToggleInventoryState)
         {
-            // Always be true due to Action being button.
             _toggleInventory = newToggleInventoryState;
         }
 

@@ -250,6 +250,9 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         // removes the Weapon datas references to the users bones changes weapon into "rag-doll state"
         if(hasWeaponEquipped())
         {
+            animationManager.SetTrigger("Unequip");
+            StartCoroutine(DelayedForceResetUnequip());
+            StartCoroutine(DelayedBoolOff(weaponData.GetWeaponType()));
             // remove this users transform data from weapon
             equippedWeapon.transform.SetParent(null);
             weaponData.ActionBoneL = null;
@@ -332,7 +335,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                 {
                     Debug.Log("Setting animation manager from sheath/draw draw -> sheath");
                     animationManager.SetTrigger("Sheath");
-                    StartCoroutine(DelayedBoolOff());
+                    StartCoroutine(DelayedBoolOff(weaponData.GetWeaponType()));
                 }
                 break;
         }
@@ -340,10 +343,16 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     }
 
-    IEnumerator DelayedBoolOff()
+    public IEnumerator DelayedBoolOff(string weaponType)
     {
         yield return null; // wait one frame
-        animationManager.SetBool(weaponData.GetWeaponType(), false);
+        animationManager.SetBool(weaponType, false);
+    }
+
+    public IEnumerator DelayedForceResetUnequip()
+    {
+        yield return null; // wait one frame
+        animationManager.ResetTrigger("Unequip");
     }
 
 

@@ -21,6 +21,9 @@ public class MC_Inventory : MonoBehaviour
     private int inventoryIndex;
 
     [SerializeField]
+    private int desiredInventoryIndex;
+
+    [SerializeField]
     private List<InventoryItem> storedItems;
 
     private HashSet<string> storedItemsSet;
@@ -67,6 +70,7 @@ public class MC_Inventory : MonoBehaviour
 
         Store(hand);
         inventoryIndex = handInventoryIndex;
+        desiredInventoryIndex = handInventoryIndex;
 
         mcEquippedWeapon = MC_EquippedWeapon.Instance;
         Debug.Assert(mcEquippedWeapon != null);
@@ -102,9 +106,9 @@ public class MC_Inventory : MonoBehaviour
     {
         if (!optionsMenu.toggled && !gameOverScreen.gameOverTriggered)
         {
-            if (inputManager.toggleInventory)
+            if (_toggled != inputManager.toggleInventory)
             {
-                Toggle(!_toggled);
+                Toggle(inputManager.toggleInventory);
             }
 
             if (_toggled)
@@ -119,7 +123,14 @@ public class MC_Inventory : MonoBehaviour
                 }
                 else if (inputManager.inventoryDropWeapon)
                 {
-                    DropCurrentWeapon();
+                    StartCoroutine(DropWeapon(desiredInventoryIndex));
+                }
+            }
+            else
+            {
+                if (desiredInventoryIndex != inventoryIndex)
+                {
+                    StartCoroutine(Switch(desiredInventoryIndex));
                 }
             }
         }
@@ -133,7 +144,6 @@ public class MC_Inventory : MonoBehaviour
 
         // Reset inventory input manager buttons.
         inputManager.inventoryDropWeapon = false;
-        inputManager.toggleInventory = false;
     }
 
     public void Store(InventoryItem item, bool unequip = true)
@@ -157,18 +167,37 @@ public class MC_Inventory : MonoBehaviour
         yield return StartCoroutine(Switch(storedItems.Count - 1));
     }
 
-    public void DropCurrentWeapon()
+    public IEnumerator DropWeapon(int index)
     {
-        InventoryItem currentItem = storedItems[inventoryIndex];
-        if (currentItem == hand)
+        InventoryItem item = storedItems[index];
+        if (item == hand)
         {
-            return;
+            yield break;
         }
-        mcEquippedWeapon.DropWeapon();
-        inventoryIndex = handInventoryIndex;
+        if (index == inventoryIndex)
+        {
+            mcEquippedWeapon.DropWeapon();
+            inventoryIndex = handInventoryIndex;
+            desiredInventoryIndex = handInventoryIndex;
+        }
+        else
+        {
+            int currentIndex = inventoryIndex;
+            yield return Switch(index);
+            mcEquippedWeapon.DropWeapon();
+            inventoryIndex = handInventoryIndex;
+            if (currentIndex > index)
+            {
+                desiredInventoryIndex = currentIndex - 1;
+            }
+            else
+            {
+                desiredInventoryIndex = currentIndex;
+            }
+        }
         // Not the most efficent but it's okay.
-        bool deletedFromList = storedItems.Remove(currentItem);
-        bool deletedFromSet = storedItemsSet.Remove(currentItem.getInventoryName());
+        bool deletedFromList = storedItems.Remove(item);
+        bool deletedFromSet = storedItemsSet.Remove(item.getInventoryName());
         UpdateInventoryUI();
         Debug.Assert(deletedFromList);
         Debug.Assert(deletedFromSet);
@@ -189,8 +218,8 @@ public class MC_Inventory : MonoBehaviour
         {
             return;
         }
-        int nextInventoryIndex = (inventoryIndex + storedItems.Count - 1) % storedItems.Count;
-        StartCoroutine(Switch(nextInventoryIndex));
+        desiredInventoryIndex = (desiredInventoryIndex + storedItems.Count - 1) % storedItems.Count;
+        UpdateInventoryUI();
     }
 
     private void Next()
@@ -199,8 +228,8 @@ public class MC_Inventory : MonoBehaviour
         {
             return;
         }
-        int nextInventoryIndex = (inventoryIndex + 1) % storedItems.Count;
-        StartCoroutine(Switch(nextInventoryIndex));
+        desiredInventoryIndex = (desiredInventoryIndex + 1) % storedItems.Count;
+        UpdateInventoryUI();
     }
 
     private IEnumerator Switch(int index)
@@ -216,6 +245,7 @@ public class MC_Inventory : MonoBehaviour
                 yield return StartCoroutine(Equip(storedItems[index]));
             }
             inventoryIndex = index;
+            desiredInventoryIndex = index;
             UpdateInventoryUI();
             timeSinceSwitch = 0.0f;
             readyToSwitch = true;
@@ -228,7 +258,7 @@ public class MC_Inventory : MonoBehaviour
 
     private void UpdateInventoryUI()
     {
-        InventoryItem item = storedItems[inventoryIndex];
+        InventoryItem item = storedItems[desiredInventoryIndex];
         image.sprite = item.getInventorySprite();
         text.text = item.getInventoryName();
         if (storedItems.Count <= 1)
@@ -237,7 +267,7 @@ public class MC_Inventory : MonoBehaviour
         }
         else
         {
-            indexText.text = $"<  {inventoryIndex + 1}  >";
+            indexText.text = $"<  {desiredInventoryIndex + 1}  >";
         }
     }
 
@@ -270,6 +300,7 @@ public class MC_Inventory : MonoBehaviour
             storedItemsSet.Remove(item.getInventoryName());
             Destroy(item);
         }
+        UpdateInventoryUI();
     }
 
 }
