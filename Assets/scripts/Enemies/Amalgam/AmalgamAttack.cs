@@ -100,7 +100,8 @@ public class AmalgamAttack : EnemyAttack
 
     public void InstantiateSword()
     {
-        SwordInstance = Instantiate(amalgamSwordPrefab, handBoneR.position, handBoneR.rotation);
+        //Vector3 centerOfEnemy = transform.position;
+        SwordInstance = Instantiate(amalgamSwordPrefab, gameObject.transform.position, Quaternion.identity);
     }
 
     new void Start()
