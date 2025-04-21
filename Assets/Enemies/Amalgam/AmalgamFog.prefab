@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7952554071621287926}
   - component: {fileID: 7515057376776858642}
   - component: {fileID: 7039563483565760231}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AmalgamFog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,9 +116,9 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 10
-      minScalar: 5
+      minMaxState: 3
+      scalar: 9
+      minScalar: 6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -223,8 +223,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 0.24634074, g: 0.1974457, b: 0.2735849, a: 0.6}
-      maxColor: {r: 0.2735849, g: 0.13550195, b: 0.1771874, a: 0.5686275}
+      minColor: {r: 0.24634074, g: 0.1974457, b: 0.2735849, a: 0.49019608}
+      maxColor: {r: 0.2735849, g: 0.13550195, b: 0.1771874, a: 0.49019608}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -605,7 +605,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 10000
+    maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 1
@@ -871,7 +871,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 60
+      scalar: 50
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -1325,7 +1325,7 @@ ParticleSystem:
         ctime5: 0
         ctime6: 0
         ctime7: 0
-        atime0: 51048
+        atime0: 41657
         atime1: 65535
         atime2: 0
         atime3: 0
