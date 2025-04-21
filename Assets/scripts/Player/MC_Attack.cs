@@ -10,7 +10,6 @@ public class MC_Attack : AttackBase
     [SerializeField] private float comboWindowTime = 0.5f; // Time to trigger a combo attack
     [SerializeField] private float clickBuffer = 0.25f; // Prevent button mashing
     private float lastAttackTime;
-    private bool attackQueued;
 
     private float drawTime = -1.0f;
     //private float attackTime = -1.0f;
@@ -34,7 +33,6 @@ public class MC_Attack : AttackBase
     {
         currentState = AttackState.Idle;
         lastAttackTime = -comboWindowTime; // Ensure first attack can trigger
-        attackQueued = false;
     }
 
     new
