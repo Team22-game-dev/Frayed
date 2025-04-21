@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using Frayed.Input;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem.Composites;
+using TMPro;
+
+
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 public class Menu : MonoBehaviour
 {
@@ -18,6 +25,10 @@ public class Menu : MonoBehaviour
 
     private InputManager inputManager;
     private GameObject canvas;
+    private GameObject optionsPanel;
+    private GameObject keybindsPanel;
+    private GameObject keybindsScrollContent;
+    private GameObject keybindTextTemplate;
 
     private GameOverScreen gameOverScreen;
     private void Awake()
@@ -40,6 +51,18 @@ public class Menu : MonoBehaviour
         canvas = this.transform.Find("Canvas").gameObject;
         Debug.Assert(canvas != null);
 
+        optionsPanel = canvas.transform.Find("OptionsPanel").gameObject;
+        Debug.Assert(optionsPanel != null);
+
+        keybindsPanel = canvas.transform.Find("KeybindsPanel").gameObject;
+        Debug.Assert(keybindsPanel != null);
+
+        keybindsScrollContent = keybindsPanel.transform.Find("ScrollContent").gameObject;
+        Debug.Assert(keybindsScrollContent != null);
+
+        keybindTextTemplate = keybindsScrollContent.transform.Find("Template").gameObject;
+        Debug.Assert(keybindTextTemplate != null);
+
         gameOverScreen = GameOverScreen.Instance;
         Debug.Assert(gameOverScreen != null);
 
@@ -55,6 +78,8 @@ public class Menu : MonoBehaviour
         if (state)
         {
             canvas.SetActive(true);
+            optionsPanel.SetActive(true);
+            keybindsPanel.SetActive(false);
             // Pause game.
             Time.timeScale = 0f;
             inputManager.UnlockMouse();
@@ -114,5 +139,50 @@ public class Menu : MonoBehaviour
             GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = true;
         }
         Toggle(false);
+    }
+
+    public void ShowKeybinds()
+    {
+        optionsPanel.SetActive(false);
+        keybindsPanel.SetActive(true);
+        foreach (Transform child in keybindsScrollContent.transform)
+        {
+            if (child.gameObject != keybindTextTemplate)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+#if ENABLE_INPUT_SYSTEM
+        foreach (InputAction inputAction in inputManager.playerInput.actions)
+        {
+            foreach(InputBinding binding in inputAction.bindings)
+            {
+                if (binding.groups.Contains(inputManager.playerInput.currentControlScheme))
+                {
+                    //string keybind = binding.path.Substring(binding.path.IndexOf("/") + 1).ToUpper();
+                    string keybind = binding.path.ToUpper();
+                    string text;
+                    if (!string.IsNullOrWhiteSpace(binding.name))
+                    {
+                        text = $"{inputAction.name} {binding.name}: {keybind}";
+                    }
+                    else
+                    {
+                        text = $"{inputAction.name}: {keybind}";
+                    }
+                    GameObject textGameObject = GameObject.Instantiate(keybindTextTemplate);
+                    textGameObject.SetActive(true);
+                    textGameObject.transform.SetParent(keybindsScrollContent.transform);
+                    textGameObject.GetComponent<TMP_Text>().text = text;
+                }
+            }
+        }
+#endif
+    }
+
+    public void HideKeybinds()
+    {
+        keybindsPanel.SetActive(false);
+        optionsPanel.SetActive(true);
     }
 }

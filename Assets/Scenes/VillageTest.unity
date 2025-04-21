@@ -1246,7 +1246,7 @@ PrefabInstance:
     - target: {fileID: 2834913884946469345, guid: e1faa718a63f76d42bb425b08cabc574,
         type: 3}
       propertyPath: m_Name
-      value: OptionsMenu
+      value: Menu
       objectReference: {fileID: 0}
     - target: {fileID: 8670595303810322229, guid: e1faa718a63f76d42bb425b08cabc574,
         type: 3}

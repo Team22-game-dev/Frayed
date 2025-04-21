@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Frayed.Input;
 using UnityEngine;
 
 
 public class MC_EquippedWeapon : EquippedWeaponBase
 {
-
-    [SerializeField] private KeyCode pickupKey = KeyCode.E; // key to pick up weapon
-
     // use singleton since only one weapon should be equipped at a time
     private static MC_EquippedWeapon _instance; // the local private _instance
     public static MC_EquippedWeapon Instance => _instance;
@@ -15,6 +13,8 @@ public class MC_EquippedWeapon : EquippedWeaponBase
     private MC_Attack mc_AttackController;
 
     private float sheathingTime = -1.0f;
+
+    private InputManager inputManager;
 
     new private void Awake()
     {
@@ -33,6 +33,13 @@ public class MC_EquippedWeapon : EquippedWeaponBase
         }
     }
 
+    new public void Start()
+    {
+        base.Start();
+        inputManager = InputManager.Instance;
+        Debug.Assert(inputManager != null);
+    }
+
     private void Update()
     {
         
@@ -42,15 +49,21 @@ public class MC_EquippedWeapon : EquippedWeaponBase
         }
     }
 
+    private void LateUpdate()
+    {
+        inputManager.pickupWeapon = false;
+        inputManager.sheathWeapon = false;
+    }
+
     // from Base Class
     override public bool WillPickupWeapon() // If player would like to pick up the weapon they should press E
     {
-        return Input.GetKeyDown(pickupKey);
+        return inputManager.pickupWeapon;
     }
 
     private bool WillSheathWeapon()
     {
-        return Input.GetMouseButtonDown(1);
+        return inputManager.sheathWeapon;
     }
 
     public IEnumerator SheathWeapon()

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Frayed.Input;
 using UnityEngine;
 
 public class MC_Attack : AttackBase
@@ -30,11 +31,16 @@ public class MC_Attack : AttackBase
         //Combo
     };
 
+    private InputManager inputManager;
+
     void Start()
     {
         currentState = AttackState.Idle;
         lastAttackTime = -comboWindowTime; // Ensure first attack can trigger
         //attackQueued = false;
+
+        inputManager = InputManager.Instance;
+        Debug.Assert(inputManager != null);
     }
 
     new
@@ -51,9 +57,14 @@ public class MC_Attack : AttackBase
         
     }
 
+    private void LateUpdate()
+    {
+        inputManager.attackDrawWeapon = false;
+    }
+
     override public bool AttackTrigger()
     {
-        return Input.GetMouseButtonDown(0);
+        return inputManager.attackDrawWeapon;
     }
 
     override public void Attack()

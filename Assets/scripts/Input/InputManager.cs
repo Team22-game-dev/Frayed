@@ -34,6 +34,9 @@ namespace Frayed.Input
         public bool movementLocked { get { return _movementLocked; } private set { _movementLocked = value; } }
         public bool cursorLocked { get { return _cursorLocked; } private set { _cursorLocked = value; } }
         public bool cursorInputForLook { get { return _cursorInputForLook; } private set { _cursorInputForLook = value; } }
+        public bool attackDrawWeapon { get { return _attackDrawWeapon; } set { _attackDrawWeapon = value; } }
+        public bool sheathWeapon { get { return _sheathWeapon; } set { _sheathWeapon = value; } }
+        public bool pickupWeapon { get { return _pickupWeapon; } set { _pickupWeapon = value; } }
 
         [Header("Input Manager settings")]
         [SerializeField]
@@ -61,6 +64,12 @@ namespace Frayed.Input
         private bool _inventoryDropWeapon;
         [SerializeField]
         private bool _switchCameraView;
+        [SerializeField]
+        private bool _attackDrawWeapon;
+        [SerializeField]
+        private bool _sheathWeapon;
+        [SerializeField]
+        private bool _pickupWeapon;
 
         [Header("Movement Settings")]
         private bool _movementLocked = false;
@@ -70,7 +79,10 @@ namespace Frayed.Input
         private bool _cursorInputForLook = true;
 
 #if ENABLE_INPUT_SYSTEM
-        private PlayerInput playerInput;
+
+        public PlayerInput playerInput { get { return _playerInput; } private set { _playerInput = value; } }
+
+        private PlayerInput _playerInput;
 #endif
 
         private void Awake()
@@ -88,7 +100,7 @@ namespace Frayed.Input
 
         private void Start()
         {
-            playerInput = GetComponent<PlayerInput>();
+            _playerInput = GetComponent<PlayerInput>();
         }
 
         private void Update()
@@ -104,6 +116,9 @@ namespace Frayed.Input
                 _inventoryPrevItem = false;
                 _inventoryDropWeapon = false;
                 _switchCameraView = false;
+                _attackDrawWeapon = false;
+                _sheathWeapon = false;
+                _pickupWeapon = false;
             }
         }
 
@@ -195,6 +210,33 @@ namespace Frayed.Input
             SwitchCameraViewInput(value.isPressed);
         }
 
+        public void OnAttackDrawWeapon(InputValue value)
+        {
+            if (inputDisabled)
+            {
+                return;
+            }
+            AttackDrawWeaponInput(value.isPressed);
+        }
+
+        public void OnSheathWeapon(InputValue value)
+        {
+            if (inputDisabled)
+            {
+                return;
+            }
+            SheathWeaponInput(value.isPressed);
+        }
+
+        public void OnPickupWeapon(InputValue value)
+        {
+            if (inputDisabled)
+            {
+                return;
+            }
+            PickupWeaponInput(value.isPressed);
+        }
+
 #endif
 
         public void MoveInput(Vector2 newMoveDirection)
@@ -251,6 +293,24 @@ namespace Frayed.Input
             _switchCameraView = newSwitchCameraViewState;
         }
 
+        public void AttackDrawWeaponInput(bool newAttackDrawWeaponState)
+        {
+            // Always be true due to Action being button.
+            _attackDrawWeapon = newAttackDrawWeaponState;
+        }
+
+        public void SheathWeaponInput(bool newSheathWeaponState)
+        {
+            // Always be true due to Action being button.
+            _sheathWeapon = newSheathWeaponState;
+        }
+
+        public void PickupWeaponInput(bool newPickupWeaponState)
+        {
+            // Always be true due to Action being button.
+            _pickupWeapon = newPickupWeaponState;
+        }
+
         private void OnApplicationFocus(bool hasFocus)
         {
             SetCursorState(_cursorLocked);
@@ -294,7 +354,7 @@ namespace Frayed.Input
             get
             {
 #if ENABLE_INPUT_SYSTEM
-                return playerInput.currentControlScheme == "KeyboardMouse";
+                return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
 				    return false;
 #endif
