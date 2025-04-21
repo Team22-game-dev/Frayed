@@ -292,6 +292,14 @@ public class MC_Inventory : MonoBehaviour
             storedItemsSet.Remove(item.getInventoryName());
             Destroy(item.gameObject);
         }
+        foreach (Transform sheath in mcEquippedWeapon.GetWeaponBoneData["WeaponSheathHip"])
+        {
+            Destroy(sheath.gameObject);
+        }
+        foreach (Transform sheath in mcEquippedWeapon.GetWeaponBoneData["WeaponSheathBack"])
+        {
+            Destroy(sheath.gameObject);
+        }
         inventoryIndex = handInventoryIndex;
         desiredInventoryIndex = handInventoryIndex;
         mcEquippedWeapon.ResetPlayerAnimation();
