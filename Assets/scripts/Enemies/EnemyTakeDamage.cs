@@ -44,6 +44,9 @@ public class EnemyTakeDamage : TakeDamageBase
         }
 
         enemyData.TakeDamage(damage);
-        DamageIndicator.Instance.IndicateDamage(damage, attackingWeapon.transform.position);
+        if (attacker.gameObject.CompareTag("Player"))
+        {
+            DamageIndicator.Instance.IndicateDamage(damage, attackingWeapon.transform.position);
+        }
     }
 }
