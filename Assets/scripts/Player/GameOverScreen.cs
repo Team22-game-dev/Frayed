@@ -81,7 +81,7 @@ public class GameOverScreen : MonoBehaviour
 
     IEnumerator GameOverSequence()
     {
-        yield return StartCoroutine(mcInventory.ClearInventory());
+        mcInventory.ClearInventory();
 
         GameOverText.gameObject.SetActive(true);
 

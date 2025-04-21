@@ -185,6 +185,10 @@ public class MC_Inventory : MonoBehaviour
         bool deletedFromList = storedItems.Remove(item);
         bool deletedFromSet = storedItemsSet.Remove(item.getInventoryName());
         UpdateInventoryUI();
+        if (storedItems.Count == 1)
+        {
+            mcEquippedWeapon.ResetPlayerAnimation();
+        }
         Debug.Assert(deletedFromList);
         Debug.Assert(deletedFromSet);
     }
@@ -224,8 +228,11 @@ public class MC_Inventory : MonoBehaviour
         {
             readyToSwitch = false;
             InventoryItem currentItem = storedItems[inventoryIndex];
-            mcEquippedWeapon.UnEquipWeapon();
-            Store(currentItem);
+            if (currentItem != hand && mcEquippedWeapon.currentWeaponState == EquippedWeaponBase.WeaponState.Drawn)
+            {
+                mcEquippedWeapon.SheathAndDrawWeapon();
+            }
+            mcEquippedWeapon.UnEquipWeapon(currentItem.transform.parent);
             if (storedItems[index] != hand)
             {
                 yield return StartCoroutine(Equip(storedItems[index]));
@@ -276,16 +283,18 @@ public class MC_Inventory : MonoBehaviour
         _toggled = state;
     }
 
-    public IEnumerator ClearInventory()
+    public void ClearInventory()
     {
-        yield return StartCoroutine(Switch(handInventoryIndex));
         for (int i = storedItems.Count - 1; i >= 1; --i)
         {
             InventoryItem item = storedItems[i];
             storedItems.RemoveAt(i);
             storedItemsSet.Remove(item.getInventoryName());
-            Destroy(item);
+            Destroy(item.gameObject);
         }
+        inventoryIndex = handInventoryIndex;
+        desiredInventoryIndex = handInventoryIndex;
+        mcEquippedWeapon.ResetPlayerAnimation();
         UpdateInventoryUI();
     }
 

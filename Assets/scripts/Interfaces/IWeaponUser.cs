@@ -8,7 +8,7 @@ public interface IWeaponUser
 
     Dictionary<string, Transform> GetWeaponBoneData { get; } // returns key value pairs of bones that weapons can be parented to.
 
-    bool UnEquipWeapon();
+    bool UnEquipWeapon(Transform parent);
 
     bool hasWeaponEquipped();
 

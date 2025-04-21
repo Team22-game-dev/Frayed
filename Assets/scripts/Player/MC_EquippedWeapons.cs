@@ -119,5 +119,25 @@ public class MC_EquippedWeapon : EquippedWeaponBase
         return sheathingTime;
     }
 
+    public void ResetPlayerAnimation()
+    {
+        // TODO: Probably need to improve on this, but we to make sure weapons are unequipped.
+        animationManager.ResetTrigger("Attack");
+        //animationManager.ResetTrigger("Sheath");
+        animationManager.SetTrigger("Unequip");
+        StartCoroutine(DelayedForceResetUnequip());
+        if (weaponData != null)
+        {
+            StartCoroutine(DelayedBoolOff(weaponData.GetWeaponType()));
+        }
+    }
+
+    public IEnumerator DelayedForceResetUnequip()
+    {
+        //yield return null; // wait one frame
+        yield return new WaitForSeconds(0.5f); // Wait a little for the unequip to fully kick in.
+        animationManager.ResetTrigger("Unequip");
+    }
+
 
 }

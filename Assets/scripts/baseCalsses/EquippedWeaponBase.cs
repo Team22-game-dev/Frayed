@@ -244,19 +244,13 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     public WeaponData GetWeaponData() => weaponData;
 
-
-    public bool UnEquipWeapon()
+    public bool UnEquipWeapon(Transform parent = null)
     {
         // removes the Weapon datas references to the users bones changes weapon into "rag-doll state"
         if(hasWeaponEquipped())
         {
-            // TODO: Probably need to improve on this, but we to make sure weapons are unequipped.
-            animationManager.ResetTrigger("Attack");
-            animationManager.SetTrigger("Unequip");
-            StartCoroutine(DelayedForceResetUnequip());
-            StartCoroutine(DelayedBoolOff(weaponData.GetWeaponType()));
             // remove this users transform data from weapon
-            equippedWeapon.transform.SetParent(null);
+            equippedWeapon.transform.SetParent(parent);
             weaponData.ActionBoneL = null;
             weaponData.ActionBoneR = null;
             weaponData.SheathedBone = null;
@@ -350,14 +344,6 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         yield return null; // wait one frame
         animationManager.SetBool(weaponType, false);
     }
-
-    public IEnumerator DelayedForceResetUnequip()
-    {
-        //yield return null; // wait one frame
-        yield return new WaitForSeconds(0.5f); // Wait a little for the unequip to fully kick in.
-        animationManager.ResetTrigger("Unequip");
-    }
-
 
     public void DrawWeapon(bool playAnimation)
     {
