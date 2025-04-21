@@ -138,6 +138,12 @@ public class Menu : MonoBehaviour
             GameObject.FindGameObjectWithTag("Player").transform.position = new Vector3(328.58f, 8.75f, 238.33f);
             GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = true;
         }
+        else if (sceneName == "TownTest")
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = false;
+            GameObject.FindGameObjectWithTag("Player").transform.position = new Vector3(11.2168f, 2.96f, -30.79f);
+            GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = true;
+        }
         Toggle(false);
     }
 
