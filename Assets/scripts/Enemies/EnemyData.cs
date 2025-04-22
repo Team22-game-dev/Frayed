@@ -23,7 +23,8 @@ public class EnemyData : MonoBehaviour, IAttackData
     public Vector3 spawnPosition { get { return _spawnPosition; } private set { _spawnPosition = value; } }
 
     public float baseHealth { get { return _baseHealth; } }
-    public float currentHealth { get {return _currentHealth; } }
+    public float currentHealth { get { return _currentHealth; } set { _currentHealth = value; } }
+    public string enemyName { get { return _enemyName; } }
 
     public void TakeDamage(float damage) => _currentHealth = Mathf.Max(0.0f, _currentHealth - damage);
 
@@ -73,6 +74,8 @@ public class EnemyData : MonoBehaviour, IAttackData
     private float _startingHealth;
     [SerializeField]
     private float _currentHealth;
+    [SerializeField]
+    private string _enemyName;
 
     [SerializeField]
     private float _baseAttackPower = 1f;
@@ -156,9 +159,10 @@ public class EnemyData : MonoBehaviour, IAttackData
         }
 
         // TODO: Temp dummy logic to kill enemies for now.
-        if (Mathf.Approximately(GetHealthRatio(), 0.0f))
+        if (Mathf.Approximately(GetHealthRatio(), 0.0f) && enemyName != "Oil Barrel")
         {
             gameObject.SetActive(false);
+            ++mainCharacter.GetComponent<MC_Data>().enemiesKilled;
         }
     }
 

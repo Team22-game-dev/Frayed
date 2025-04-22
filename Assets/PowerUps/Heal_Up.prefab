@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2233898312811765888}
   - component: {fileID: 1274230799090312675}
   - component: {fileID: 3487212913099449439}
+  - component: {fileID: 159712469320186752}
   m_Layer: 0
   m_Name: Heal_Up
   m_TagString: Untagged
@@ -136,6 +137,23 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 3.079834
   m_Center: {x: 0.03491211, y: 0, z: -0.012207031}
+--- !u!114 &159712469320186752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3672819469043211254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6698aeb9b636249a4d427627fe1d4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minRespawnTime: 10
+  maxRespawnTime: 60
+  currentRespawnTime: 0
+  deactivated: 0
+  timeDeactivated: 0
 --- !u!1001 &5832136401413168329
 PrefabInstance:
   m_ObjectHideFlags: 0

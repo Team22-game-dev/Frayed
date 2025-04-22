@@ -43,7 +43,16 @@ public class EnemyTakeDamage : TakeDamageBase
             damage = attackerData.GetAttackPower();
         }
 
+        // TODO: Probably a better place to put this, but this will do for now.
+        if (attackerData.GetType() == typeof(EnemyData) && ((EnemyData)attackerData).enemyName == "Oil Barrel")
+        {
+            damage *= 10.0f;
+        }
+
         enemyData.TakeDamage(damage);
-        DamageIndicator.Instance.IndicateDamage(damage, attackingWeapon.transform.position);
+        if (attacker.gameObject.CompareTag("Player"))
+        {
+            DamageIndicator.Instance.IndicateDamage(damage, attackingWeapon.transform.position);
+        }
     }
 }

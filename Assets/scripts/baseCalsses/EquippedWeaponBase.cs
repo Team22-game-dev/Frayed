@@ -39,7 +39,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
         if (animationManager == null)
         {
-            Debug.LogError("AnimationManager component not found on this GameObject.");
+            Debug.LogWarning("AnimationManager component not found on this GameObject.");
         }
     }
 
@@ -244,8 +244,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     public WeaponData GetWeaponData() => weaponData;
 
-
-    public bool UnEquipWeapon()
+    public bool UnEquipWeapon(Transform parent = null)
     {
         // removes the Weapon datas references to the users bones changes weapon into "rag-doll state"
         if(hasWeaponEquipped())
@@ -255,7 +254,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                 SheathAndDrawWeapon();
             }
             // remove this users transform data from weapon
-            equippedWeapon.transform.SetParent(null);
+            equippedWeapon.transform.SetParent(parent);
             weaponData.ActionBoneL = null;
             weaponData.ActionBoneR = null;
             weaponData.SheathedBone = null;
@@ -336,7 +335,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
                 {
                     Debug.Log("Setting animation manager from sheath/draw draw -> sheath");
                     animationManager.SetTrigger("Sheath");
-                    StartCoroutine(DelayedBoolOff());
+                    StartCoroutine(DelayedBoolOff(weaponData.GetWeaponType()));
                 }
                 break;
         }
@@ -344,12 +343,11 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
     }
 
-    IEnumerator DelayedBoolOff()
+    public IEnumerator DelayedBoolOff(string weaponType)
     {
         yield return null; // wait one frame
-        animationManager.SetBool(weaponData.GetWeaponType(), false);
+        animationManager.SetBool(weaponType, false);
     }
-
 
     public void DrawWeapon(bool playAnimation)
     {
