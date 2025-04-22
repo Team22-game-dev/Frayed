@@ -250,6 +250,10 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
         // removes the Weapon datas references to the users bones changes weapon into "rag-doll state"
         if(hasWeaponEquipped())
         {
+            if(isDrawn())
+            {
+                SheathAndDrawWeapon();
+            }
             // remove this users transform data from weapon
             equippedWeapon.transform.SetParent(null);
             weaponData.ActionBoneL = null;
