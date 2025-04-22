@@ -754,6 +754,7 @@ GameObject:
   - component: {fileID: 834696444019533968}
   - component: {fileID: 83916530936056911}
   - component: {fileID: 4806484458827810765}
+  - component: {fileID: 5227956949873163591}
   m_Layer: 7
   m_Name: Amalgam
   m_TagString: Untagged
@@ -970,6 +971,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fogEmitterPrefab: {fileID: 2798820115358291680, guid: 0b2c47bf0e93d6a15bfcc90a8df1e3e4,
     type: 3}
+--- !u!114 &5227956949873163591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2867637006469518429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6698aeb9b636249a4d427627fe1d4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minRespawnTime: 10
+  maxRespawnTime: 60
+  currentRespawnTime: 0
+  deactivated: 0
+  timeDeactivated: 0
 --- !u!1 &2895302443934387576
 GameObject:
   m_ObjectHideFlags: 0
