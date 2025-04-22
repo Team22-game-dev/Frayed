@@ -44,7 +44,10 @@ public abstract class TakeDamageBase : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        inFire = !(other.gameObject.layer == LayerMask.NameToLayer("Fire"));
+        if(other.gameObject.layer == LayerMask.NameToLayer("Fire"))
+        {
+            inFire = false;
+        }
     }
 
     private IEnumerator PollAttacking(IAttack attackSM, GameObject attacker, GameObject attackingWeapon)

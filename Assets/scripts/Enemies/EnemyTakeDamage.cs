@@ -6,7 +6,7 @@ public class EnemyTakeDamage : TakeDamageBase
 {
 
     [SerializeField]
-    private float elementalDamage = 20;
+    private float elementalDamage = 100;
     public override void HandleDamage(GameObject attacker, GameObject attackingWeapon)
     {
         if(attacker == gameObject)
@@ -62,6 +62,7 @@ public class EnemyTakeDamage : TakeDamageBase
     override
     public void FireDamage()
     {
+        Debug.Log("Enemy Taking fire damage");
         
         var enemyData = GetComponent<EnemyData>();
 

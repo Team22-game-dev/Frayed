@@ -52,10 +52,11 @@ public class EnemyManager : MonoBehaviour
             Debug.LogError("Amalgam animationManager is null");
 
         // Create child game object for chasing sphere collider since a game object can only have one collider.
-        AddCollider(ref chasingColliderGameObject, ref chasingCollider, "Chasing Collider", enemyData.chaseRadius, ChasingColliderEnter, ChasingColliderExit);
+        AddCollider(ref chasingColliderGameObject, ref chasingCollider, "Chasing Collider", enemyData.chaseRadius, ChasingColliderEnter, ChasingColliderExit, "PlayerDetect");
 
+        //chasingColliderGameObject.layer = LayerMask.NameToLayer("PlayerDetection");
         // Create child game object for attacking sphere collider since a game object can only have one collider.
-        AddCollider(ref attackingColliderGameObject, ref attackingCollider, "Attacking Collider", enemyData.attackRadius, AttackingColliderEnter, AttackingColliderExit);
+        AddCollider(ref attackingColliderGameObject, ref attackingCollider, "Attacking Collider", enemyData.attackRadius, AttackingColliderEnter, AttackingColliderExit, "Default");
 
         // Configure CharacterController
         characterController = GetComponent<CharacterController>();
@@ -79,9 +80,11 @@ public class EnemyManager : MonoBehaviour
     }
 
     // Creates a new GameObject for colliderGameObject and a new SphereCollider for collider.
-    void AddCollider(ref GameObject colliderGameObject, ref SphereCollider collider, string colliderName, float colliderRadius, Action<Collider> colliderEnter, Action<Collider> colliderExit)
+    void AddCollider(ref GameObject colliderGameObject, ref SphereCollider collider, string colliderName, 
+    float colliderRadius, Action<Collider> colliderEnter, Action<Collider> colliderExit, string layer)
     {
         colliderGameObject = new GameObject(colliderName);
+        colliderGameObject.layer = LayerMask.NameToLayer(layer);
         colliderGameObject.transform.SetParent(this.transform);
         colliderGameObject.transform.localPosition = new Vector3(0f, 0f, 0f);
         collider = colliderGameObject.AddComponent<SphereCollider>();

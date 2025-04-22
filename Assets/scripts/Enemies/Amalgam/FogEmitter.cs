@@ -48,7 +48,7 @@ public class FogEmitter : MonoBehaviour
 
     private void DropFog()
     {
-        Debug.Log("Dropping emitter at: " + gameObject.transform.position);
+        //Debug.Log("Dropping emitter at: " + gameObject.transform.position);
 
         if (fogEmitterPrefab != null)
         {
