@@ -141,7 +141,7 @@ public class Menu : MonoBehaviour
         else if (sceneName == "TownTest")
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = false;
-            GameObject.FindGameObjectWithTag("Player").transform.position = new Vector3(11.2168f, 2.96f, -30.79f);
+            GameObject.FindGameObjectWithTag("Player").transform.position = new Vector3(12.26f, 2.575f, -13.538f);
             GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = true;
         }
         Toggle(false);

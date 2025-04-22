@@ -266,7 +266,12 @@ public class MC_Inventory : MonoBehaviour
 
     public bool Contains(InventoryItem item)
     {
-        return storedItemsSet.Contains(item.getInventoryName());
+        return Contains(item.getInventoryName());
+    }
+
+    public bool Contains(string name)
+    {
+        return storedItemsSet.Contains(name);
     }
 
     public void Toggle(bool state)

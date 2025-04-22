@@ -39,7 +39,7 @@ public abstract class EquippedWeaponBase : MonoBehaviour, IWeaponUser
 
         if (animationManager == null)
         {
-            Debug.LogError("AnimationManager component not found on this GameObject.");
+            Debug.LogWarning("AnimationManager component not found on this GameObject.");
         }
     }
 
