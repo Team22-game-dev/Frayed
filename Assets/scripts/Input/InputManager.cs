@@ -17,21 +17,33 @@ namespace Frayed.Input
         private static InputManager _instance;
         public static InputManager Instance => _instance;
 
+        public int disableInputCount { get { return _disableInputCount; } set { _disableInputCount = value; } }
+        public bool inputDisabled { get { return (_disableInputCount > 0); } }
         public Vector2 move { get { return _move; } private set { _move = value; } }
         public Vector2 look { get { return _look; } private set { _look = value; } }
         // Public setter and getter.
         public bool jump { get { return _jump; } set { _jump = value; } }
         public bool sprint { get { return _sprint; } private set { _sprint = value; } }
         // Public setter and getter.
-        public bool toggleOptionsMenu { get { return _toggleOptionsMenu; } set { _toggleOptionsMenu = value; } }
+        public bool toggleMenu { get { return _toggleMenu; } set { _toggleMenu = value; } }
         public bool toggleInventory { get { return _toggleInventory; } set { _toggleInventory = value; } }
         public bool inventoryNextItem { get { return _inventoryNextItem; } private set { _inventoryNextItem = value; } }
         public bool inventoryPrevItem { get { return _inventoryPrevItem; } private set { _inventoryPrevItem = value; } }
         public bool inventoryDropWeapon { get { return _inventoryDropWeapon; } set { _inventoryDropWeapon = value; } }
         public bool switchCameraView { get { return _switchCameraView; } set { _switchCameraView = value; } }
+        public bool movementLocked { get { return _movementLocked; } private set { _movementLocked = value; } }
+        public bool cursorLocked { get { return _cursorLocked; } private set { _cursorLocked = value; } }
+        public bool cursorInputForLook { get { return _cursorInputForLook; } private set { _cursorInputForLook = value; } }
+        public bool attackDrawWeapon { get { return _attackDrawWeapon; } set { _attackDrawWeapon = value; } }
+        public bool sheathWeapon { get { return _sheathWeapon; } set { _sheathWeapon = value; } }
+        public bool pickupWeapon { get { return _pickupWeapon; } set { _pickupWeapon = value; } }
+
+        [Header("Input Manager settings")]
+        [SerializeField]
+        public int _disableInputCount = 0;
 
 
-        [Header("Character Input Values")]
+        [Header("Player Input Values")]
         [SerializeField]
         private Vector2 _move;
         [SerializeField]
@@ -41,7 +53,7 @@ namespace Frayed.Input
         [SerializeField]
         private bool _sprint;
         [SerializeField]
-        private bool _toggleOptionsMenu;
+        private bool _toggleMenu;
         [SerializeField]
         private bool _toggleInventory;
         [SerializeField]
@@ -52,16 +64,25 @@ namespace Frayed.Input
         private bool _inventoryDropWeapon;
         [SerializeField]
         private bool _switchCameraView;
+        [SerializeField]
+        private bool _attackDrawWeapon;
+        [SerializeField]
+        private bool _sheathWeapon;
+        [SerializeField]
+        private bool _pickupWeapon;
 
         [Header("Movement Settings")]
-        public bool movementLocked = false;
+        private bool _movementLocked = false;
 
         [Header("Mouse Cursor Settings")]
-        public bool cursorLocked = true;
-        public bool cursorInputForLook = true;
+        private bool _cursorLocked = true;
+        private bool _cursorInputForLook = true;
 
 #if ENABLE_INPUT_SYSTEM
-        private PlayerInput playerInput;
+
+        public PlayerInput playerInput { get { return _playerInput; } private set { _playerInput = value; } }
+
+        private PlayerInput _playerInput;
 #endif
 
         private void Awake()
@@ -74,69 +95,146 @@ namespace Frayed.Input
             }
             _instance = this;
             DontDestroyOnLoad(gameObject);
+            _disableInputCount = 0;
         }
 
         private void Start()
         {
-            playerInput = GetComponent<PlayerInput>();
+            _playerInput = GetComponent<PlayerInput>();
+        }
+
+        private void Update()
+        {
+            if (inputDisabled)
+            {
+                _move = new Vector2(0.0f, 0.0f);
+                _look = new Vector2(0.0f, 0.0f);
+                _jump = false;
+                _sprint = false;
+                _toggleInventory = false;
+                _inventoryNextItem = false;
+                _inventoryPrevItem = false;
+                _inventoryDropWeapon = false;
+                _switchCameraView = false;
+                _attackDrawWeapon = false;
+                _sheathWeapon = false;
+                _pickupWeapon = false;
+            }
         }
 
 #if ENABLE_INPUT_SYSTEM
 
         public void OnMove(InputValue value)
         {
-            if (!movementLocked)
+            if (inputDisabled || movementLocked)
             {
-                MoveInput(value.Get<Vector2>());
+                return;
             }
+            MoveInput(value.Get<Vector2>());
         }
 
         public void OnLook(InputValue value)
         {
-            if (cursorInputForLook)
+            if (inputDisabled || !cursorInputForLook)
             {
-                LookInput(value.Get<Vector2>());
+                return;
             }
+            LookInput(value.Get<Vector2>());
         }
 
         public void OnJump(InputValue value)
         {
+            if (inputDisabled || movementLocked)
+            {
+                return;
+            }
             JumpInput(value.isPressed);
         }
 
         public void OnSprint(InputValue value)
         {
+            if (inputDisabled || movementLocked)
+            {
+                return;
+            }
             SprintInput(value.isPressed);
         }
 
-        public void OnToggleOptionsMenu(InputValue value)
+        public void OnToggleMenu(InputValue value)
         {
-            ToggleOptionsMenuInput(value.isPressed);
+            ToggleMenuInput(value.isPressed);
         }
 
         public void OnToggleInventory(InputValue value)
         {
+            if (inputDisabled)
+            {
+                return;
+            }
             ToggleInventoryInput(value.isPressed);
         }
 
         public void OnInventoryNextItem(InputValue value)
         {
+            if (inputDisabled)
+            {
+                return;
+            }
             InventoryNextItemInput(value.isPressed);
         }
 
         public void OnInventoryPrevItem(InputValue value)
         {
+            if (inputDisabled)
+            {
+                return;
+            }
             InventoryPrevItemInput(value.isPressed);
         }
 
         public void OnInventoryDropWeapon(InputValue value)
         {
+            if (inputDisabled)
+            {
+                return;
+            }
             InventoryDropWeaponInput(value.isPressed);
         }
 
         public void OnSwitchCameraView(InputValue value)
         {
+            if (inputDisabled)
+            {
+                return;
+            }
             SwitchCameraViewInput(value.isPressed);
+        }
+
+        public void OnAttackDrawWeapon(InputValue value)
+        {
+            if (inputDisabled)
+            {
+                return;
+            }
+            AttackDrawWeaponInput(value.isPressed);
+        }
+
+        public void OnSheathWeapon(InputValue value)
+        {
+            if (inputDisabled)
+            {
+                return;
+            }
+            SheathWeaponInput(value.isPressed);
+        }
+
+        public void OnPickupWeapon(InputValue value)
+        {
+            if (inputDisabled)
+            {
+                return;
+            }
+            PickupWeaponInput(value.isPressed);
         }
 
 #endif
@@ -162,15 +260,14 @@ namespace Frayed.Input
             _sprint = newSprintState;
         }
 
-        public void ToggleOptionsMenuInput(bool newToggleOptionsMenuState)
+        public void ToggleMenuInput(bool newToggleMenuState)
         {
             // Always be true due to Action being button.
-            _toggleOptionsMenu = newToggleOptionsMenuState;
+            _toggleMenu = newToggleMenuState;
         }
 
         public void ToggleInventoryInput(bool newToggleInventoryState)
         {
-            // Always be true due to Action being button.
             _toggleInventory = newToggleInventoryState;
         }
 
@@ -196,9 +293,27 @@ namespace Frayed.Input
             _switchCameraView = newSwitchCameraViewState;
         }
 
+        public void AttackDrawWeaponInput(bool newAttackDrawWeaponState)
+        {
+            // Always be true due to Action being button.
+            _attackDrawWeapon = newAttackDrawWeaponState;
+        }
+
+        public void SheathWeaponInput(bool newSheathWeaponState)
+        {
+            // Always be true due to Action being button.
+            _sheathWeapon = newSheathWeaponState;
+        }
+
+        public void PickupWeaponInput(bool newPickupWeaponState)
+        {
+            // Always be true due to Action being button.
+            _pickupWeapon = newPickupWeaponState;
+        }
+
         private void OnApplicationFocus(bool hasFocus)
         {
-            SetCursorState(cursorLocked);
+            SetCursorState(_cursorLocked);
         }
 
         private void SetCursorState(bool newState)
@@ -208,27 +323,27 @@ namespace Frayed.Input
 
         public void LockMovement()
         {
-            movementLocked = true;
+            _movementLocked = true;
             // Stop all current movement.
             _move = new Vector2(0f, 0f);
         }
 
         public void UnlockMovement()
         {
-            movementLocked = false;
+            _movementLocked = false;
         }
 
         public void LockMouse()
         {
-            cursorLocked = true;
-            cursorInputForLook = true;
+            _cursorLocked = true;
+            _cursorInputForLook = true;
             SetCursorState(true);
         }
 
         public void UnlockMouse()
         {
-            cursorLocked = false;
-            cursorInputForLook = false;
+            _cursorLocked = false;
+            _cursorInputForLook = false;
             SetCursorState(false);
             // Stop all camera movement.
             _look = new Vector2(0f, 0f);
@@ -239,7 +354,7 @@ namespace Frayed.Input
             get
             {
 #if ENABLE_INPUT_SYSTEM
-                return playerInput.currentControlScheme == "KeyboardMouse";
+                return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
 				    return false;
 #endif

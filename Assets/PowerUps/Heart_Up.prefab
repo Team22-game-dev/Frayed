@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2071381518205599505}
   - component: {fileID: 3621170351133028986}
   - component: {fileID: 9171894873114632001}
+  - component: {fileID: 3121005411305163402}
   m_Layer: 0
   m_Name: Heart_Up
   m_TagString: Untagged
@@ -136,6 +137,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerUpType: 1
+--- !u!114 &3121005411305163402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7724226831621093518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6698aeb9b636249a4d427627fe1d4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minRespawnTime: 10
+  maxRespawnTime: 60
+  currentRespawnTime: 0
+  deactivated: 0
+  timeDeactivated: 0
 --- !u!1001 &6873243423936358042
 PrefabInstance:
   m_ObjectHideFlags: 0

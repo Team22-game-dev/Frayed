@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _toggled: 0
   inventoryIndex: 0
+  desiredInventoryIndex: 0
   storedItems: []
   readyToSwitch: 0
   timeSinceSwitch: 0

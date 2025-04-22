@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public abstract class TakeDamageBase : MonoBehaviour
@@ -30,14 +31,29 @@ public abstract class TakeDamageBase : MonoBehaviour
         {
             Debug.LogError("IAttack not found");
         }
-        if(!attackSM.IsAttacking())
-        {
-           // Debug.Log("Wasn't trying to attack");
-            return;
-        }
+        //if(!attackSM.IsAttacking())
+        //{
+        //   // Debug.Log("Wasn't trying to attack");
+        //    return;
+        //}
 
-        //Debug.Log("Attacking Weapon: " + attackingWeapon.name);
-        HandleDamage(attacker, attackingWeapon);
+        ////Debug.Log("Attacking Weapon: " + attackingWeapon.name);
+        //HandleDamage(attacker, attackingWeapon);
+        StartCoroutine(PollAttacking(attackSM, attacker, attackingWeapon));
+    }
+
+    private IEnumerator PollAttacking(IAttack attackSM, GameObject attacker, GameObject attackingWeapon)
+    {
+        float startTime = Time.time;
+        while (Time.time - startTime <= 0.1f)
+        {
+            if (attackSM.IsAttacking())
+            {
+                HandleDamage(attacker, attackingWeapon);
+                yield break;
+            }
+            yield return null;
+        }
     }
 
 
