@@ -3013,6 +3013,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TownHelpController
       objectReference: {fileID: 0}
+    - target: {fileID: 7747294678811051694, guid: 9cf47db1eee4eb94b8daf73f5ef0477a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -82,6 +82,7 @@ public class GameOverScreen : MonoBehaviour
     IEnumerator GameOverSequence()
     {
         mcInventory.ClearInventory();
+        GameObject.FindObjectOfType<MC_Data>().enemiesKilled = 0;
 
         GameOverText.gameObject.SetActive(true);
 
@@ -115,7 +116,8 @@ public class GameOverScreen : MonoBehaviour
         HideGameOver();
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         // TODO: Use options menu to reload scene for now.
-        menu.LoadScene(SceneManager.GetActiveScene().name);
+        //menu.LoadScene(SceneManager.GetActiveScene().name);
+        menu.LoadScene("TownTest");
         // Lock mouse and unlock movement and unpause game.
         inputManager.LockMouse();
         inputManager.UnlockMovement();

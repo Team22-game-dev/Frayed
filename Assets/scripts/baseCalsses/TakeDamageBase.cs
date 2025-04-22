@@ -39,7 +39,16 @@ public abstract class TakeDamageBase : MonoBehaviour
         {
             Debug.LogError("IAttack not found");
         }
-        StartCoroutine(PollAttacking(attackSM, attacker, attackingWeapon));
+
+        if (attackSM.IsAttacking())
+        {
+            HandleDamage(attacker, attackingWeapon);
+        }
+        // TODO: Just some dummy logic to make oil barrel hitboxes better....
+        else if (GetComponent<EnemyData>() != null && GetComponent<EnemyData>().enemyName == "Oil Barrel")
+        {
+            StartCoroutine(PollAttacking(attackSM, attacker, attackingWeapon));
+        }
     }
 
     void OnTriggerExit(Collider other)
