@@ -16,6 +16,7 @@ namespace Frayed.Camera
 
         public enum Mode
         {
+            None,
             ThirdPersonStandard,
             ThirdPersonCombat
         }
@@ -79,13 +80,21 @@ namespace Frayed.Camera
             inputManager = InputManager.Instance;
             Debug.Assert(inputManager != null);
 
+            mode = Mode.None;
+        }
+
+        private void FixedUpdate()
+        {
             cinemachineVirtualCameraGameObject = GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject;
             Debug.Assert(cinemachineVirtualCameraGameObject != null);
 
             cinemachineVirtualCamera = cinemachineVirtualCameraGameObject.GetComponent<CinemachineVirtualCamera>();
             Debug.Assert(cinemachineVirtualCamera != null);
 
-            ChangeMode(Mode.ThirdPersonStandard);
+            if (mode == Mode.None)
+            {
+                ChangeMode(Mode.ThirdPersonStandard);
+            }
         }
 
         private void Update()

@@ -13,11 +13,9 @@ public class OilFire : MonoBehaviour
     private float timeOnFire;
     private float radius;
     private CapsuleCollider fireCollider;
-    [SerializeField]
-    private float timeSinceDamage;
 
     [SerializeField]
-    private float maxRadius = 4f;
+    private float maxRadius = 6.0f;
     
     public bool onFire { get { return fire.activeSelf; } }
 
@@ -44,7 +42,6 @@ public class OilFire : MonoBehaviour
 
         timeOnFire = 0.0f;
         radius = 0.0f;
-        timeSinceDamage = 0.0f;
         fire.gameObject.SetActive(false);
     }
 
@@ -53,8 +50,7 @@ public class OilFire : MonoBehaviour
         if (onFire)
         {
             timeOnFire += Time.deltaTime;
-            timeSinceDamage += Time.deltaTime;
-            radius = Mathf.Min(Mathf.Pow(timeOnFire, 1.0f / 4.0f) * 1.5f, maxRadius);
+            radius = Mathf.Min(Mathf.Pow(timeOnFire, 1.0f / 4.0f) * 2.0f, maxRadius);
             ParticleSystem.ShapeModule fireParticleShape = fireParticle.shape;
             fireParticleShape.radius = radius;
             ParticleSystem.ShapeModule fireAddParticleShape = fireAddParticle.shape;
@@ -62,12 +58,6 @@ public class OilFire : MonoBehaviour
             ParticleSystem.ShapeModule glowParticleShape = glowParticle.shape;
             glowParticleShape.radius = radius;
             fireCollider.radius = radius;
-            if (timeSinceDamage >= 1.0f)
-            {
-                timeSinceDamage = 0.0f;
-                fireCollider.enabled = false;
-                fireCollider.enabled = true;
-            }
         }
         else
         {
