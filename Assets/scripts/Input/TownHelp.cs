@@ -34,6 +34,11 @@ public class TownHelp : MonoBehaviour
 
     private void Update()
     {
+        if (GameOverScreen.Instance.gameOverTriggered)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
         if (!mcInventory.Contains("Dagger"))
         {
             tmpText.text = "Walk up to the dagger and pick it up.";
