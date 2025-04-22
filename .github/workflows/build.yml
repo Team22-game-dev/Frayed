@@ -21,6 +21,10 @@ jobs:
           - StandaloneLinux64
           - WebGL
     steps:
+
+      - name: Delete huge unnecessary tools folder
+        run: rm -rf /opt/hostedtoolcache
+        
       # Checkout
       - name: Checkout repository
         uses: actions/checkout@v4

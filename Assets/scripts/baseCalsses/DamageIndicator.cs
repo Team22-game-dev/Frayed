@@ -70,7 +70,8 @@ public class DamageIndicator : MonoBehaviour
         rectTransform.position = hitPosition;
         TMP_Text tmpText = damageText.GetComponent<TMP_Text>();
         tmpText.fontSize = startingFontSize;
-        tmpText.text = damage.ToString();
+        int damageInteger = Mathf.RoundToInt(damage);
+        tmpText.text = damageInteger.ToString();
         tmpText.color = color;
         float elapsedTime = 0f;
         while (elapsedTime < displayTime)

@@ -21,14 +21,15 @@ public class MC_Inventory : MonoBehaviour
     private int inventoryIndex;
 
     [SerializeField]
+    private int desiredInventoryIndex;
+
+    [SerializeField]
     private List<InventoryItem> storedItems;
 
     private HashSet<string> storedItemsSet;
 
     private MC_EquippedWeapon mcEquippedWeapon;
     private InputManager inputManager;
-    private OptionsMenu optionsMenu;
-    private GameOverScreen gameOverScreen;
 
     private InventoryItem hand;
     private readonly int handInventoryIndex = 0;
@@ -67,14 +68,12 @@ public class MC_Inventory : MonoBehaviour
 
         Store(hand);
         inventoryIndex = handInventoryIndex;
+        desiredInventoryIndex = handInventoryIndex;
 
         mcEquippedWeapon = MC_EquippedWeapon.Instance;
         Debug.Assert(mcEquippedWeapon != null);
 
         inputManager = InputManager.Instance;
-        Debug.Assert(inputManager != null);
-
-        optionsMenu = OptionsMenu.Instance;
         Debug.Assert(inputManager != null);
 
         canvasGameObject = this.transform.Find("Canvas").gameObject;
@@ -89,9 +88,6 @@ public class MC_Inventory : MonoBehaviour
         indexText = this.transform.Find("Canvas/Circle/Index").GetComponent<TMP_Text>();
         Debug.Assert(text != null);
 
-        gameOverScreen = GameOverScreen.Instance;
-        Debug.Assert(gameOverScreen != null);
-
         readyToSwitch = true;
         timeSinceSwitch = 0.0f;
 
@@ -100,27 +96,28 @@ public class MC_Inventory : MonoBehaviour
 
     private void Update()
     {
-        if (!optionsMenu.toggled && !gameOverScreen.gameOverTriggered)
-        {
-            if (inputManager.toggleInventory)
-            {
-                Toggle(!_toggled);
-            }
 
-            if (_toggled)
+        Toggle(inputManager.toggleInventory);
+        if (_toggled)
+        {
+            if (inputManager.inventoryNextItem)
             {
-                if (inputManager.inventoryNextItem)
-                {
-                    Next();
-                }
-                else if (inputManager.inventoryPrevItem)
-                {
-                    Prev();
-                }
-                else if (inputManager.inventoryDropWeapon)
-                {
-                    DropCurrentWeapon();
-                }
+                Next();
+            }
+            else if (inputManager.inventoryPrevItem)
+            {
+                Prev();
+            }
+            else if (inputManager.inventoryDropWeapon)
+            {
+                StartCoroutine(DropWeapon(desiredInventoryIndex));
+            }
+        }
+        else
+        {
+            if (desiredInventoryIndex != inventoryIndex)
+            {
+                StartCoroutine(Switch(desiredInventoryIndex));
             }
         }
 
@@ -133,7 +130,6 @@ public class MC_Inventory : MonoBehaviour
 
         // Reset inventory input manager buttons.
         inputManager.inventoryDropWeapon = false;
-        inputManager.toggleInventory = false;
     }
 
     public void Store(InventoryItem item, bool unequip = true)
@@ -157,19 +153,42 @@ public class MC_Inventory : MonoBehaviour
         yield return StartCoroutine(Switch(storedItems.Count - 1));
     }
 
-    public void DropCurrentWeapon()
+    public IEnumerator DropWeapon(int index)
     {
-        InventoryItem currentItem = storedItems[inventoryIndex];
-        if (currentItem == hand)
+        InventoryItem item = storedItems[index];
+        if (item == hand)
         {
-            return;
+            yield break;
         }
-        mcEquippedWeapon.DropWeapon();
-        inventoryIndex = handInventoryIndex;
+        if (index == inventoryIndex)
+        {
+            mcEquippedWeapon.DropWeapon();
+            inventoryIndex = handInventoryIndex;
+            desiredInventoryIndex = handInventoryIndex;
+        }
+        else
+        {
+            int currentIndex = inventoryIndex;
+            yield return Switch(index);
+            mcEquippedWeapon.DropWeapon();
+            inventoryIndex = handInventoryIndex;
+            if (currentIndex > index)
+            {
+                desiredInventoryIndex = currentIndex - 1;
+            }
+            else
+            {
+                desiredInventoryIndex = currentIndex;
+            }
+        }
         // Not the most efficent but it's okay.
-        bool deletedFromList = storedItems.Remove(currentItem);
-        bool deletedFromSet = storedItemsSet.Remove(currentItem.getInventoryName());
+        bool deletedFromList = storedItems.Remove(item);
+        bool deletedFromSet = storedItemsSet.Remove(item.getInventoryName());
         UpdateInventoryUI();
+        if (storedItems.Count == 1)
+        {
+            mcEquippedWeapon.ResetPlayerAnimation();
+        }
         Debug.Assert(deletedFromList);
         Debug.Assert(deletedFromSet);
     }
@@ -189,8 +208,8 @@ public class MC_Inventory : MonoBehaviour
         {
             return;
         }
-        int nextInventoryIndex = (inventoryIndex + storedItems.Count - 1) % storedItems.Count;
-        StartCoroutine(Switch(nextInventoryIndex));
+        desiredInventoryIndex = (desiredInventoryIndex + storedItems.Count - 1) % storedItems.Count;
+        UpdateInventoryUI();
     }
 
     private void Next()
@@ -199,8 +218,8 @@ public class MC_Inventory : MonoBehaviour
         {
             return;
         }
-        int nextInventoryIndex = (inventoryIndex + 1) % storedItems.Count;
-        StartCoroutine(Switch(nextInventoryIndex));
+        desiredInventoryIndex = (desiredInventoryIndex + 1) % storedItems.Count;
+        UpdateInventoryUI();
     }
 
     private IEnumerator Switch(int index)
@@ -209,13 +228,17 @@ public class MC_Inventory : MonoBehaviour
         {
             readyToSwitch = false;
             InventoryItem currentItem = storedItems[inventoryIndex];
-            mcEquippedWeapon.UnEquipWeapon();
-            Store(currentItem);
+            if (currentItem != hand && mcEquippedWeapon.currentWeaponState == EquippedWeaponBase.WeaponState.Drawn)
+            {
+                mcEquippedWeapon.SheathAndDrawWeapon();
+            }
+            mcEquippedWeapon.UnEquipWeapon(currentItem.transform.parent);
             if (storedItems[index] != hand)
             {
                 yield return StartCoroutine(Equip(storedItems[index]));
             }
             inventoryIndex = index;
+            desiredInventoryIndex = index;
             UpdateInventoryUI();
             timeSinceSwitch = 0.0f;
             readyToSwitch = true;
@@ -228,7 +251,7 @@ public class MC_Inventory : MonoBehaviour
 
     private void UpdateInventoryUI()
     {
-        InventoryItem item = storedItems[inventoryIndex];
+        InventoryItem item = storedItems[desiredInventoryIndex];
         image.sprite = item.getInventorySprite();
         text.text = item.getInventoryName();
         if (storedItems.Count <= 1)
@@ -237,18 +260,22 @@ public class MC_Inventory : MonoBehaviour
         }
         else
         {
-            indexText.text = $"<  {inventoryIndex + 1}  >";
+            indexText.text = $"<  {desiredInventoryIndex + 1}  >";
         }
     }
 
     public bool Contains(InventoryItem item)
     {
-        return storedItemsSet.Contains(item.getInventoryName());
+        return Contains(item.getInventoryName());
+    }
+
+    public bool Contains(string name)
+    {
+        return storedItemsSet.Contains(name);
     }
 
     public void Toggle(bool state)
     {
-        _toggled = state;
         if (_toggled)
         {
             UpdateInventoryUI();
@@ -258,18 +285,30 @@ public class MC_Inventory : MonoBehaviour
         {
             canvasGameObject.SetActive(false);
         }
+        _toggled = state;
     }
 
-    public IEnumerator ClearInventory()
+    public void ClearInventory()
     {
-        yield return StartCoroutine(Switch(handInventoryIndex));
         for (int i = storedItems.Count - 1; i >= 1; --i)
         {
             InventoryItem item = storedItems[i];
             storedItems.RemoveAt(i);
             storedItemsSet.Remove(item.getInventoryName());
-            Destroy(item);
+            Destroy(item.gameObject);
         }
+        foreach (Transform sheath in mcEquippedWeapon.GetWeaponBoneData["WeaponSheathHip"])
+        {
+            Destroy(sheath.gameObject);
+        }
+        foreach (Transform sheath in mcEquippedWeapon.GetWeaponBoneData["WeaponSheathBack"])
+        {
+            Destroy(sheath.gameObject);
+        }
+        inventoryIndex = handInventoryIndex;
+        desiredInventoryIndex = handInventoryIndex;
+        mcEquippedWeapon.ResetPlayerAnimation();
+        UpdateInventoryUI();
     }
 
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Frayed.Input;
 using UnityEngine;
 
 public class MC_Attack : AttackBase
@@ -10,6 +11,7 @@ public class MC_Attack : AttackBase
     [SerializeField] private float comboWindowTime = 0.5f; // Time to trigger a combo attack
     [SerializeField] private float clickBuffer = 0.25f; // Prevent button mashing
     private float lastAttackTime;
+    //private bool attackQueued;
 
     private float drawTime = -1.0f;
     //private float attackTime = -1.0f;
@@ -26,13 +28,19 @@ public class MC_Attack : AttackBase
     {
         Idle,
         Attacking,
-        Combo
+        //Combo
     };
+
+    private InputManager inputManager;
 
     void Start()
     {
         currentState = AttackState.Idle;
         lastAttackTime = -comboWindowTime; // Ensure first attack can trigger
+        //attackQueued = false;
+
+        inputManager = InputManager.Instance;
+        Debug.Assert(inputManager != null);
     }
 
     new
@@ -42,15 +50,21 @@ public class MC_Attack : AttackBase
         if(Time.time - lastAttackTime > 0.6f)
         {
             currentAttack = nextAttack = 0; // reset attacks sequence if pause between attack requests 
-
+            currentState = AttackState.Idle;
+            animationManager.ResetTrigger("Attack");
             animationManager.SetInt("attackNumber", nextAttack);
         }
         
     }
 
+    private void LateUpdate()
+    {
+        inputManager.attackDrawWeapon = false;
+    }
+
     override public bool AttackTrigger()
     {
-        return Input.GetMouseButtonDown(0);
+        return inputManager.attackDrawWeapon;
     }
 
     override public void Attack()

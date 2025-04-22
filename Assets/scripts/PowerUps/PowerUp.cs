@@ -40,7 +40,8 @@ public class PowerUp : MonoBehaviour
                 }
 
                 // Destroy the power-up object after being collected
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                gameObject.SetActive(false);
             }
             else
             {
