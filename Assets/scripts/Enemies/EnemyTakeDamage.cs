@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyTakeDamage : TakeDamageBase
 {
+
+    [SerializeField]
+    private float elementalDamage = 20;
     public override void HandleDamage(GameObject attacker, GameObject attackingWeapon)
     {
         if(attacker == gameObject)
@@ -54,5 +57,16 @@ public class EnemyTakeDamage : TakeDamageBase
         {
             DamageIndicator.Instance.IndicateDamage(damage, attackingWeapon.transform.position);
         }
+    }
+
+    override
+    public void FireDamage()
+    {
+        
+        var enemyData = GetComponent<EnemyData>();
+
+        enemyData.TakeDamage(elementalDamage);
+
+
     }
 }
