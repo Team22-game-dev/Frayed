@@ -76,7 +76,16 @@ public class TownHelp : MonoBehaviour
             return;
         }
         // Remove text from screen if all conditions are false.
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
+
+        StartCoroutine(TeleportToVillage());
+    }
+
+    private IEnumerator TeleportToVillage()
+    {
+        tmpText.text = "Well done! Teleporting to the village...";
+        yield return new WaitForSeconds(10.0f);
+        Menu.Instance.LoadScene("VillageTest");
     }
 
     private bool HasAmalgam(EnemyData[] enemies)
