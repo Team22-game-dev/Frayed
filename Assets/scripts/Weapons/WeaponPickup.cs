@@ -109,11 +109,13 @@ public class WeaponPickup : MonoBehaviour
                 pickupPromptUI.rectTransform.position = screenPos;
             }
 
+            List<EquippedWeaponBase> toRemove = new List<EquippedWeaponBase>();
             foreach (EquippedWeaponBase user in userWeaponController)
             {
                 if (user == null)
                 {
-                    userWeaponController.Remove(user);
+                    toRemove.Add(user);
+                    continue;
                 }
                 else if (user.WillPickupWeapon() && (!user.gameObject.CompareTag("Player") || pickupPromptUI.enabled))
                 {
@@ -121,6 +123,10 @@ public class WeaponPickup : MonoBehaviour
                     StartCoroutine(PickupWeapon());
                     break;
                 }
+            }
+            foreach (EquippedWeaponBase user in toRemove)
+            {
+                userWeaponController.Remove(user);
             }
         }
     }

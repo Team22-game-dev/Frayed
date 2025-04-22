@@ -59,4 +59,10 @@ public class MC_TakeDamageController : TakeDamageBase
             Debug.LogError("couldnot get attackers Equipped weapon component!");
         }
     }
+
+    override
+    public void FireDamage()
+    {
+        PlayerStats.Instance.TakeDamage(0.25f);
+    }
 }

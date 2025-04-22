@@ -5,11 +5,20 @@ using UnityEngine;
 public abstract class TakeDamageBase : MonoBehaviour
 {
 
+    private bool inFire = false;
+
+    [SerializeField]
+    private float fireDamageInterval = 1.0f;
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer != LayerMask.NameToLayer("Weapons"))
         {
-           // Debug.Log("Collided with: " + other.name);
+           if(other.gameObject.layer == LayerMask.NameToLayer("Fire") && !inFire)
+           {
+                inFire = true;
+                StartCoroutine(DelayFireDamage());
+           }
             return;
         }
 
@@ -30,21 +39,31 @@ public abstract class TakeDamageBase : MonoBehaviour
         {
             Debug.LogError("IAttack not found");
         }
-        //if(!attackSM.IsAttacking())
-        //{
-        //   // Debug.Log("Wasn't trying to attack");
-        //    return;
-        //}
 
-        ////Debug.Log("Attacking Weapon: " + attackingWeapon.name);
-        //HandleDamage(attacker, attackingWeapon);
-        StartCoroutine(PollAttacking(attackSM, attacker, attackingWeapon));
+        if (attackSM.IsAttacking())
+        {
+            HandleDamage(attacker, attackingWeapon);
+        }
+        // TODO: Just some dummy logic to make oil barrel hitboxes better....
+        else if (GetComponent<EnemyData>() != null && GetComponent<EnemyData>().enemyName == "Oil Barrel")
+        {
+            StartCoroutine(PollAttacking(attackSM, attacker, attackingWeapon));
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        // TODO: This assumes there can only be one fire.
+        if (other.gameObject.layer == LayerMask.NameToLayer("Fire"))
+        {
+            inFire = false;
+        }
     }
 
     private IEnumerator PollAttacking(IAttack attackSM, GameObject attacker, GameObject attackingWeapon)
     {
         float startTime = Time.time;
-        while (Time.time - startTime <= 0.1f)
+        while (Time.time - startTime <= 0.5f)
         {
             if (attackSM.IsAttacking())
             {
@@ -86,7 +105,19 @@ public abstract class TakeDamageBase : MonoBehaviour
         return null;
     }
 
+    private IEnumerator DelayFireDamage()
+    {
+        while(inFire)
+        {
+            yield return new WaitForSeconds(fireDamageInterval);
+            if(inFire)
+                FireDamage();
+        }
+    }
+
 
     public abstract void HandleDamage(GameObject attacker, GameObject attackingWeapon);
+
+    public abstract void FireDamage();
     
 }

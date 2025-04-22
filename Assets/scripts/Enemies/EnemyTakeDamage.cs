@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyTakeDamage : TakeDamageBase
 {
+
+    [SerializeField]
+    private float elementalDamage = 20;
     public override void HandleDamage(GameObject attacker, GameObject attackingWeapon)
     {
         if(attacker == gameObject)
@@ -43,16 +46,21 @@ public class EnemyTakeDamage : TakeDamageBase
             damage = attackerData.GetAttackPower();
         }
 
-        // TODO: Probably a better place to put this, but this will do for now.
-        if (attackerData.GetType() == typeof(EnemyData) && ((EnemyData)attackerData).enemyName == "Oil Barrel")
-        {
-            damage *= 10.0f;
-        }
-
         enemyData.TakeDamage(damage);
         if (attacker.gameObject.CompareTag("Player"))
         {
             DamageIndicator.Instance.IndicateDamage(damage, attackingWeapon.transform.position);
         }
+    }
+
+    override
+    public void FireDamage()
+    {
+        
+        var enemyData = GetComponent<EnemyData>();
+
+        enemyData.TakeDamage(elementalDamage);
+
+
     }
 }
