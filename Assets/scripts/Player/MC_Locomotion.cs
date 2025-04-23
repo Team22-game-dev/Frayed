@@ -147,6 +147,11 @@ public class MC_Locomotion : MonoBehaviour
         GroundedCheck();
         animationManager.SetBool("Grounded", _grounded);
         Move();
+
+        if (transform.position.y <= -100f)
+        {
+            GameOverScreen.Instance.ShowGameOver();
+        }
     }
 
     private void GroundedCheck()

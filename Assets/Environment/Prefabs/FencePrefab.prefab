@@ -53,8 +53,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.695934, y: 4.5891137, z: 0.39113122}
-  m_Center: {x: -0.0747726, y: 2.1337073, z: -0.13352355}
+  m_Size: {x: 4.695934, y: 4.5891137, z: 2}
+  m_Center: {x: -0.0747726, y: 2.1337073, z: 0}
 --- !u!54 &4161090052338381302
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -81,7 +81,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &376162510384857079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b021db8c9ac656e5b581eabc640cd09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToIgnite: 3
+  timeToIgnite: 1
   burnTime: 7
   firePrefab: {fileID: 4107660703856219361, guid: a2fc661e85a95ac649497bf893bb013f,
     type: 3}
