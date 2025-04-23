@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FireController : MonoBehaviour
 {
-    private bool onFire = false;
+    public bool onFire { get; private set; }
     private bool inContact = false;
 
     [SerializeField]

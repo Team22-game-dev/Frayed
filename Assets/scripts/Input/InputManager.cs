@@ -37,6 +37,7 @@ namespace Frayed.Input
         public bool attackDrawWeapon { get { return _attackDrawWeapon; } set { _attackDrawWeapon = value; } }
         public bool sheathWeapon { get { return _sheathWeapon; } set { _sheathWeapon = value; } }
         public bool pickupWeapon { get { return _pickupWeapon; } set { _pickupWeapon = value; } }
+        public bool shootFireball { get { return _shootFireball; } private set { _shootFireball = value; } }
 
         [Header("Input Manager settings")]
         [SerializeField]
@@ -70,6 +71,8 @@ namespace Frayed.Input
         private bool _sheathWeapon;
         [SerializeField]
         private bool _pickupWeapon;
+        [SerializeField]
+        private bool _shootFireball;
 
         [Header("Movement Settings")]
         private bool _movementLocked = false;
@@ -237,6 +240,15 @@ namespace Frayed.Input
             PickupWeaponInput(value.isPressed);
         }
 
+        public void OnShootFireball(InputValue value)
+        {
+            if (inputDisabled)
+            {
+                return;
+            }
+            ShootFireballInput(value.isPressed);
+        }
+
 #endif
 
         public void MoveInput(Vector2 newMoveDirection)
@@ -309,6 +321,11 @@ namespace Frayed.Input
         {
             // Always be true due to Action being button.
             _pickupWeapon = newPickupWeaponState;
+        }
+
+        public void ShootFireballInput(bool newShootFireballState)
+        {
+            _shootFireball = newShootFireballState;
         }
 
         private void OnApplicationFocus(bool hasFocus)

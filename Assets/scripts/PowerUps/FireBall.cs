@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Frayed.Input;
 using UnityEngine;
 
 public class FireBall : MonoBehaviour
@@ -13,11 +14,22 @@ public class FireBall : MonoBehaviour
     [SerializeField]
     private float life = 5.0f;
 
+    public bool hasPowerup;
+
     private float lastFireball = -1f;
+    private InputManager inputManager;
+
+    private void Start()
+    {
+        inputManager = InputManager.Instance;
+        Debug.Assert(inputManager != null);
+
+        hasPowerup = false;
+    }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (inputManager.shootFireball && hasPowerup)
         {
             // Wait at least `cooldown` seconds between throws
             if (Time.time - lastFireball >= cooldown)
@@ -30,8 +42,8 @@ public class FireBall : MonoBehaviour
 
     private void ThrowFireball()
     {
-        Vector3 spawnPosition = transform.position + new Vector3(0, 1.2f, 0.5f);
-        GameObject fireball = Instantiate(fireballPrefab, spawnPosition, Quaternion.identity);
+        Vector3 spawnPosition = transform.position + transform.up * 1.2f + transform.forward * 0.5f;
+        GameObject fireball = Instantiate(fireballPrefab, spawnPosition, transform.rotation);
 
         Debug.DrawRay(fireball.transform.position, transform.forward * 5, Color.red, 2f);
 
