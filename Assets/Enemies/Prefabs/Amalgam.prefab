@@ -912,7 +912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireDamageInterval: 1
-  elementalDamage: 100
+  elementalDamage: 50
 --- !u!54 &834696444019533968
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -990,6 +990,7 @@ MonoBehaviour:
   deactivated: 0
   timeDeactivated: 0
   spawnLocation: {x: 0, y: 0, z: 0}
+  spawnRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &2895302443934387576
 GameObject:
   m_ObjectHideFlags: 0

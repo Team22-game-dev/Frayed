@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8733130844381871535}
   - component: {fileID: 9101892191348497986}
   - component: {fileID: 1871553582397835443}
+  - component: {fileID: 7203332228421454449}
   - component: {fileID: 2414933632065371780}
   - component: {fileID: 1820562684697366528}
-  - component: {fileID: 7203332228421454449}
   m_Layer: 7
   m_Name: BARREL_1
   m_TagString: Untagged
@@ -135,9 +135,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireDamageInterval: 1
-
   elementalDamage: 100
-
+--- !u!114 &7203332228421454449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7075907405540547706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1da94fd28abc6164b9afac055ea54767, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeOnFire: 0
+  maxRadius: 6
+  oilParticlePrefab: {fileID: 0}
 --- !u!54 &2414933632065371780
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -191,20 +204,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7203332228421454449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7075907405540547706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da94fd28abc6164b9afac055ea54767, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeOnFire: 0
-  maxRadius: 6
 --- !u!1001 &4978281566589105883
 PrefabInstance:
   m_ObjectHideFlags: 0
