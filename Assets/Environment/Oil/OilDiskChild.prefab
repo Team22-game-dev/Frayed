@@ -50,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   oilPrefab: {fileID: 5007694102205524941}
   hierarchyLimit: 2
-  childLimit: 3
+  childLimit: 1
   noiseStrength: 20
   spreadInterval: 0.3
   spreadDistance: 0.5
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeToIgnite: 0.1
-  burnTime: 5
+  burnTime: 8
   firePrefab: {fileID: 4107660703856219361, guid: a2fc661e85a95ac649497bf893bb013f,
     type: 3}
 --- !u!1 &8068313482147096397
