@@ -10,6 +10,7 @@ public class RespawnItem : MonoBehaviour
     public bool deactivated;
     public float timeDeactivated;
     public Vector3 spawnLocation;
+    public Quaternion spawnRotation;
     public void Start()
     {
         timeDeactivated = 0.0f;
@@ -17,6 +18,7 @@ public class RespawnItem : MonoBehaviour
         timeDeactivated = 0.0f;
         currentRespawnTime = 0.0f;
         spawnLocation = transform.position;
+        spawnRotation = transform.rotation;
     }
 
     void Update()

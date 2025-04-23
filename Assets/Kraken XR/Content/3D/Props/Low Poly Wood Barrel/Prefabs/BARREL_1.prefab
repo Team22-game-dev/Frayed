@@ -16,8 +16,6 @@ GameObject:
   - component: {fileID: 2414933632065371780}
   - component: {fileID: 1820562684697366528}
   - component: {fileID: 7203332228421454449}
-  - component: {fileID: 7294822533879659687}
-  - component: {fileID: 4595092936096736678}
   m_Layer: 7
   m_Name: BARREL_1
   m_TagString: Untagged
@@ -137,7 +135,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireDamageInterval: 1
+
   elementalDamage: 100
+
 --- !u!54 &2414933632065371780
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -204,42 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeOnFire: 0
-  timeSinceDamage: 0
-  maxRadius: 4
---- !u!114 &7294822533879659687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7075907405540547706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f8eed520171e604da069e1417193d95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4595092936096736678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7075907405540547706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30cfbfc3ce5fb9f40b6361a311cd479d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponData: {fileID: 0}
-  equippedWeapon: {fileID: 0}
-  weaponSheath: {fileID: 0}
-  WeaponHandFowardR: {fileID: 0}
-  WeaponHandReverseR: {fileID: 0}
-  WeaponHandFowardL: {fileID: 0}
-  WeaponHandReverseL: {fileID: 0}
-  SheathBoneHip: {fileID: 0}
-  SheathBoneBack: {fileID: 0}
-  currentWeaponState: 0
+  maxRadius: 6
 --- !u!1001 &4978281566589105883
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -392,6 +357,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7600243178557179584}
     m_Modifications:
+    - target: {fileID: 1624273858534458139, guid: a2fc661e85a95ac649497bf893bb013f,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4107660703856219361, guid: a2fc661e85a95ac649497bf893bb013f,
         type: 3}
       propertyPath: m_Name
@@ -400,12 +370,12 @@ PrefabInstance:
     - target: {fileID: 4107660703856219361, guid: a2fc661e85a95ac649497bf893bb013f,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4708818484705730685, guid: a2fc661e85a95ac649497bf893bb013f,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4976886262259790486, guid: a2fc661e85a95ac649497bf893bb013f,
         type: 3}
@@ -430,12 +400,12 @@ PrefabInstance:
     - target: {fileID: 5418553703938651351, guid: a2fc661e85a95ac649497bf893bb013f,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6472554781402537931, guid: a2fc661e85a95ac649497bf893bb013f,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7321129787282768669, guid: a2fc661e85a95ac649497bf893bb013f,
         type: 3}
