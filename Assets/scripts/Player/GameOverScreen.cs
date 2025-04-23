@@ -83,10 +83,6 @@ public class GameOverScreen : MonoBehaviour
     {
         mcInventory.ClearInventory();
         GameObject.FindObjectOfType<MC_Data>().enemiesKilled = 0;
-        if (CorruptionMeter.Instance != null)
-        {
-            CorruptionMeter.Instance.ResetCorruption();
-        }
 
         GameOverText.gameObject.SetActive(true);
 
@@ -117,6 +113,10 @@ public class GameOverScreen : MonoBehaviour
 
     public void RestartGame()
     {
+        if (CorruptionMeter.Instance != null)
+        {
+            CorruptionMeter.Instance.ResetCorruption();
+        }
         HideGameOver();
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         // TODO: Use options menu to reload scene for now.

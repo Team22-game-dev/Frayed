@@ -122,6 +122,7 @@ namespace Frayed.Input
                 _attackDrawWeapon = false;
                 _sheathWeapon = false;
                 _pickupWeapon = false;
+                _shootFireball = false;
             }
         }
 
