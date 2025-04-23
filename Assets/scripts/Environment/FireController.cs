@@ -28,6 +28,7 @@ public class FireController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("fire entered " + gameObject.name + "'s collider");
         if (onFire)
             return;
 
@@ -71,6 +72,6 @@ public class FireController : MonoBehaviour
             Destroy(newFire);
         }
 
-        Destroy(gameObject); // Optional: remove this line if object shouldn't disappear after burning
+        Destroy(transform.root.gameObject); // Optional: remove this line if object shouldn't disappear after burning
     }
 }

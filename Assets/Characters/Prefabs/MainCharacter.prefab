@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5929012306377573619}
   - component: {fileID: 1743911993189556463}
   - component: {fileID: 2585218319331271650}
+  - component: {fileID: 9207397600931701335}
   - component: {fileID: 8166158922348966025}
   - component: {fileID: 7005419985995812074}
   - component: {fileID: 7030976015949841167}
@@ -94,7 +95,6 @@ MonoBehaviour:
   SheathBoneHip: {fileID: 0}
   SheathBoneBack: {fileID: 0}
   currentWeaponState: 0
-  pickupKey: 101
 --- !u!95 &2585218319331271650
 Animator:
   serializedVersion: 5
@@ -116,6 +116,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &9207397600931701335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2456836682300840533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f05e74b1922fca9b78b4c184957d8e0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireballPrefab: {fileID: 2743552334007735585, guid: 1e0271465ab16e06ea2fdbbb996765f0,
+    type: 3}
+  fireballSpeed: 15
+  cooldown: 0.5
+  life: 5
 --- !u!114 &8166158922348966025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,6 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01728b4420151425680bf246dd1689eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fireDamageInterval: 1
 --- !u!114 &8612749129740152534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attackPower: 1
+  enemiesKilled: 0
 --- !u!1 &8244900443576938951
 GameObject:
   m_ObjectHideFlags: 0
