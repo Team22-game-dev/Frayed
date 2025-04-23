@@ -1,5 +1,17 @@
 # Playing the Game
-N/A
+Welcome to Frayed
+
+-Town Scene
+
+Use the fire power you have equipped (already equipped) with "F". Be careful though, this power comes from a dark trait Rage that will chip away at your corruption meter.
+
+
+-Village scene
+
+Have fun, explore the area, try the amalgam sword it is very OP.
+
+-Playground
+-Test the mechanics and evade the amalgam.
 
 # Bugs
 N/A
@@ -15,7 +27,6 @@ N/A
 - [Terrain Sample Asset Pack](https://assetstore.unity.com/packages/3d/environments/landscapes/terrain-sample-asset-pack-145808)  
 - [Hand Painted Seamless Lava Texture](https://assetstore.unity.com/packages/2d/textures-materials/floors/hand-painted-seamless-lava-texture-158352)  
 - [Lowpoly Environment - Nature Free - MEDIEVAL FANTASY SERIES](https://assetstore.unity.com/packages/3d/environments/lowpoly-environment-nature-free-medieval-fantasy-series-187052)
--[4k textures for town scene- polyhaven] (https://polyhave.com)
 
 # Contributing
 ## Contributing Guide
