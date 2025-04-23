@@ -912,6 +912,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f126d0091dafc1eb880acd360173ff8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fireDamageInterval: 1
+  damageHitbox: {fileID: 0}
+  elementalDamage: 100
 --- !u!54 &834696444019533968
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -988,6 +991,7 @@ MonoBehaviour:
   currentRespawnTime: 0
   deactivated: 0
   timeDeactivated: 0
+  spawnLocation: {x: 0, y: 0, z: 0}
 --- !u!1 &2895302443934387576
 GameObject:
   m_ObjectHideFlags: 0

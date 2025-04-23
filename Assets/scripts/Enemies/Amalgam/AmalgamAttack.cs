@@ -61,7 +61,7 @@ public class AmalgamAttack : EnemyAttack
 
         currentState = AttackState.PreparingAttack;
 
-        Debug.Log("Claw Attack!");
+        //Debug.Log("Claw Attack!");
         if (clawSphereLeftHand == null || clawSphereRightHand == null)
         {
             Debug.Log("ClawSpheres null");

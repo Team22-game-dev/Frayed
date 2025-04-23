@@ -53,8 +53,9 @@ public abstract class TakeDamageBase : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        // TODO: This assumes there can only be one fire.
-        if (other.gameObject.layer == LayerMask.NameToLayer("Fire"))
+
+        if(other.gameObject.layer == LayerMask.NameToLayer("Fire"))
+
         {
             inFire = false;
         }
