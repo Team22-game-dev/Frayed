@@ -12,20 +12,24 @@ public class CorruptionMeter : MonoBehaviour
 
     public Text meterNumber;
     public Image corruptionMeter;
+    public static float corruption = 0;
 
-    float corruption, maxCorruption = 100;
+    float maxCorruption = 100;
     float lerpSpeed;
+    [SerializeField] private float corruptionDrainRate = 1f;
+
     public float corruptionDecayRate = 5f;
 
-    private void Start()
+    /*private void Start()
     {
         corruption = 0;
-    }
+    }*/
 
     private void Awake()
     {
         Instance = this;
     }
+
 
     private void Update()
     {
@@ -37,12 +41,13 @@ public class CorruptionMeter : MonoBehaviour
             if (!GameOverScreen.Instance.gameOverTriggered)
             {
                 GameOverScreen.Instance.ShowGameOver();
+                ResetCorruption();
             }
         }
 
         else if (corruption > 0)
         {
-            corruption -= Time.deltaTime * 5f;
+            corruption -= Time.deltaTime * corruptionDrainRate;
             corruption = Mathf.Max(0, corruption);
         }
 
@@ -79,6 +84,11 @@ public class CorruptionMeter : MonoBehaviour
         {
             corruption += increase;
         }
+    }
+
+    public void ResetCorruption()
+    {
+        corruption = 0;
     }
 
     void GameOver()
