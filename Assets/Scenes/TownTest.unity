@@ -2023,9 +2023,9 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.23333333
+  m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: a32fb2384eb9a0d44881cf0a7af0ded3, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 64cb6985d236c394d851a50c30a10360, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &985171380
 Transform:
@@ -2307,10 +2307,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1332586109}
-    - targetCorrespondingSourceObject: {fileID: -7146521406498821007, guid: 8b94a4540275fa2729ce7669937ac9c2,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1332586110}
     - targetCorrespondingSourceObject: {fileID: -8949256303094658967, guid: 8b94a4540275fa2729ce7669937ac9c2,
         type: 3}
       insertIndex: -1
@@ -2319,10 +2315,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1326446097}
-    - targetCorrespondingSourceObject: {fileID: 8134837689134937748, guid: 8b94a4540275fa2729ce7669937ac9c2,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1326446098}
     - targetCorrespondingSourceObject: {fileID: -2990163113245169829, guid: 8b94a4540275fa2729ce7669937ac9c2,
         type: 3}
       insertIndex: -1
@@ -2367,10 +2359,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1661831402}
-    - targetCorrespondingSourceObject: {fileID: -8244292045088546545, guid: 8b94a4540275fa2729ce7669937ac9c2,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1661831403}
     - targetCorrespondingSourceObject: {fileID: -7029948723529949830, guid: 8b94a4540275fa2729ce7669937ac9c2,
         type: 3}
       insertIndex: -1
@@ -2699,37 +2687,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2977981768884665668, guid: 8b94a4540275fa2729ce7669937ac9c2, type: 3}
---- !u!114 &1326446098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1326446093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.23333333
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: b39a9044b6a2a6a6c9fb8b3fd9f7328c, type: 2}
-  m_BuildHeightMesh: 0
 --- !u!1 &1332586105 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7146521406498821007, guid: 8b94a4540275fa2729ce7669937ac9c2,
@@ -2758,37 +2715,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8678823145569952518, guid: 8b94a4540275fa2729ce7669937ac9c2, type: 3}
---- !u!114 &1332586110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332586105}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.23333333
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 7996b9f839e3c9b43ab17411191f3de2, type: 2}
-  m_BuildHeightMesh: 0
 --- !u!1 &1375065430 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4202050752608874440, guid: 8b94a4540275fa2729ce7669937ac9c2,
@@ -3078,37 +3004,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -547483819616444489, guid: 8b94a4540275fa2729ce7669937ac9c2, type: 3}
---- !u!114 &1661831403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1661831398}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.23333333
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 5a0ef4a99ad419513afccb10637fb111, type: 2}
-  m_BuildHeightMesh: 0
 --- !u!1 &1664833466 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4280916219013052582, guid: 8b94a4540275fa2729ce7669937ac9c2,
