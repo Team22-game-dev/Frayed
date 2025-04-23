@@ -24,6 +24,10 @@ public class VillageHelp : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!Menu.Instance.toggled)
+        {
+            tmpText.text = "";
+        }
         if (GameOverScreen.Instance.gameOverTriggered)
         {
             gameObject.SetActive(false);

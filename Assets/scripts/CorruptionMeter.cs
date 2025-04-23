@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using UnityEngine;
@@ -7,24 +8,56 @@ using UnityEngine.UI;
 
 public class CorruptionMeter : MonoBehaviour
 {
+    public static CorruptionMeter Instance;
+
     public Text meterNumber;
     public Image corruptionMeter;
+    public static float corruption = 0;
 
-    float corruption, maxCorruption = 100;
+    float maxCorruption = 100;
     float lerpSpeed;
+    [SerializeField] private float corruptionDrainRate = 1f;
 
-    private void Start()
+    public float corruptionDecayRate = 5f;
+
+    /*private void Start()
     {
         corruption = 0;
+    }*/
+
+    private void Awake()
+    {
+        Instance = this;
     }
+
 
     private void Update()
     {
-        meterNumber.text = corruption + "%";
+        meterNumber.text = Mathf.RoundToInt(corruption) + "%";
+        if (GameOverScreen.Instance.gameOverTriggered)
+        {
+            corruption = maxCorruption;
+            MeterFiller();
+            ColorChanger();
+            return;
+        }
+
         if (corruption > maxCorruption)
         {
             corruption = maxCorruption;
+            if (!GameOverScreen.Instance.gameOverTriggered)
+            {
+                GameOverScreen.Instance.ShowGameOver();
+            }
         }
+
+        else if (corruption > 0)
+        {
+            corruption -= Time.deltaTime * corruptionDrainRate;
+            corruption = Mathf.Max(0, corruption);
+        }
+
+
         lerpSpeed = 3f * Time.deltaTime;
 
         MeterFiller();
@@ -57,5 +90,15 @@ public class CorruptionMeter : MonoBehaviour
         {
             corruption += increase;
         }
+    }
+
+    public void ResetCorruption()
+    {
+        corruption = 0;
+    }
+
+    void GameOver()
+    {
+        UnityEngine.Debug.Log("GAME OVER");
     }
 }

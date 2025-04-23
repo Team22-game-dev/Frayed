@@ -38,6 +38,10 @@ public class TownHelp : MonoBehaviour
 
     private void Update()
     {
+        if (!Menu.Instance.toggled)
+        {
+            tmpText.text = "";
+        }
         if (GameOverScreen.Instance.gameOverTriggered)
         {
             gameObject.SetActive(false);
@@ -54,7 +58,7 @@ public class TownHelp : MonoBehaviour
         }
         if (player.GetComponent<FireBall>() != null & !player.GetComponent<FireBall>().hasPowerup)
         {
-            tmpText.text = "Walk up to the rocket powerup to pick it up.";
+            tmpText.text = "Walk up to the rocket powerup to pick it up. This is a powerful ability, but increases your corruption percentage.";
             return;
         }
         FireController[] fireControllers = GameObject.FindObjectsOfType<FireController>();
