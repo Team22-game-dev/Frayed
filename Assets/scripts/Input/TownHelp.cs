@@ -84,6 +84,11 @@ public class TownHelp : MonoBehaviour
                 if (HasAmalgam(enemies))
                 {
                     OilFire oilFire = enemy.GetComponent<OilFire>();
+                    if (oilFire.flamable)
+                    {
+                        tmpText.text = "This oil is flammable... seems dangerous...";
+                        return;
+                    }
                     if (oilFire.onFire)
                     {
                         tmpText.text = "BOOM!!! Amalgams are vulnerable to flame... lure them toward the fire.";

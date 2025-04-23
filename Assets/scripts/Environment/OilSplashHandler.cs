@@ -7,10 +7,13 @@ public class OilSplashHandler : MonoBehaviour
     private ParticleSystem ps;
     private List<ParticleCollisionEvent> collisionEvents;
 
+    public List<GameObject> oilDecals { get; private set; }
+
     void Start()
     {
         ps = GetComponent<ParticleSystem>();
         collisionEvents = new List<ParticleCollisionEvent>();
+        oilDecals = new List<GameObject>();
     }
 
     void OnParticleCollision(GameObject other)
@@ -24,7 +27,7 @@ public class OilSplashHandler : MonoBehaviour
 
             // Place the oil decal (or puddle)
             Quaternion rot = Quaternion.FromToRotation(Vector3.up, normal);
-            Instantiate(oilDecalPrefab, hitPoint + normal * 0.01f, rot); // tiny offset to avoid z-fighting
+            oilDecals.Add(Instantiate(oilDecalPrefab, hitPoint + normal * 0.01f, rot)); // tiny offset to avoid z-fighting
         }
     }
 }
