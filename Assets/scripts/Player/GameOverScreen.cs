@@ -83,6 +83,10 @@ public class GameOverScreen : MonoBehaviour
     {
         mcInventory.ClearInventory();
         GameObject.FindObjectOfType<MC_Data>().enemiesKilled = 0;
+        if (CorruptionMeter.Instance != null)
+        {
+            CorruptionMeter.Instance.ResetCorruption();
+        }
 
         GameOverText.gameObject.SetActive(true);
 

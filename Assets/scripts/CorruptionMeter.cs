@@ -34,6 +34,13 @@ public class CorruptionMeter : MonoBehaviour
     private void Update()
     {
         meterNumber.text = Mathf.RoundToInt(corruption) + "%";
+        if (GameOverScreen.Instance.gameOverTriggered)
+        {
+            corruption = maxCorruption;
+            MeterFiller();
+            ColorChanger();
+            return;
+        }
 
         if (corruption > maxCorruption)
         {
@@ -41,7 +48,6 @@ public class CorruptionMeter : MonoBehaviour
             if (!GameOverScreen.Instance.gameOverTriggered)
             {
                 GameOverScreen.Instance.ShowGameOver();
-                ResetCorruption();
             }
         }
 

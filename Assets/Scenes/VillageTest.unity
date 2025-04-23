@@ -15889,6 +15889,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meterNumber: {fileID: 1842922418}
   corruptionMeter: {fileID: 439788199}
+  corruptionDrainRate: 2
+  corruptionDecayRate: 5
 --- !u!1001 &1128510249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16815,7 +16817,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.23333333
+  m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 180de32d65954df45ab81e749cc0d72b, type: 2}
   m_BuildHeightMesh: 0
