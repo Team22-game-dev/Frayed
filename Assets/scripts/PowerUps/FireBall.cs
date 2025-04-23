@@ -51,5 +51,10 @@ public class FireBall : MonoBehaviour
         }
 
         Destroy(fireball, life);
+
+        if (CorruptionMeter.Instance != null)
+        {
+            CorruptionMeter.Instance.Increase(10f); // Increase by 10%, adjust to balance
+        }
     }
 }
