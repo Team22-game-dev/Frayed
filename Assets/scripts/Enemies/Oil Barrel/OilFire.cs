@@ -11,12 +11,14 @@ public class OilFire : MonoBehaviour
 
     [SerializeField]
     private GameObject brokenBarrelPrefab;
+    public bool onFire;
     
     void Start()
     {
         enemyData = GetComponent<EnemyData>();
         Debug.Assert(enemyData != null);
 
+        onFire = false;
 
     }
 
@@ -36,6 +38,7 @@ public class OilFire : MonoBehaviour
         GameObject oilSprayer = Instantiate(oilParticlePrefab, transform.position, transform.rotation);
         GameObject brokenBarrel = Instantiate(brokenBarrelPrefab, transform.position, transform.rotation);
 
+        onFire = true;
         if(oilSprayer != null)
         {
             Destroy(oilSprayer, 0.8f);

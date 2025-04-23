@@ -131,7 +131,7 @@ MonoBehaviour:
   _baseHealth: 12
   _startingHealth: 0
   _currentHealth: 0
-  _enemyName: 
+  _enemyName: Oil Barrel
   _baseAttackPower: 1
   _mainCharacter: {fileID: 0}
   mainCamera: {fileID: 0}
@@ -153,6 +153,7 @@ MonoBehaviour:
     type: 3}
   brokenBarrelPrefab: {fileID: 6422791986998891004, guid: a17e85ca43786d812a9c57f71a20d486,
     type: 3}
+  onFire: 0
 --- !u!1001 &6112185755992407646
 PrefabInstance:
   m_ObjectHideFlags: 0
