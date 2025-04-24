@@ -38,9 +38,10 @@ public class TownHelp : MonoBehaviour
 
     private void Update()
     {
-        if (!Menu.Instance.toggled)
+        if (Menu.Instance.toggled)
         {
             tmpText.text = "";
+            return;
         }
         if (GameOverScreen.Instance.gameOverTriggered)
         {
@@ -50,6 +51,7 @@ public class TownHelp : MonoBehaviour
         EnemyData[] enemies = GameObject.FindObjectsOfType<EnemyData>();
         if (!HasAmalgam(enemies))
         {
+            tmpText.text = "Well done! Teleporting to the village...";
             if (!teleporting)
             {
                 StartCoroutine(TeleportToVillage());
@@ -81,42 +83,41 @@ public class TownHelp : MonoBehaviour
             tmpText.text = "Walk up to the dagger and pick it up.";
             return;
         }
-        foreach (EnemyData enemy in enemies)
+        OilFire[] oilFires = GameObject.FindObjectsOfType<OilFire>();
+        OilFire[] unactivatedOilFires = oilFires.Where((oilFire) => !oilFire.activated).ToArray();
+        if (HasAmalgam(enemies))
         {
-            if (enemy.enemyName == "Oil Barrel")
+            foreach (OilFire oilFire in oilFires)
             {
-                if (HasAmalgam(enemies))
+                if (oilFire.onFire)
                 {
-                    OilFire oilFire = enemy.GetComponent<OilFire>();
-                    if (oilFire.flamable)
-                    {
-                        tmpText.text = "This oil is flammable... seems dangerous...";
-                        return;
-                    }
-                    if (oilFire.onFire)
-                    {
-                        tmpText.text = "BOOM!!! Amalgams are vulnerable to flame... lure them toward the fire.";
-                        return;
-                    }
+                    tmpText.text = "BOOM!!! Amalgams are vulnerable to flame... lure them toward the fire.";
+                    return;
+                }
+                if (oilFire.flamable)
+                {
+                    tmpText.text = "The spilled oil is flammable... seems dangerous...";
+                    return;
+                }
+            }
+            foreach (OilFire oilFire in unactivatedOilFires)
+            {
+                Vector3 barrelPosition = oilFire.transform.position;
+                if ((barrelPosition - player.transform.position).magnitude <= 5f)
+                {
+                    tmpText.text = "Hmm... this oil barrel might be useful...";
+                    return;
                 }
             }
         }
-        foreach (EnemyData enemy in enemies)
+        if (unactivatedOilFires.Count() == 0)
         {
-            if (enemy.enemyName == "Oil Barrel")
-            {
-                if (HasAmalgam(enemies))
-                {
-                    Vector3 barrelPosition = enemy.transform.position;
-                    if ((barrelPosition - player.transform.position).magnitude <= 5f)
-                    {
-                        tmpText.text = "Hmm... these oil barrels might be useful...";
-                        return;
-                    }
-                }
-            }
+            tmpText.text = "There are amalgams looking for you! All you have is this dagger to kill them.";
         }
-        tmpText.text = "There are amalgams looking for you! This dagger probably isn't strong enough... look around the map to find something useful that can kill them.";
+        else
+        {
+            tmpText.text = "There are amalgams looking for you! This dagger probably isn't strong enough... look around the map to find something useful that can kill them.";
+        }
         //if (HasAmalgam(enemies))
         //{
         //    tmpText.text = "There are amalgams looking for you! This dagger probably isn't strong enough... look around the map to find something useful that can kill them.";
@@ -131,7 +132,6 @@ public class TownHelp : MonoBehaviour
     private IEnumerator TeleportToVillage()
     {
         teleporting = true;
-        tmpText.text = "Well done! Teleporting to the village...";
         yield return new WaitForSeconds(10.0f);
         Menu.Instance.LoadScene("VillageTest");
     }

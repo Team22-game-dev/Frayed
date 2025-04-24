@@ -56,11 +56,22 @@ public class EnemyTakeDamage : TakeDamageBase
     override
     public void FireDamage()
     {
+        Debug.Assert(inFire && fireGameObject != null);
         Debug.Log("Enemy Taking fire damage");
-        
-        var enemyData = GetComponent<EnemyData>();
 
-        enemyData.TakeDamage(elementalDamage);
+        EnemyData enemyData = GetComponent<EnemyData>();
+
+        // TODO: This is bad but will do for now.
+        if (fireGameObject.name.StartsWith("FireBall"))
+        {
+            // Take much less damage on fireball to avoid it being overpowered.
+            enemyData.TakeDamage(1.0f);
+            DamageIndicator.Instance.IndicateDamage(1.0f, fireGameObject.transform.position);
+        }
+        else
+        {
+            enemyData.TakeDamage(elementalDamage);
+        }
 
 
     }

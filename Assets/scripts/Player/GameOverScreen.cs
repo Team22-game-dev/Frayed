@@ -83,6 +83,15 @@ public class GameOverScreen : MonoBehaviour
     {
         mcInventory.ClearInventory();
         GameObject.FindObjectOfType<MC_Data>().enemiesKilled = 0;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            FireBall fireball = player.GetComponent<FireBall>();
+            if (fireball != null)
+            {
+                fireball.hasPowerup = false;
+            }
+        }
 
         GameOverText.gameObject.SetActive(true);
 

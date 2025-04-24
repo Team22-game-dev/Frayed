@@ -37,7 +37,7 @@ public class MC_EnviromentDamage : MonoBehaviour
 
     void Update()
     {
-        if (hazardousLayerIndex == -1 || Terrain.activeTerrain != null) return; // If no hazardous texture or terrain found, exit
+        if (hazardousLayerIndex == -1 || Terrain.activeTerrain == null) return; // If no hazardous texture or terrain found, exit
 
         int currentLayerIndex = GetTerrainTextureIndex();
         bool onHazardousGround = (currentLayerIndex == hazardousLayerIndex);

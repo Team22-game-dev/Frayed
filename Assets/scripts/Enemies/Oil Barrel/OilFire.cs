@@ -14,6 +14,7 @@ public class OilFire : MonoBehaviour
 
     private GameObject oilSprayer;
     private GameObject brokenBarrel;
+    private GameObject woodenBarrel;
 
     public bool flamable;
     public bool onFire;
@@ -23,6 +24,9 @@ public class OilFire : MonoBehaviour
     {
         enemyData = GetComponent<EnemyData>();
         Debug.Assert(enemyData != null);
+
+        woodenBarrel = transform.Find("wooden_barrel").gameObject;
+        Debug.Assert(woodenBarrel != null);
 
         onFire = false;
         flamable = false;
@@ -57,6 +61,18 @@ public class OilFire : MonoBehaviour
                     }
                 }
             }
+            if (brokenBarrel != null)
+            {
+                FireController fireController = brokenBarrel.GetComponentInChildren<FireController>();
+                if (fireController != null)
+                {
+                    if (fireController.onFire)
+                    {
+                        flamable = false;
+                        onFire = true;
+                    }
+                }
+            }
         }
         else if (onFire)
         {
@@ -78,13 +94,38 @@ public class OilFire : MonoBehaviour
                     }
                 }
             }
+            if (brokenBarrel != null)
+            {
+                FireController fireController = brokenBarrel.GetComponentInChildren<FireController>();
+                if (fireController != null)
+                {
+                    if (fireController.onFire)
+                    {
+                        tempOnFire = true;
+                    }
+                }
+            }
             onFire = tempOnFire;
+            if (!onFire)
+            {
+                gameObject.SetActive(false);
+            }
         }
         
     }
 
     private void ActivateFire()
     {
+        MeshRenderer meshRender = woodenBarrel.GetComponent<MeshRenderer>();
+        if (meshRender != null)
+        {
+            meshRender.enabled = false;
+        }
+        CharacterController characterController = GetComponent<CharacterController>();
+        if (characterController != null)
+        {
+            characterController.enabled = false;
+        }
 
         oilSprayer = Instantiate(oilParticlePrefab, transform.position, transform.rotation);
         brokenBarrel = Instantiate(brokenBarrelPrefab, transform.position, transform.rotation);

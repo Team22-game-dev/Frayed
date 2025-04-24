@@ -10,7 +10,7 @@ public class OilBehavior : MonoBehaviour
     private bool set = false;
 
     [SerializeField] private GameObject oilPrefab;
-    [SerializeField] private int hierarchyLimit = 2;
+    // [SerializeField] private int hierarchyLimit = 2;
     [SerializeField] private int childLimit = 3;
     [SerializeField] private float noiseStrength = 20f;
     [SerializeField] private float spreadInterval = 0.3f;

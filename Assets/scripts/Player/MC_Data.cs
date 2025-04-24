@@ -21,7 +21,7 @@ public class MC_Data : MonoBehaviour, IAttackData
     // Update is called once per frame
     void Update()
     {
-        _attackPower = Mathf.Pow((enemiesKilled + 1) * 2.0f, 1.0f / 2.0f);
+        _attackPower = Mathf.Pow(enemiesKilled + 1, 1.0f / 2.0f) * 1.2f;
     }
 
 

@@ -5,20 +5,56 @@ using UnityEngine;
 public abstract class TakeDamageBase : MonoBehaviour
 {
 
-    private bool inFire = false;
+    [SerializeField]
+    protected bool inFire = false;
+    private bool inFireThisFrame = false;
+    [SerializeField]
+    protected GameObject fireGameObject;
+    private GameObject fireGameObjectThisFrame;
 
     [SerializeField]
-    private float fireDamageInterval = 1.0f;
+    protected float fireDamageInterval = 1.0f;
+    [SerializeField]
+    protected float timeSinceFireDamage = 0.0f;
+
+    void FixedUpdate()
+    {
+        inFire = inFireThisFrame;
+        fireGameObject = fireGameObjectThisFrame;
+        fireGameObjectThisFrame = null;
+        inFireThisFrame = false;
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Fire"))
+        {
+            fireGameObjectThisFrame = other.transform.root.gameObject;
+            inFireThisFrame = true;
+        }
+    }
+
+    private void Update()
+    {
+        timeSinceFireDamage += Time.deltaTime;
+        if (inFire && timeSinceFireDamage >= fireDamageInterval)
+        {
+            timeSinceFireDamage = 0.0f;
+            FireDamage();
+        }
+    }
+
+
 
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer != LayerMask.NameToLayer("Weapons"))
         {
-           if(other.gameObject.layer == LayerMask.NameToLayer("Fire") && !inFire)
-           {
-                inFire = true;
-                StartCoroutine(DelayFireDamage());
-           }
+            //if (other.gameObject.layer == LayerMask.NameToLayer("Fire") && !inFire)
+            //{
+            //    inFire = true;
+            //    StartCoroutine(DelayFireDamage());
+            //}
             return;
         }
 
@@ -106,15 +142,15 @@ public abstract class TakeDamageBase : MonoBehaviour
         return null;
     }
 
-    private IEnumerator DelayFireDamage()
-    {
-        while(inFire)
-        {
-            yield return new WaitForSeconds(fireDamageInterval);
-            if(inFire)
-                FireDamage();
-        }
-    }
+    //private IEnumerator DelayFireDamage()
+    //{
+    //    while(inFire)
+    //    {
+    //        yield return new WaitForSeconds(fireDamageInterval);
+    //        if(inFire)
+    //            FireDamage();
+    //    }
+    //}
 
 
     public abstract void HandleDamage(GameObject attacker, GameObject attackingWeapon);

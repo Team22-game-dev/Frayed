@@ -42,7 +42,7 @@ public class FireBall : MonoBehaviour
 
     private void ThrowFireball()
     {
-        Vector3 spawnPosition = transform.position + transform.up * 1.2f + transform.forward * 0.5f;
+        Vector3 spawnPosition = transform.position + transform.up * 1.2f + transform.forward * 0.4f;
         GameObject fireball = Instantiate(fireballPrefab, spawnPosition, transform.rotation);
 
         Debug.DrawRay(fireball.transform.position, transform.forward * 5, Color.red, 2f);
@@ -53,6 +53,7 @@ public class FireBall : MonoBehaviour
         if (rb != null)
         {
             Debug.Log("Velocity: " + transform.forward * fireballSpeed);
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
             rb.velocity = transform.forward * fireballSpeed;
 
 

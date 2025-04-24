@@ -912,7 +912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireDamageInterval: 1
-  elementalDamage: 50
+  elementalDamage: 25
 --- !u!54 &834696444019533968
 Rigidbody:
   m_ObjectHideFlags: 0

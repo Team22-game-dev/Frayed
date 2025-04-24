@@ -1732,6 +1732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioMixer: {fileID: 24100000, guid: 809eeaa92d747ac4799aadfe23dc9de8, type: 2}
+  fullScreenToggle: {fileID: 656449374}
 --- !u!1 &1202956721
 GameObject:
   m_ObjectHideFlags: 0
